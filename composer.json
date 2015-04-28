@@ -11,7 +11,9 @@
             "email": "langlade.baptiste@gmail.com"
         }
     ],
-    "support": "http://github.com/Innmind/neo4j-dbal/issues",
+    "support": {
+        "issues": "http://github.com/Innmind/neo4j-dbal/issues"
+    },
     "require": {
         "php": ">=5.4"
     },
