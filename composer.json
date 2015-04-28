@@ -15,7 +15,10 @@
         "issues": "http://github.com/Innmind/neo4j-dbal/issues"
     },
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "symfony/event-dispatcher": "~2.3",
+        "guzzlehttp/guzzle": "~5.0",
+        "symfony/options-resolver": "~2.3"
     },
     "autoload": {
         "psr-0": {
