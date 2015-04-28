@@ -22,7 +22,7 @@ class Connection
             'port' => 7474,
             'timeout' => 60
         ]);
-        $resolver->setOptional(['username', 'password']);
+        $resolver->setDefined(['username', 'password']);
         $resolver->setRequired(['scheme', 'host', 'port']);
         $resolver->setAllowedTypes('scheme', 'string');
         $resolver->setAllowedTypes('host', 'string');
@@ -30,9 +30,7 @@ class Connection
         $resolver->setAllowedTypes('username', 'string');
         $resolver->setAllowedTypes('password', 'string');
         $resolver->setAllowedTypes('timeout', 'int');
-        $resolver->setAllowedValues([
-            'scheme' => ['http', 'https'],
-        ]);
+        $resolver->setAllowedValues('scheme', ['http', 'https']);
         $resolver->setNormalizer('port', function ($options, $value) {
             if (in_array($value, [80, 0, null], true)) {
                 return '';
