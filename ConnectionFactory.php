@@ -9,13 +9,18 @@ use Innmind\Neo4j\DBAL\EventListener\ResponseListener;
 
 class ConnectionFactory
 {
+    static protected $cypherBuilder;
     public static function make(array $params = [], EventDispatcherInterface $dispatcher = null)
     {
         if ($dispatcher === null) {
             $dispatcher = new EventDispatcher();
         }
 
-        $conn = new Connection($params, $dispatcher);
+        if (self::$cypherBuilder === null) {
+            self::$cypherBuilder = new CypherBuilder;
+        }
+
+        $conn = new Connection($params, $dispatcher, self::$cypherBuilder);
 
         if (!($dispatcher instanceof ImmutableEventDispatcher)) {
             $listener = new ResponseListener();

@@ -3,6 +3,8 @@
 namespace Innmind\Neo4j\DBAL\Tests;
 
 use Innmind\Neo4j\DBAL\Connection;
+use Innmind\Neo4j\DBAL\CypherBuilder;
+use Innmind\Neo4j\DBAL\Query;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ConnectionTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +16,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     {
         new Connection(
             ['scheme' => null],
-            new EventDispatcher()
+            new EventDispatcher,
+            new CypherBuilder
         );
     }
 
@@ -25,7 +28,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     {
         new Connection(
             ['scheme' => 'ftp'],
-            new EventDispatcher()
+            new EventDispatcher,
+            new CypherBuilder
         );
     }
 
@@ -33,7 +37,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $conn = new Connection(
             [],
-            new EventDispatcher()
+            new EventDispatcher,
+            new CypherBuilder
         );
 
         $refl = new \ReflectionObject($conn);
@@ -54,7 +59,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $conn = new Connection(
             ['username' => 'foo', 'password' => 'bar'],
-            new EventDispatcher()
+            new EventDispatcher,
+            new CypherBuilder
         );
 
         $refl = new \ReflectionObject($conn);
@@ -74,8 +80,65 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function testGetDispatcher()
     {
         $d = new EventDispatcher;
-        $conn = new Connection([], $d);
+        $conn = new Connection([], $d, new CypherBuilder);
 
         $this->assertEquals($d, $conn->getDispatcher());
+    }
+
+    public function testExecuteQuery()
+    {
+        $conn = new Connection(
+            ['host' => 'docker'],
+            new EventDispatcher,
+            new CypherBuilder
+        );
+        $q = new Query;
+        $q
+            ->create('(a:Foo:Bar {props})')
+            ->addParameter('props', [
+                'name' => 'foo'
+            ])
+            ->setReturn('a');
+
+        $response = $conn->executeQuery($q);
+
+        $this->assertEquals(1, count($response['nodes']));
+        $this->assertEquals(
+            ['Foo', 'Bar'],
+            $response['nodes'][0]['labels']
+        );
+        $this->assertEquals(
+            ['name' => 'foo'],
+            $response['nodes'][0]['properties']
+        );
+    }
+
+    public function testExecute()
+    {
+        $conn = new Connection(
+            ['host' => 'docker'],
+            new EventDispatcher,
+            new CypherBuilder
+        );
+
+        $response = $conn->execute(
+            'CREATE (a:Baz {props})-[r:Test]->(b:Baz {props}) RETURN a, b, r',
+            ['props' => ['name' => 'baz']]
+        );
+
+        $this->assertEquals(2, count($response['nodes']));
+        $this->assertEquals(1, count($response['relationships']));
+        $this->assertEquals(
+            ['Baz'],
+            $response['nodes'][0]['labels']
+        );
+        $this->assertEquals(
+            ['name' => 'baz'],
+            $response['nodes'][0]['properties']
+        );
+        $this->assertEquals(
+            'Test',
+            $response['relationships'][0]['type']
+        );
     }
 }

@@ -13,14 +13,16 @@ class Connection implements ConnectionInterface
 {
     protected $http;
     protected $dispatcher;
+    protected $cypherBuilder;
     protected $transactionId;
 
-    public function __construct(array $params, EventDispatcherInterface $dispatcher)
+    public function __construct(array $params, EventDispatcherInterface $dispatcher, CypherBuilder $cypherBuilder)
     {
         $resolver = $this->configureOptions();
         $params = $resolver->resolve($params);
 
         $this->dispatcher = $dispatcher;
+        $this->cypherBuilder = $cypherBuilder;
 
         $headers = [
             'Accept' => 'application/json; charset=UTF-8',
@@ -77,15 +79,25 @@ class Connection implements ConnectionInterface
      */
     public function executeQuery(Query $query)
     {
-
+        return $this->executeStatements([
+            $this->getStatementArray(
+                $this->cypherBuilder->getCypher($query),
+                $query->getParameters()
+            )
+        ]);
     }
 
     /**
      * @inheritdoc
      */
-    public function execute($query)
+    public function execute($query, array $parameters)
     {
-
+        return $this->executeStatements([
+            $this->getStatementArray(
+                (string) $query,
+                $parameters
+            )
+        ]);
     }
 
     /**
@@ -229,5 +241,95 @@ class Connection implements ConnectionInterface
         });
 
         return $resolver;
+    }
+
+    /**
+     * Prepare a statement array to be sent to the Neo4j API
+     *
+     * @param string $query
+     * @param array $parameters
+     *
+     * @return array
+     */
+    protected function getStatementArray($query, array $parameters)
+    {
+        $statement = [
+            'statement' => (string) $query,
+            'resultDataContents' => ['graph'],
+        ];
+
+        if (count($parameters) > 0) {
+            $statement['parameters'] = $parameters;
+        }
+
+        return $statement;
+    }
+
+    /**
+     * Send the set of statements to the API
+     *
+     * @param array $statements
+     *
+     * @return array
+     */
+    protected function executeStatements(array $statements)
+    {
+        $endpoint = sprintf(
+            'transaction/%s',
+            $this->isTransactionOpened() ?
+                $this->transactionId :
+                'commit'
+        );
+
+        $response = $this->http->post($endpoint, [
+            'body' => json_encode(['statements' => $statements]),
+        ]);
+
+        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+            throw new TransactionException(
+                sprintf('Query failed (reason phrase: %s)', $response->getReasonPhrase()),
+                TransactionException::QUERY_FAILURE
+            );
+        }
+
+        $content = $response->json();
+
+        if (count($content['errors']) > 0) {
+            throw new TransactionException(
+                $content['errors'][0]['message'],
+                TransactionException::QUERY_FAILURE
+            );
+        }
+
+        return $this->getData($content['results']);
+    }
+
+    /**
+     * Loop over the results to extract properly the data
+     *
+     * @param array $results
+     *
+     * @return array
+     */
+    protected function getData($results)
+    {
+        $nodes = [];
+        $relationships = [];
+
+        foreach ($results as $result) {
+            foreach ($result['data'] as $element) {
+                foreach ($element['graph']['nodes'] as $node) {
+                    $nodes[$node['id']] = $node;
+                }
+                foreach ($element['graph']['relationships'] as $relationship) {
+                    $relationships[$relationship['id']] = $relationship;
+                }
+            }
+        }
+
+        return [
+            'nodes' => array_values($nodes),
+            'relationships' => array_values($relationships),
+        ];
     }
 }

@@ -24,10 +24,11 @@ interface ConnectionInterface
      * Execute the given cypher query
      *
      * @param string $query
+     * @param array $parameters
      *
      * @return mixed
      */
-    public function execute($query);
+    public function execute($query, array $parameters);
 
     /**
      * Open a new transaction
