@@ -187,7 +187,9 @@ class Connection implements ConnectionInterface
     protected function configureListeners()
     {
         $this->http->getEmitter()->on('complete', function (CompleteEvent $event) {
-            $this->dispatcher->dispatch(Events::API_RESPONSE, new ApiResponseEvent($event->getResponse()));
+            if ($response = $event->getResponse()) {
+                $this->dispatcher->dispatch(Events::API_RESPONSE, new ApiResponseEvent($response));
+            }
         });
     }
 
