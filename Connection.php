@@ -154,7 +154,7 @@ class Connection implements ConnectionInterface
             'body' => json_encode(['statements' => []])
         ]);
 
-        if ($respose->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== 200) {
             throw new TransactionException(
                 'Transaction commit failed',
                 TransactionException::COMMIT_FAILED
