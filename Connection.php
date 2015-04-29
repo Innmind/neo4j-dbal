@@ -17,33 +17,7 @@ class Connection implements ConnectionInterface
 
     public function __construct(array $params, EventDispatcherInterface $dispatcher)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults([
-            'scheme' => 'http',
-            'host' => 'localhost',
-            'port' => 7474,
-            'timeout' => 60
-        ]);
-        $resolver->setDefined(['username', 'password']);
-        $resolver->setRequired(['scheme', 'host', 'port']);
-        $resolver->setAllowedTypes('scheme', 'string');
-        $resolver->setAllowedTypes('host', 'string');
-        $resolver->setAllowedTypes('port', ['int', 'null']);
-        $resolver->setAllowedTypes('username', 'string');
-        $resolver->setAllowedTypes('password', 'string');
-        $resolver->setAllowedTypes('timeout', 'int');
-        $resolver->setAllowedValues('scheme', ['http', 'https']);
-        $resolver->setNormalizer('port', function ($options, $value) {
-            if (in_array($value, [80, 0, null], true)) {
-                return '';
-            }
-
-            if ($value === 443 && $options['scheme'] === 'https') {
-                return '';
-            }
-
-            return sprintf(':%s', $value);
-        });
+        $resolver = $this->configureOptions();
         $params = $resolver->resolve($params);
 
         $this->dispatcher = $dispatcher;
@@ -215,5 +189,43 @@ class Connection implements ConnectionInterface
         $this->http->getEmitter()->on('complete', function (CompleteEvent $event) {
             $this->dispatcher->dispatch(Events::API_RESPONSE, new ApiResponseEvent($event->getResponse()));
         });
+    }
+
+    /**
+     * Create an options resolver for the connection parameters
+     *
+     * @return OptionsResolver
+     */
+    protected function configureOptions()
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'scheme' => 'http',
+            'host' => 'localhost',
+            'port' => 7474,
+            'timeout' => 60
+        ]);
+        $resolver->setDefined(['username', 'password']);
+        $resolver->setRequired(['scheme', 'host', 'port']);
+        $resolver->setAllowedTypes('scheme', 'string');
+        $resolver->setAllowedTypes('host', 'string');
+        $resolver->setAllowedTypes('port', ['int', 'null']);
+        $resolver->setAllowedTypes('username', 'string');
+        $resolver->setAllowedTypes('password', 'string');
+        $resolver->setAllowedTypes('timeout', 'int');
+        $resolver->setAllowedValues('scheme', ['http', 'https']);
+        $resolver->setNormalizer('port', function ($options, $value) {
+            if (in_array($value, [80, 0, null], true)) {
+                return '';
+            }
+
+            if ($value === 443 && $options['scheme'] === 'https') {
+                return '';
+            }
+
+            return sprintf(':%s', $value);
+        });
+
+        return $resolver;
     }
 }
