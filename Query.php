@@ -295,6 +295,16 @@ class Query
     }
 
     /**
+     * Check if the query has a return statement
+     *
+     * @return bool
+     */
+    public function hasReturn()
+    {
+        return count($this->return) > 0;
+    }
+
+    /**
      * Return the return statement
      *
      * @return array

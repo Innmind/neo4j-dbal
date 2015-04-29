@@ -61,7 +61,9 @@ class CypherBuilder
             $cypher[] = $this->formatLine($key, $currentStatement);
         }
 
-        $cypher[] = $this->formatLine(Query::SEQUENCE_RETURN, $query->getReturn());
+        if ($query->hasReturn()) {
+            $cypher[] = $this->formatLine(Query::SEQUENCE_RETURN, $query->getReturn());
+        }
         $cypher = implode("\n", $cypher);
         $cypher .= ';';
 
