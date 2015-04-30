@@ -11,6 +11,9 @@ dependencies:
         - composer --no-dev --prefer-source
         - docker run -d -p 7474:7474 tpires/neo4j; sleep 20
         - 'curl http://localhost:7474/user/neo4j/password -X POST -H "Content-Type: application/json" -H "Accept: application/json; charset=UTF-8" -H "Authorization: Basic bmVvNGo6bmVvNGo=" -d "{\"password\":\"ci\"}"'
+        - pecl install xdebug
+        - cat ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini | sed -e "s/;//" > xdebug.ini
+        - mv xdebug.ini ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 
 test:
     override:
