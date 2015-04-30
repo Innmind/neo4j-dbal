@@ -22,7 +22,7 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('a');
 
         $this->assertEquals(
-            'MATCH (a:Foo)'."\n".'RETURN a;',
+            'MATCH (a:Foo)' . "\n" . 'RETURN a;',
             $this->builder->getCypher($q)
         );
     }
@@ -44,16 +44,16 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('c, d');
 
         $this->assertEquals(
-            'MATCH (a:Foo)'."\n".
-            'OPTIONAL MATCH (b:Bar)'."\n".
-            'WHERE a.foo = "bar"'."\n".
-            'CREATE (c:Baz)'."\n".
-            'MERGE (d:FooBar)'."\n".
-            'ON MATCH SET d.time = timestamp()'."\n".
-            'ON CREATE SET d.time = timestamp()'."\n".
-            'SET d.foo = "bar"'."\n".
-            'DELETE a'."\n".
-            'REMOVE b.foo'."\n".
+            'MATCH (a:Foo)' . "\n" .
+            'OPTIONAL MATCH (b:Bar)' . "\n" .
+            'WHERE a.foo = "bar"' . "\n" .
+            'CREATE (c:Baz)' . "\n" .
+            'MERGE (d:FooBar)' . "\n" .
+            'ON MATCH SET d.time = timestamp()' . "\n" .
+            'ON CREATE SET d.time = timestamp()' . "\n" .
+            'SET d.foo = "bar"' . "\n" .
+            'DELETE a' . "\n" .
+            'REMOVE b.foo' . "\n" .
             'RETURN c, d;',
             $this->builder->getCypher($q)
         );
@@ -69,7 +69,7 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('b');
 
         $this->assertEquals(
-            'MATCH (a:Foo), (b:Bar)'."\n".'RETURN a, b;',
+            'MATCH (a:Foo), (b:Bar)' . "\n" . 'RETURN a, b;',
             $this->builder->getCypher($q)
         );
     }
@@ -86,10 +86,10 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('b');
 
         $this->assertEquals(
-            'MATCH (a:Foo)'."\n".
-            'SET a.foo = "bar", a.baz = "foo"'."\n".
-            'CREATE (b:Bar)'."\n".
-            'SET b += {a}'."\n".
+            'MATCH (a:Foo)' . "\n" .
+            'SET a.foo = "bar", a.baz = "foo"' . "\n" .
+            'CREATE (b:Bar)' . "\n" .
+            'SET b += {a}' . "\n" .
             'RETURN b;',
             $this->builder->getCypher($q)
         );

@@ -121,7 +121,7 @@ class Connection implements ConnectionInterface
         }
 
         $this->transactionId = (int) str_replace(
-            $this->http->getBaseUrl().'transaction/',
+            $this->http->getBaseUrl() . 'transaction/',
             '',
             $response->getHeader('Location')
         );
@@ -148,7 +148,7 @@ class Connection implements ConnectionInterface
             throw new \LogicException('No transaction opened');
         }
 
-        $this->http->post('transaction/'.$this->transactionId, [
+        $this->http->post('transaction/' . $this->transactionId, [
             'body' => json_encode(['statements' => []])
         ]);
     }
@@ -183,7 +183,7 @@ class Connection implements ConnectionInterface
             throw new \LogicException('No transaction opened');
         }
 
-        $response = $this->http->delete('transaction/'.$this->transactionId);
+        $response = $this->http->delete('transaction/' . $this->transactionId);
 
         if ($response->getStatusCode() !== 200) {
             throw new TransactionException(
@@ -198,7 +198,7 @@ class Connection implements ConnectionInterface
      */
     protected function configureListeners()
     {
-        $this->http->getEmitter()->on('complete', function (CompleteEvent $event) {
+        $this->http->getEmitter()->on('complete', function(CompleteEvent $event) {
             if ($response = $event->getResponse()) {
                 $this->dispatcher->dispatch(Events::API_RESPONSE, new ApiResponseEvent($response));
             }
@@ -228,7 +228,7 @@ class Connection implements ConnectionInterface
         $resolver->setAllowedTypes('password', 'string');
         $resolver->setAllowedTypes('timeout', 'int');
         $resolver->setAllowedValues('scheme', ['http', 'https']);
-        $resolver->setNormalizer('port', function ($options, $value) {
+        $resolver->setNormalizer('port', function($options, $value) {
             if (in_array($value, [80, 0, null], true)) {
                 return '';
             }
@@ -277,8 +277,7 @@ class Connection implements ConnectionInterface
         $endpoint = sprintf(
             'transaction/%s',
             $this->isTransactionOpened() ?
-                $this->transactionId :
-                'commit'
+                $this->transactionId : 'commit'
         );
 
         $response = $this->http->post($endpoint, [
