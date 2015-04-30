@@ -7,7 +7,7 @@ machine:
 dependencies:
     override:
         - curl -sS https://getcomposer.org/installer | php
-        - composer.phar install --no-dev --prefer-source
+        - php composer.phar install --no-dev --prefer-source
         - docker run -d -p 7474:7474 tpires/neo4j; sleep 10
 
 test:
