@@ -11,7 +11,7 @@ dependencies:
         - curl -sS https://getcomposer.org/installer | php
         - php composer.phar install --no-dev --prefer-source
         - docker run -d -p 7474:7474 tpires/neo4j; sleep 10
-        - curl http://localhost:7474/user/neo4j/password -X POST -H "Content-Type: application/json" -H "Accept: application/json charset=UTF-8" -H "Authorization: Basic bmVvNGo6bmVvNGo=" -d "{\"password\":\"ci\"}"
+        - 'curl http://localhost:7474/user/neo4j/password -X POST -H "Content-Type: application/json\" -H "Accept: application/json charset=UTF-8" -H "Authorization: Basic bmVvNGo6bmVvNGo=" -d "{\"password\":\"ci\"}"'
 
 test:
     override:
