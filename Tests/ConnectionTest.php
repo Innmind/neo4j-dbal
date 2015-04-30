@@ -9,6 +9,17 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
+    protected $host = 'docker';
+    protected $password;
+
+    public function setUp()
+    {
+        if (getenv('CI')) {
+            $this->host = 'localhost';
+            $this->password = 'ci';
+        }
+    }
+
     /**
      * @expectedException Symfony\Component\OptionsResolver\Exception\InvalidArgumentException
      */
@@ -87,8 +98,14 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteQuery()
     {
+        $p = ['host' => $this->host];
+        if ($this->password) {
+            $p['username'] = 'neo4j';
+            $p['password'] = $this->password;
+        }
+
         $conn = new Connection(
-            ['host' => 'docker'],
+            $p,
             new EventDispatcher,
             new CypherBuilder
         );
@@ -115,8 +132,14 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
+        $p = ['host' => $this->host];
+        if ($this->password) {
+            $p['username'] = 'neo4j';
+            $p['password'] = $this->password;
+        }
+
         $conn = new Connection(
-            ['host' => 'docker'],
+            $p,
             new EventDispatcher,
             new CypherBuilder
         );
