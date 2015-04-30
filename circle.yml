@@ -1,0 +1,18 @@
+machine:
+    services:
+        - docker
+    php:
+        version: 5.4
+
+dependencies:
+    override:
+        - curl -sS https://getcomposer.org/installer | php
+        - composer.phar install --no-dev --prefer-source
+        - docker run -d -p 7474:7474 tpires/neo4j; sleep 10
+
+test:
+    override:
+        - phpunit --coverage-clover=coverage.clover
+    post:
+        - wget https://scrutinizer-ci.com/ocular.phar
+        - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
