@@ -5,6 +5,8 @@ machine:
         version: 5.4.37
 
 dependencies:
+    cache_directories:
+        - ~/docker
     override:
         - curl -sS https://getcomposer.org/installer | php
         - php composer.phar install --no-dev --prefer-source
