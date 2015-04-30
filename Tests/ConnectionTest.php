@@ -9,6 +9,15 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
+    protected $host = 'docker';
+
+    public function setUp()
+    {
+        if (getenv('CI')) {
+            $this->host = 'localhost';
+        }
+    }
+
     /**
      * @expectedException Symfony\Component\OptionsResolver\Exception\InvalidArgumentException
      */
@@ -88,7 +97,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function testExecuteQuery()
     {
         $conn = new Connection(
-            ['host' => 'docker'],
+            ['host' => $this->host],
             new EventDispatcher,
             new CypherBuilder
         );
@@ -116,7 +125,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $conn = new Connection(
-            ['host' => 'docker'],
+            ['host' => $this->host],
             new EventDispatcher,
             new CypherBuilder
         );
