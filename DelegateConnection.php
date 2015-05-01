@@ -68,7 +68,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function createQuery()
     {
@@ -76,7 +76,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function executeQuery(Query $query)
     {
@@ -84,7 +84,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function execute($query, array $parameters)
     {
@@ -92,7 +92,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function executeQueries(array $queries)
     {
@@ -100,7 +100,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function openTransaction()
     {
@@ -108,7 +108,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isTransactionOpened()
     {
@@ -116,7 +116,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function resetTransactionTimeout()
     {
@@ -124,7 +124,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function commit()
     {
@@ -132,7 +132,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rollback()
     {
@@ -140,7 +140,7 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function isAlive()
     {
