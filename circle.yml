@@ -5,8 +5,6 @@ machine:
         version: 5.4.37
 
 dependencies:
-    cache_directories:
-        - "~/docker"
     pre:
         - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
     override:
