@@ -43,6 +43,8 @@ interface ConnectionInterface
      * Open a new transaction
      *
      * @throws LogicException If a transaction is already opened
+     *
+     * @return ConnectionInterface self
      */
     public function openTransaction();
 
@@ -57,6 +59,8 @@ interface ConnectionInterface
      * Reset the timeout before the transaction closing
      *
      * @throws LogicException If no transaction opened
+     *
+     * @return ConnectionInterface self
      */
     public function resetTransactionTimeout();
 
@@ -64,6 +68,8 @@ interface ConnectionInterface
      * Commit the current transaction
      *
      * @throws LogicException If no transaction opened
+     *
+     * @return ConnectionInterface self
      */
     public function commit();
 
@@ -71,6 +77,8 @@ interface ConnectionInterface
      * Rollback the current transaction
      *
      * @throws LogicException If no transaction opened
+     *
+     * @return ConnectionInterface self
      */
     public function rollback();
 

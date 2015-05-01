@@ -149,6 +149,8 @@ class Connection implements ConnectionInterface
             '',
             $response->getHeader('Location')
         );
+
+        return $this;
     }
 
     /**
@@ -175,6 +177,8 @@ class Connection implements ConnectionInterface
         $this->http->post('transaction/' . $this->transactionId, [
             'body' => json_encode(['statements' => []])
         ]);
+
+        return $this;
     }
 
     /**
@@ -196,6 +200,8 @@ class Connection implements ConnectionInterface
                 TransactionException::COMMIT_FAILED
             );
         }
+
+        return $this;
     }
 
     /**
@@ -215,6 +221,8 @@ class Connection implements ConnectionInterface
                 TransactionException::ROLLBACK_FAILED
             );
         }
+
+        return $this;
     }
 
     /**
