@@ -218,6 +218,21 @@ class Connection implements ConnectionInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function isAlive()
+    {
+        try {
+            $response = $this->http->options('');
+            $code = $response->getStatusCode();
+
+            return $code >= 200 && $code < 300;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Dispatch an event each time a http request is completed
      */
     protected function configureListeners()

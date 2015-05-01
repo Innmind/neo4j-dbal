@@ -73,4 +73,12 @@ interface ConnectionInterface
      * @throws LogicException If no transaction opened
      */
     public function rollback();
+
+    /**
+     * Check if the connection is working
+     * (meaning the server is up and reachable)
+     *
+     * @return bool
+     */
+    public function isAlive();
 }

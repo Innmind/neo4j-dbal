@@ -197,4 +197,29 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($response['nodes']));
         $this->assertEquals(2, count($response['results']));
     }
+
+    public function testIsAlive()
+    {
+        $p = ['host' => $this->host];
+        if ($this->password) {
+            $p['username'] = 'neo4j';
+            $p['password'] = $this->password;
+        }
+
+        $conn = new Connection(
+            $p,
+            new EventDispatcher,
+            new CypherBuilder
+        );
+
+        $this->assertTrue($conn->isAlive());
+
+        $conn = new Connection(
+            ['host' => 'foo'],
+            new EventDispatcher,
+            new CypherBuilder
+        );
+
+        $this->assertFalse($conn->isAlive());
+    }
 }
