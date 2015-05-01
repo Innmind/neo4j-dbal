@@ -94,4 +94,22 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             $this->builder->getCypher($q)
         );
     }
+
+    public function testFormatWhereExpr()
+    {
+        $q = new Query;
+        $where = $q->createWhereExpr();
+        $where
+            ->andWhere('foo')
+            ->orWhere('bar');
+        $q
+            ->match('(a:Foo)')
+            ->where($where);
+
+        $this->assertEquals(
+            'MATCH (a:Foo)' . "\n" .
+            'WHERE (foo) OR (bar);',
+            $this->builder->getCypher($q)
+        );
+    }
 }

@@ -83,16 +83,26 @@ class Query
     /**
      * Set the where clause
      *
-     * @param string $where
+     * @param string|WhereExpr $where
      *
      * @return Query self
      */
     public function where($where)
     {
         $this->sequence[] = self::SEQUENCE_WHERE;
-        $this->where[] = (string) $where;
+        $this->where[] = $where;
 
         return $this;
+    }
+
+    /**
+     * Create a where expression
+     *
+     * @return WhereExpr
+     */
+    public function createWhereExpr()
+    {
+        return new WhereExpr;
     }
 
     /**
