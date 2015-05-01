@@ -30,4 +30,15 @@ class ConnectionFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($conn->getDispatcher()->hasListeners(Events::API_RESPONSE));
     }
+
+    public function testCreateCluster()
+    {
+        $conn = ConnectionFactory::make([
+            'cluster' => [
+                'foo' => []
+            ]
+        ]);
+
+        $this->assertInstanceOf('Innmind\\Neo4j\\DBAL\\DelegateConnection', $conn);
+    }
 }

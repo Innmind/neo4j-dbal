@@ -20,7 +20,15 @@ class ConnectionFactory
             self::$cypherBuilder = new CypherBuilder;
         }
 
-        $conn = new Connection($params, $dispatcher, self::$cypherBuilder);
+        if (isset($params['cluster']) && is_array($params['cluster'])) {
+            $conn = new DelegateConnection;
+
+            foreach ($params['cluster'] as $name => $connParams) {
+                $conn->addConnection($name, self::make($connParams, $dispatcher));
+            }
+        } else {
+            $conn = new Connection($params, $dispatcher, self::$cypherBuilder);
+        }
 
         if (!($dispatcher instanceof ImmutableEventDispatcher)) {
             $listener = new ResponseListener();
