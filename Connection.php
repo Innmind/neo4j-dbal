@@ -201,6 +201,8 @@ class Connection implements ConnectionInterface
             );
         }
 
+        $this->transactionId = null;
+
         return $this;
     }
 
@@ -221,6 +223,8 @@ class Connection implements ConnectionInterface
                 TransactionException::ROLLBACK_FAILED
             );
         }
+
+        $this->transactionId = null;
 
         return $this;
     }
