@@ -338,21 +338,32 @@ class Connection implements ConnectionInterface
     {
         $nodes = [];
         $relationships = [];
+        $byResult = [];
 
         foreach ($results as $result) {
+            $current = ['nodes' => [], 'relationships' => []];
+
             foreach ($result['data'] as $element) {
                 foreach ($element['graph']['nodes'] as $node) {
                     $nodes[$node['id']] = $node;
+                    $current['nodes'][$node['id']] = $node;
                 }
                 foreach ($element['graph']['relationships'] as $relationship) {
                     $relationships[$relationship['id']] = $relationship;
+                    $current['relationships'][$relationship['id']] = $relationship;
                 }
             }
+
+            $byResult[] = [
+                'nodes' => array_values($current['nodes']),
+                'relationships' => array_values($current['relationships']),
+            ];
         }
 
         return [
             'nodes' => array_values($nodes),
             'relationships' => array_values($relationships),
+            'results' => $byResult,
         ];
     }
 }

@@ -120,6 +120,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $response = $conn->executeQuery($q);
 
         $this->assertEquals(1, count($response['nodes']));
+        $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Foo', 'Bar'],
             $response['nodes'][0]['labels']
@@ -151,6 +152,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($response['nodes']));
         $this->assertEquals(1, count($response['relationships']));
+        $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Baz'],
             $response['nodes'][0]['labels']
@@ -193,5 +195,6 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $this->assertEquals(2, count($response['nodes']));
+        $this->assertEquals(2, count($response['results']));
     }
 }
