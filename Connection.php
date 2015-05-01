@@ -103,6 +103,30 @@ class Connection implements ConnectionInterface
     /**
      * @inheritdoc
      */
+    public function executeQueries(array $queries)
+    {
+        $statements = [];
+
+        foreach ($queries as $query) {
+            if ($query instanceof Query) {
+                $statements[] = $this->getStatementArray(
+                    $this->cypherBuilder->getCypher($query),
+                    $query->getParameters()
+                );
+            } else if (is_array($query) && isset($query['query'])) {
+                $statements[] = $this->getStatementArray(
+                    $query['query'],
+                    $query['parameters'] ?: []
+                );
+            }
+        }
+
+        return $this->executeStatements($statements);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function openTransaction()
     {
         if ($this->isTransactionOpened()) {

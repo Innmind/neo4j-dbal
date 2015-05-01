@@ -164,4 +164,34 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             $response['relationships'][0]['type']
         );
     }
+
+    public function testExecuteQueries()
+    {
+        $p = ['host' => $this->host];
+        if ($this->password) {
+            $p['username'] = 'neo4j';
+            $p['password'] = $this->password;
+        }
+
+        $conn = new Connection(
+            $p,
+            new EventDispatcher,
+            new CypherBuilder
+        );
+        $q = new Query;
+        $q
+            ->create('(a {props})')
+            ->addParameter('props', ['name' => 'foo'])
+            ->setReturn('a');
+
+        $response = $conn->executeQueries([
+            $q,
+            [
+                'query' => 'CREATE (b {props}) RETURN b',
+                'parameters' => ['props' => ['name' => 'bar']],
+            ]
+        ]);
+
+        $this->assertEquals(2, count($response['nodes']));
+    }
 }

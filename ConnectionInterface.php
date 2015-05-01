@@ -31,6 +31,15 @@ interface ConnectionInterface
     public function execute($query, array $parameters);
 
     /**
+     * Execute multiple queries in a single API call
+     *
+     * @param array $queries
+     *
+     * @return array
+     */
+    public function executeQueries(array $queries);
+
+    /**
      * Open a new transaction
      *
      * @throws LogicException If a transaction is already opened
