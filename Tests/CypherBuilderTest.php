@@ -41,6 +41,13 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->set('d.foo = "bar"')
             ->delete('a')
             ->remove('b.foo')
+            ->with('foo')
+            ->orderBy('bar')
+            ->skip('42')
+            ->limit('42')
+            ->unwind('[1,2] as x')
+            ->union('')
+            ->using('INDEX a(foo)')
             ->setReturn('c, d');
 
         $this->assertEquals(
@@ -54,6 +61,13 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             'SET d.foo = "bar"' . "\n" .
             'DELETE a' . "\n" .
             'REMOVE b.foo' . "\n" .
+            'WITH foo' . "\n" .
+            'ORDER BY bar' . "\n" .
+            'SKIP 42' . "\n" .
+            'LIMIT 42' . "\n" .
+            'UNWIND [1,2] as x' . "\n" .
+            'UNION ' . "\n" .
+            'USING INDEX a(foo)' . "\n".
             'RETURN c, d;',
             $this->builder->getCypher($q)
         );

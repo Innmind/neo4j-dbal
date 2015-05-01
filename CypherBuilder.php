@@ -16,6 +16,13 @@ class CypherBuilder
         Query::SEQUENCE_DELETE => 'DELETE',
         Query::SEQUENCE_REMOVE => 'REMOVE',
         Query::SEQUENCE_RETURN => 'RETURN',
+        Query::SEQUENCE_ORDER_BY => 'ORDER BY',
+        Query::SEQUENCE_LIMIT => 'LIMIT',
+        Query::SEQUENCE_SKIP => 'SKIP',
+        Query::SEQUENCE_WITH => 'WITH',
+        Query::SEQUENCE_UNWIND => 'UNWIND',
+        Query::SEQUENCE_UNION => 'UNION',
+        Query::SEQUENCE_USING => 'USING',
     ];
 
     /**
@@ -39,6 +46,14 @@ class CypherBuilder
             Query::SEQUENCE_SET => $query->getSet(),
             Query::SEQUENCE_DELETE => $query->getDelete(),
             Query::SEQUENCE_REMOVE => $query->getRemove(),
+            Query::SEQUENCE_RETURN => $query->getReturn(),
+            Query::SEQUENCE_ORDER_BY => $query->getOrderBy(),
+            Query::SEQUENCE_LIMIT => $query->getLimit(),
+            Query::SEQUENCE_SKIP => $query->getSkip(),
+            Query::SEQUENCE_WITH => $query->getWith(),
+            Query::SEQUENCE_UNWIND => $query->getUnwind(),
+            Query::SEQUENCE_UNION => $query->getUnion(),
+            Query::SEQUENCE_USING => $query->getUsing(),
         ];
         $cypher = [];
         $currentStatement = [];
@@ -61,9 +76,6 @@ class CypherBuilder
             $cypher[] = $this->formatLine($key, $currentStatement);
         }
 
-        if ($query->hasReturn()) {
-            $cypher[] = $this->formatLine(Query::SEQUENCE_RETURN, $query->getReturn());
-        }
         $cypher = implode("\n", $cypher);
         $cypher .= ';';
 

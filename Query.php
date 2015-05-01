@@ -14,7 +14,14 @@ class Query
     const SEQUENCE_SET = 'set';
     const SEQUENCE_DELETE = 'delete';
     const SEQUENCE_REMOVE = 'remove';
-    const SEQUENCE_RETURN = 'RETURN';
+    const SEQUENCE_RETURN = 'return';
+    const SEQUENCE_ORDER_BY = 'orderBy';
+    const SEQUENCE_LIMIT = 'limit';
+    const SEQUENCE_SKIP = 'skip';
+    const SEQUENCE_WITH = 'with';
+    const SEQUENCE_UNWIND = 'unwind';
+    const SEQUENCE_UNION = 'union';
+    const SEQUENCE_USING = 'using';
 
     protected $sequence = [];
     protected $match = [];
@@ -28,6 +35,13 @@ class Query
     protected $delete = [];
     protected $remove = [];
     protected $return = [];
+    protected $orderBy = [];
+    protected $limit = [];
+    protected $skip = [];
+    protected $with = [];
+    protected $unwind = [];
+    protected $union = [];
+    protected $using = [];
     protected $parameters = [];
 
     /**
@@ -299,6 +313,7 @@ class Query
      */
     public function setReturn($return)
     {
+        $this->sequence[] = self::SEQUENCE_RETURN;
         $this->return[] = (string) $return;
 
         return $this;
@@ -322,6 +337,181 @@ class Query
     public function getReturn()
     {
         return $this->return;
+    }
+
+    /**
+     * Set ORDER BY statement
+     *
+     * @param string $orderBy
+     *
+     * @return Query self
+     */
+    public function orderBy($orderBy)
+    {
+        $this->sequence[] = self::SEQUENCE_ORDER_BY;
+        $this->orderBy[] = (string) $orderBy;
+
+        return $this;
+    }
+
+    /**
+     * Return the ORDER BY statements
+     *
+     * @return array
+     */
+    public function getOrderBy()
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * Set LIMIT statement
+     *
+     * @param string $limit
+     *
+     * @return Query self
+     */
+    public function limit($limit)
+    {
+        $this->sequence[] = self::SEQUENCE_LIMIT;
+        $this->limit[] = (string) $limit;
+
+        return $this;
+    }
+
+    /**
+     * Return the LIMIT statements
+     *
+     * @return array
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Set SKIP statement
+     *
+     * @param string $skip
+     *
+     * @return Query self
+     */
+    public function skip($skip)
+    {
+        $this->sequence[] = self::SEQUENCE_SKIP;
+        $this->skip[] = (string) $skip;
+
+        return $this;
+    }
+
+    /**
+     * Return the SKIP statements
+     *
+     * @return array
+     */
+    public function getSkip()
+    {
+        return $this->skip;
+    }
+
+    /**
+     * Set WITH statement
+     *
+     * @param string $with
+     *
+     * @return Query self
+     */
+    public function with($with)
+    {
+        $this->sequence[] = self::SEQUENCE_WITH;
+        $this->with[] = (string) $with;
+
+        return $this;
+    }
+
+    /**
+     * Return the WITH statements
+     *
+     * @return array
+     */
+    public function getWith()
+    {
+        return $this->with;
+    }
+
+    /**
+     * Set UNWIND statement
+     *
+     * @param string $unwind
+     *
+     * @return Query self
+     */
+    public function unwind($unwind)
+    {
+        $this->sequence[] = self::SEQUENCE_UNWIND;
+        $this->unwind[] = (string) $unwind;
+
+        return $this;
+    }
+
+    /**
+     * Return the UNWIND statements
+     *
+     * @return array
+     */
+    public function getUnwind()
+    {
+        return $this->unwind;
+    }
+
+    /**
+     * Set UNION statement
+     *
+     * @param string $union
+     *
+     * @return Query self
+     */
+    public function union($union)
+    {
+        $this->sequence[] = self::SEQUENCE_UNION;
+        $this->union[] = (string) $union;
+
+        return $this;
+    }
+
+    /**
+     * Return the UNION statements
+     *
+     * @return array
+     */
+    public function getUnion()
+    {
+        return $this->union;
+    }
+
+    /**
+     * Set USING statement
+     *
+     * @param string $using
+     *
+     * @return Query self
+     */
+    public function using($using)
+    {
+        $this->sequence[] = self::SEQUENCE_USING;
+        $this->using[] = (string) $using;
+
+        return $this;
+    }
+
+    /**
+     * Return the USING statements
+     *
+     * @return array
+     */
+    public function getUsing()
+    {
+        return $this->using;
     }
 
     /**
