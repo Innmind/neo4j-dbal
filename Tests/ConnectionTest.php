@@ -152,6 +152,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($response['nodes']));
         $this->assertEquals(1, count($response['relationships']));
+        $this->assertEquals(3, count($response['rows']));
         $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Baz'],
@@ -164,6 +165,24 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'Test',
             $response['relationships'][0]['type']
+        );
+
+        $expectedRows = [
+            'a' => [[
+                'name' => 'baz',
+            ]],
+            'b' => [[
+                'name' => 'baz',
+            ]],
+            'r' => [[]],
+        ];
+        $this->assertEquals(
+            $expectedRows,
+            $response['rows']
+        );
+        $this->assertEquals(
+            $expectedRows,
+            $response['results'][0]['rows']
         );
     }
 

@@ -306,7 +306,7 @@ class Connection implements ConnectionInterface
     {
         $statement = [
             'statement' => (string) $query,
-            'resultDataContents' => ['graph'],
+            'resultDataContents' => ['graph', 'row'],
         ];
 
         if (count($parameters) > 0) {
@@ -365,10 +365,11 @@ class Connection implements ConnectionInterface
     {
         $nodes = [];
         $relationships = [];
+        $rows = [];
         $byResult = [];
 
         foreach ($results as $result) {
-            $current = ['nodes' => [], 'relationships' => []];
+            $current = ['nodes' => [], 'relationships' => [], 'rows' => []];
 
             foreach ($result['data'] as $element) {
                 foreach ($element['graph']['nodes'] as $node) {
@@ -379,17 +380,28 @@ class Connection implements ConnectionInterface
                     $relationships[$relationship['id']] = $relationship;
                     $current['relationships'][$relationship['id']] = $relationship;
                 }
+                foreach ($element['row'] as $idx => $value) {
+                    if (!isset($rows[$result['columns'][$idx]])) {
+                        $rows[$result['columns'][$idx]] = [];
+                        $current['rows'][$result['columns'][$idx]] = [];
+                    }
+
+                    $rows[$result['columns'][$idx]][] = $value;
+                    $current['rows'][$result['columns'][$idx]][] = $value;
+                }
             }
 
             $byResult[] = [
                 'nodes' => array_values($current['nodes']),
                 'relationships' => array_values($current['relationships']),
+                'rows' => $current['rows'],
             ];
         }
 
         return [
             'nodes' => array_values($nodes),
             'relationships' => array_values($relationships),
+            'rows' => $rows,
             'results' => $byResult,
         ];
     }
