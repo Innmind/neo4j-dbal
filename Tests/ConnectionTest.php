@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
     protected $host = 'docker';
-    protected $password;
+    protected $password = 'bar';
 
     public function setUp()
     {
@@ -123,11 +123,11 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Foo', 'Bar'],
-            $response['nodes'][0]['labels']
+            current($response['nodes'])['labels']
         );
         $this->assertEquals(
             ['name' => 'foo'],
-            $response['nodes'][0]['properties']
+            current($response['nodes'])['properties']
         );
     }
 
@@ -152,18 +152,37 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, count($response['nodes']));
         $this->assertEquals(1, count($response['relationships']));
+        $this->assertEquals(3, count($response['rows']));
         $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Baz'],
-            $response['nodes'][0]['labels']
+            current($response['nodes'])['labels']
         );
         $this->assertEquals(
             ['name' => 'baz'],
-            $response['nodes'][0]['properties']
+            current($response['nodes'])['properties']
         );
         $this->assertEquals(
             'Test',
-            $response['relationships'][0]['type']
+            current($response['relationships'])['type']
+        );
+
+        $expectedRows = [
+            'a' => [[
+                'name' => 'baz',
+            ]],
+            'b' => [[
+                'name' => 'baz',
+            ]],
+            'r' => [[]],
+        ];
+        $this->assertEquals(
+            $expectedRows,
+            $response['rows']
+        );
+        $this->assertEquals(
+            $expectedRows,
+            $response['results'][0]['rows']
         );
     }
 
