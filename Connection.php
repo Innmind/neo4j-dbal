@@ -392,15 +392,15 @@ class Connection implements ConnectionInterface
             }
 
             $byResult[] = [
-                'nodes' => array_values($current['nodes']),
-                'relationships' => array_values($current['relationships']),
+                'nodes' => $current['nodes'],
+                'relationships' => $current['relationships'],
                 'rows' => $current['rows'],
             ];
         }
 
         return [
-            'nodes' => array_values($nodes),
-            'relationships' => array_values($relationships),
+            'nodes' => $nodes,
+            'relationships' => $relationships,
             'rows' => $rows,
             'results' => $byResult,
         ];

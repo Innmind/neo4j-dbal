@@ -123,11 +123,11 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Foo', 'Bar'],
-            $response['nodes'][0]['labels']
+            current($response['nodes'])['labels']
         );
         $this->assertEquals(
             ['name' => 'foo'],
-            $response['nodes'][0]['properties']
+            current($response['nodes'])['properties']
         );
     }
 
@@ -156,15 +156,15 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($response['results']));
         $this->assertEquals(
             ['Baz'],
-            $response['nodes'][0]['labels']
+            current($response['nodes'])['labels']
         );
         $this->assertEquals(
             ['name' => 'baz'],
-            $response['nodes'][0]['properties']
+            current($response['nodes'])['properties']
         );
         $this->assertEquals(
             'Test',
-            $response['relationships'][0]['type']
+            current($response['relationships'])['type']
         );
 
         $expectedRows = [
