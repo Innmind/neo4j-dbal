@@ -10,13 +10,12 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
     protected $host = 'docker';
-    protected $password = 'bar';
+    protected $password = 'ci';
 
     public function setUp()
     {
         if (getenv('CI')) {
             $this->host = 'localhost';
-            $this->password = 'ci';
         }
     }
 
