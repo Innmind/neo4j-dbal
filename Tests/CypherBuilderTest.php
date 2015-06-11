@@ -22,7 +22,7 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('a');
 
         $this->assertEquals(
-            'MATCH (a:Foo)' . "\n" . 'RETURN a;',
+            'MATCH (a:Foo) RETURN a;',
             $this->builder->getCypher($q)
         );
     }
@@ -51,23 +51,23 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('c, d');
 
         $this->assertEquals(
-            'MATCH (a:Foo)' . "\n" .
-            'OPTIONAL MATCH (b:Bar)' . "\n" .
-            'WHERE a.foo = "bar"' . "\n" .
-            'CREATE (c:Baz)' . "\n" .
-            'MERGE (d:FooBar)' . "\n" .
-            'ON MATCH SET d.time = timestamp()' . "\n" .
-            'ON CREATE SET d.time = timestamp()' . "\n" .
-            'SET d.foo = "bar"' . "\n" .
-            'DELETE a' . "\n" .
-            'REMOVE b.foo' . "\n" .
-            'WITH foo' . "\n" .
-            'ORDER BY bar' . "\n" .
-            'SKIP 42' . "\n" .
-            'LIMIT 42' . "\n" .
-            'UNWIND [1,2] as x' . "\n" .
-            'UNION ' . "\n" .
-            'USING INDEX a(foo)' . "\n".
+            'MATCH (a:Foo) ' .
+            'OPTIONAL MATCH (b:Bar) ' .
+            'WHERE a.foo = "bar" ' .
+            'CREATE (c:Baz) ' .
+            'MERGE (d:FooBar) ' .
+            'ON MATCH SET d.time = timestamp() ' .
+            'ON CREATE SET d.time = timestamp() ' .
+            'SET d.foo = "bar" ' .
+            'DELETE a ' .
+            'REMOVE b.foo ' .
+            'WITH foo ' .
+            'ORDER BY bar ' .
+            'SKIP 42 ' .
+            'LIMIT 42 ' .
+            'UNWIND [1,2] as x ' .
+            'UNION  ' .
+            'USING INDEX a(foo) ' .
             'RETURN c, d;',
             $this->builder->getCypher($q)
         );
@@ -83,7 +83,7 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('b');
 
         $this->assertEquals(
-            'MATCH (a:Foo), (b:Bar)' . "\n" . 'RETURN a, b;',
+            'MATCH (a:Foo), (b:Bar) RETURN a, b;',
             $this->builder->getCypher($q)
         );
     }
@@ -100,10 +100,10 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->setReturn('b');
 
         $this->assertEquals(
-            'MATCH (a:Foo)' . "\n" .
-            'SET a.foo = "bar", a.baz = "foo"' . "\n" .
-            'CREATE (b:Bar)' . "\n" .
-            'SET b += {a}' . "\n" .
+            'MATCH (a:Foo) ' .
+            'SET a.foo = "bar", a.baz = "foo" ' .
+            'CREATE (b:Bar) ' .
+            'SET b += {a} ' .
             'RETURN b;',
             $this->builder->getCypher($q)
         );
@@ -121,7 +121,7 @@ class CypherBuilderTest extends \PHPUnit_Framework_TestCase
             ->where($where);
 
         $this->assertEquals(
-            'MATCH (a:Foo)' . "\n" .
+            'MATCH (a:Foo) ' .
             'WHERE (foo) OR (bar);',
             $this->builder->getCypher($q)
         );
