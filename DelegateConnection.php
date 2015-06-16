@@ -68,6 +68,16 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
+     * Return the dispatcher of the active connection
+     *
+     * @return EventDispatcherInterface
+     */
+    public function getDispatcher()
+    {
+        return $this->getActiveConnection()->getDispatcher();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function createQuery()
