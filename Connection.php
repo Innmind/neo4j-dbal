@@ -92,7 +92,7 @@ class Connection implements ConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($query, array $parameters)
+    public function execute($query, array $parameters = [])
     {
         return $this->executeStatements([
             $this->getStatementArray(

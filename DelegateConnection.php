@@ -96,7 +96,7 @@ class DelegateConnection implements ConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($query, array $parameters)
+    public function execute($query, array $parameters = [])
     {
         return $this->delegateCall('execute', [$query, $parameters]);
     }
