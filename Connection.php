@@ -5,6 +5,8 @@ namespace Innmind\Neo4j\DBAL;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Innmind\Neo4j\DBAL\Event\ApiResponseEvent;
+use Innmind\Neo4j\DBAL\Event\PreQueryEvent;
+use Innmind\Neo4j\DBAL\Event\PostQueryEvent;
 use Innmind\Neo4j\DBAL\Exception\TransactionException;
 use GuzzleHttp\Event\CompleteEvent;
 use GuzzleHttp\Client;
@@ -90,7 +92,7 @@ class Connection implements ConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($query, array $parameters)
+    public function execute($query, array $parameters = [])
     {
         return $this->executeStatements([
             $this->getStatementArray(
@@ -331,8 +333,13 @@ class Connection implements ConnectionInterface
                 $this->transactionId : 'commit'
         );
 
+        $event = $this->dispatcher->dispatch(
+            Events::PRE_QUERY,
+            new PreQueryEvent($statements)
+        );
+
         $response = $this->http->post($endpoint, [
-            'body' => json_encode(['statements' => $statements]),
+            'body' => json_encode(['statements' => $event->getStatements()]),
         ]);
 
         if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
@@ -343,6 +350,11 @@ class Connection implements ConnectionInterface
         }
 
         $content = $response->json();
+
+        $this->dispatcher->dispatch(
+            Events::POST_QUERY,
+            new PostQueryEvent($event->getStatements(), $content, $response)
+        );
 
         if (count($content['errors']) > 0) {
             throw new TransactionException(

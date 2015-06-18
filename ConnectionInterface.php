@@ -28,7 +28,7 @@ interface ConnectionInterface
      *
      * @return mixed
      */
-    public function execute($query, array $parameters);
+    public function execute($query, array $parameters = []);
 
     /**
      * Execute multiple queries in a single API call

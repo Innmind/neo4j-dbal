@@ -68,6 +68,16 @@ class DelegateConnection implements ConnectionInterface
     }
 
     /**
+     * Return the dispatcher of the active connection
+     *
+     * @return EventDispatcherInterface
+     */
+    public function getDispatcher()
+    {
+        return $this->getActiveConnection()->getDispatcher();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function createQuery()
@@ -86,7 +96,7 @@ class DelegateConnection implements ConnectionInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($query, array $parameters)
+    public function execute($query, array $parameters = [])
     {
         return $this->delegateCall('execute', [$query, $parameters]);
     }

@@ -10,6 +10,7 @@ use Innmind\Neo4j\DBAL\EventListener\ResponseListener;
 class ConnectionFactory
 {
     static protected $cypherBuilder;
+
     public static function make(array $params = [], EventDispatcherInterface $dispatcher = null)
     {
         if ($dispatcher === null) {

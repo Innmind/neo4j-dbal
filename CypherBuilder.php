@@ -76,7 +76,7 @@ class CypherBuilder
             $cypher[] = $this->formatLine($key, $currentStatement);
         }
 
-        $cypher = implode("\n", $cypher);
+        $cypher = implode(' ', $cypher);
         $cypher .= ';';
 
         return $cypher;
