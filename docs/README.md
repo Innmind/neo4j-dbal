@@ -1,9 +1,10 @@
 # Documentation
 
-As this library is a lightweight wrapper of the Neo4j REST API, this documentation can only focus on 2 subjects:
+As this library is a lightweight wrapper of the Neo4j REST API, this documentation can only focus on 3 subjects:
 
-* Building a connection
-* Querying 
+* [Building a connection](#build-a-connection)
+* [Querying](#querying)
+* [Events](#events)
 
 ## Build a connection
 
