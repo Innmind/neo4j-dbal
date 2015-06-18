@@ -16,11 +16,36 @@ class PreQueryEventTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             $e,
-            $e->setStatements(['bar' => 'baz'])
+            $e->setStatements([
+                [
+                    'statement' => 'foo',
+                    'resultDataContents' => ['graph', 'row']
+                ]
+            ])
         );
         $this->assertSame(
-            ['bar' => 'baz'],
+            [
+                [
+                    'statement' => 'foo',
+                    'resultDataContents' => ['graph', 'row']
+                ]
+            ],
             $e->getStatements()
         );
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage A statement must have the key "resultDataContents" set to "['graph', 'row']"
+     */
+    public function testThrowIfSettingStatementWithoutResultDataContents()
+    {
+        $e = new PreQueryEvent([]);
+
+        $e->setStatements([
+            [
+                'statement' => 'MATCH (a) RETURN a;',
+            ],
+        ]);
     }
 }

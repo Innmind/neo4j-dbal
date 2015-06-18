@@ -28,10 +28,23 @@ class PreQueryEvent extends Event
      *
      * @param array $statements
      *
+     * @throws InvalidArgumentException if there's no resultDataContents
+     *
      * @return PreQueryEvent self
      */
     public function setStatements(array $statements)
     {
+        foreach ($statements as $statement) {
+            if (
+                !isset($statement['resultDataContents']) ||
+                $statement['resultDataContents'] !== ['graph', 'row']
+            ) {
+                throw new \InvalidArgumentException(
+                    'A statement must have the key "resultDataContents" set to "[\'graph\', \'row\']"'
+                );
+            }
+        }
+
         $this->statements = $statements;
 
         return $this;

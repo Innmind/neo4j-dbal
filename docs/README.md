@@ -261,13 +261,11 @@ The event [`Events::PRE_QUERY`](../Events.php) dispatch an instance of [`PreQuer
 ```php
 [
     'statement' => 'cypher query',
-    'resultDataContents' => ['graph', 'row'], //this is used by the library to parse results, NEVER use this in your scripts (neither modify it)
+    'resultDataContents' => ['graph', 'row'],
     'parameters' => ['some' => 'param']
 ]
 ```
 
 The `statements` is an array of arrays like above and can be accessed via the method `getStatements` of the event. If you wish, you can modify all the statements and inject them in the event via `setStatements` (those will be sent to the API instead of the original ones).
-
-**Important**: if you do modify the statements, remember to leave the `resultDataContents` as is, otherwise it will fail to provide you the API call results.
 
 The second event is [`Events::POST_QUERY`](../Events.php) which dispatch an instance of [`PostQueryEvent`](../Event/PostQueryEvent.php). You have access to the statements sent to the API, the parsed json, and the guzzle response of the call; respectively through the methods `getStatements`, 'getContent' and `getResponse`.
