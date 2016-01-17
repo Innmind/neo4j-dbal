@@ -18,7 +18,8 @@
         "php": ">=7.0",
         "symfony/event-dispatcher": "~2.7|~3.0",
         "guzzlehttp/guzzle": "~6.0",
-        "symfony/options-resolver": "~2.7|~3.0"
+        "symfony/options-resolver": "~2.7|~3.0",
+        "innmind/immutable": "~0.5|~1.0"
     },
     "autoload": {
         "psr-0": {
