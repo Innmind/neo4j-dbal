@@ -12,7 +12,7 @@ interface QueryInterface
      *
      * @return string
      */
-    public function getCypher(): string;
+    public function cypher(): string;
 
     /**
      * Same as getCypher
@@ -26,7 +26,7 @@ interface QueryInterface
      *
      * @return TypedCollection
      */
-    public function getParameters(): TypedCollectionInterface;
+    public function parameters(): TypedCollectionInterface;
 
     /**
      * Check if parameters have been set

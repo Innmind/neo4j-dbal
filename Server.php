@@ -21,7 +21,7 @@ class Server
      *
      * @return string
      */
-    public function getScheme(): string
+    public function scheme(): string
     {
         return $this->scheme;
     }
@@ -31,7 +31,7 @@ class Server
      *
      * @return string
      */
-    public function getHost(): string
+    public function host(): string
     {
         return $this->host;
     }
@@ -41,7 +41,7 @@ class Server
      *
      * @return int
      */
-    public function getPort(): int
+    public function port(): int
     {
         return $this->port;
     }

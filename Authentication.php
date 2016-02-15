@@ -19,7 +19,7 @@ class Authentication
      *
      * @return string
      */
-    public function getUser(): string
+    public function user(): string
     {
         return $this->user;
     }
@@ -29,7 +29,7 @@ class Authentication
      *
      * @return string
      */
-    public function getPassword(): string
+    public function password(): string
     {
         return $this->password;
     }

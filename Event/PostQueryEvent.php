@@ -21,7 +21,7 @@ class PostQueryEvent extends PreQueryEvent
      *
      * @return ResultInterface
      */
-    public function getResult(): ResultInterface
+    public function result(): ResultInterface
     {
         return $this->result;
     }

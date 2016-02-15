@@ -12,19 +12,19 @@ interface ResultInterface
      *
      * @return TypedCollectionInterface
      */
-    public function getNodes(): TypedCollectionInterface;
+    public function nodes(): TypedCollectionInterface;
 
     /**
      * Return a list of relationships
      *
      * @return TypedCollectionInterface
      */
-    public function getRelationships(): TypedCollectionInterface;
+    public function relationships(): TypedCollectionInterface;
 
     /**
      * Return the rows
      *
      * @return TypedCollectionInterface
      */
-    public function getRows(): TypedCollectionInterface;
+    public function rows(): TypedCollectionInterface;
 }

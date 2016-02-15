@@ -11,9 +11,9 @@ class ServerTest extends \PHPUnit_Framework_TestCase
     {
         $server = new Server('http', 'localhost', 7474);
 
-        $this->assertSame('http', $server->getScheme());
-        $this->assertSame('localhost', $server->getHost());
-        $this->assertSame(7474, $server->getPort());
+        $this->assertSame('http', $server->scheme());
+        $this->assertSame('localhost', $server->host());
+        $this->assertSame(7474, $server->port());
         $this->assertSame('http://localhost:7474/', (string) $server);
     }
 }

@@ -13,7 +13,7 @@ class PostQueryEventTest extends \PHPUnit_Framework_TestCase
     public function testGetters()
     {
         $q = new class implements QueryInterface {
-            public function getCypher(): string
+            public function cypher(): string
             {
             }
 
@@ -21,7 +21,7 @@ class PostQueryEventTest extends \PHPUnit_Framework_TestCase
             {
             }
 
-            public function getParameters(): TypedCollectionInterface
+            public function parameters(): TypedCollectionInterface
             {
             }
 
@@ -30,21 +30,21 @@ class PostQueryEventTest extends \PHPUnit_Framework_TestCase
             }
         };
         $r = new class implements ResultInterface {
-            public function getNodes(): TypedCollectionInterface
+            public function nodes(): TypedCollectionInterface
             {
             }
 
-            public function getRelationships(): TypedCollectionInterface
+            public function relationships(): TypedCollectionInterface
             {
             }
 
-            public function getRows(): TypedCollectionInterface
+            public function rows(): TypedCollectionInterface
             {
             }
         };
         $e = new PostQueryEvent($q, $r);
 
-        $this->assertSame($q, $e->getQuery());
-        $this->assertSame($r, $e->getResult());
+        $this->assertSame($q, $e->query());
+        $this->assertSame($r, $e->result());
     }
 }

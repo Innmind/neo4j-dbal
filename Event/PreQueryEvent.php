@@ -20,7 +20,7 @@ class PreQueryEvent extends Event
      *
      * @return QueryInterface
      */
-    public function getQuery(): QueryInterface
+    public function query(): QueryInterface
     {
         return $this->query;
     }

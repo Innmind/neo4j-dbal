@@ -12,7 +12,7 @@ class PreQueryEventTest extends \PHPUnit_Framework_TestCase
     public function testGetQuery()
     {
         $q = new class implements QueryInterface {
-            public function getCypher(): string
+            public function cypher(): string
             {
             }
 
@@ -20,7 +20,7 @@ class PreQueryEventTest extends \PHPUnit_Framework_TestCase
             {
             }
 
-            public function getParameters(): TypedCollectionInterface
+            public function parameters(): TypedCollectionInterface
             {
             }
 
@@ -30,6 +30,6 @@ class PreQueryEventTest extends \PHPUnit_Framework_TestCase
         };
         $e = new PreQueryEvent($q);
 
-        $this->assertSame($q, $e->getQuery());
+        $this->assertSame($q, $e->query());
     }
 }
