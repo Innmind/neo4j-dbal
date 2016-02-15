@@ -24,7 +24,7 @@ interface QueryInterface
     /**
      * Return the list of parameters
      *
-     * @return TypedCollection
+     * @return TypedCollectionInterface
      */
     public function parameters(): TypedCollectionInterface;
 
