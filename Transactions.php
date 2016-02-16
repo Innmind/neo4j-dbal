@@ -11,14 +11,18 @@ class Transactions
     private $transactions;
     private $http;
 
-    public function __construct(Server $server, Authentication $authentication)
-    {
+    public function __construct(
+        Server $server,
+        Authentication $authentication,
+        int $timeout = 60
+    ) {
         $this->transactions = new TypedCollection(
             Transaction::class,
             []
         );
         $this->http = new Client([
             'base_uri' => (string) $server,
+            'timeout' => $timeout,
             'headers' => [
                 'Authorization' => base64_encode(sprintf(
                     '%s:%s',
