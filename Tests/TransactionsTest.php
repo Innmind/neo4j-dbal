@@ -35,11 +35,11 @@ class TransactionsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Transaction::class, $t);
         $this->assertRegExp(
-            '|' . (string) $this->s . 'db/data/transaction/\d|',
+            '|' . (string) $this->s . 'db/data/transaction/\d+|',
             $t->endpoint()
         );
         $this->assertRegExp(
-            '|' . (string) $this->s . 'db/data/transaction/\d/commit|',
+            '|' . (string) $this->s . 'db/data/transaction/\d+/commit|',
             $t->commitEndpoint()
         );
         $this->assertTrue($this->t->has());
