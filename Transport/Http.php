@@ -98,6 +98,14 @@ class Http implements TransportInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function dispatcher(): EventDispatcherInterface
+    {
+        return $this->dispatcher;
+    }
+
+    /**
      * Check if the response is successful
      *
      * @param ResponseInterface $response

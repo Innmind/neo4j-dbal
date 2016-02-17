@@ -109,4 +109,9 @@ class HttpTest extends \PHPUnit_Framework_TestCase
 
         $this->t->execute($q);
     }
+
+    public function testDispatcher()
+    {
+        $this->assertSame($this->d, $this->t->dispatcher());
+    }
 }

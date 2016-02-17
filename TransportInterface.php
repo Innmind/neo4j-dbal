@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 interface TransportInterface
 {
     /**
@@ -22,4 +24,11 @@ interface TransportInterface
      * @return self
      */
     public function ping(): self;
+
+    /**
+     * Return the event dispatcher used to dispatch query events
+     *
+     * @return EventDispatcherInterface
+     */
+    public function dispatcher(): EventDispatcherInterface;
 }

@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
     private $c;
+    private $d;
 
     public function setUp()
     {
@@ -32,7 +33,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                new EventDispatcher,
+                $this->d = new EventDispatcher,
                 $server,
                 $auth
             ),
@@ -87,5 +88,10 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertFalse($c->isAlive());
+    }
+
+    public function testDispatcher()
+    {
+        $this->assertSame($this->d, $this->c->dispatcher());
     }
 }
