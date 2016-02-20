@@ -11,7 +11,7 @@ class WithClause implements ClauseInterface
 
     private $variables;
 
-    public function __construct(...$variables)
+    public function __construct(string ...$variables)
     {
         $this->variables = $variables;
     }
