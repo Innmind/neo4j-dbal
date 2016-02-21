@@ -61,7 +61,7 @@ class Node
                 ' { %s }',
                 $this
                     ->properties
-                    ->walk(function (&$element, $index) {
+                    ->walk(function(&$element, $index) {
                         $element = sprintf(
                             '%s: %s',
                             $index,

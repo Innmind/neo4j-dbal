@@ -183,7 +183,7 @@ class Path
             []
         );
 
-        $this->elements->each(function ($index, $element) {
+        $this->elements->each(function($index, $element) {
             $this->parameters = $this->parameters->merge($element->parameters());
         });
 

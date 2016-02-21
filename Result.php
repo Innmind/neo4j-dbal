@@ -113,7 +113,7 @@ class Result implements ResultInterface
     {
         $relationships = [];
 
-       foreach ($data as $response) {
+        foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
                 $relationships[] = new Relationship(
                     new Id((int) $rel['id']),

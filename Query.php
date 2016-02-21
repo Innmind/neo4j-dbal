@@ -69,7 +69,7 @@ class Query implements QueryInterface
 
         $this->parameters = new TypedCollection(Parameter::class, []);
 
-        $this->clauses->each(function ($index, ClauseInterface $clause) {
+        $this->clauses->each(function($index, ClauseInterface $clause) {
             if ($clause instanceof Clause\ParametrableInterface) {
                 $this->parameters = $this->parameters->merge(
                     $clause->parameters()
