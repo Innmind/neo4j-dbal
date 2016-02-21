@@ -39,7 +39,7 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('<-[a:FOO]-', (string) new Relationship('a', 'FOO', Relationship::LEFT));
         $this->assertSame('-[a:FOO]->', (string) new Relationship('a', 'FOO', Relationship::RIGHT));
         $this->assertSame(
-            '-[a:FOO { "key": {value}, "another": {where}.value }]->',
+            '-[a:FOO { key: {value}, another: {where}.value }]->',
             (string) (new Relationship('a', 'FOO', Relationship::RIGHT))
                 ->withProperty('key', '{value}')
                 ->withProperty('another', '{where}.value')

@@ -37,7 +37,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('(a:Foo:Bar)', (string) new Node('a', ['Foo', 'Bar']));
         $this->assertSame('(:Foo:Bar)', (string) new Node(null, ['Foo', 'Bar']));
         $this->assertSame(
-            '(a:Foo { "key": {value}, "another": {where}.value })',
+            '(a:Foo { key: {value}, another: {where}.value })',
             (string) (new Node('a', ['Foo']))
                 ->withProperty('key', '{value}')
                 ->withProperty('another', '{where}.value')

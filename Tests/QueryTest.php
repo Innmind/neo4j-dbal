@@ -47,7 +47,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
             ->using('INDEX n.foo');
 
         $this->assertSame(
-            $e = 'MATCH (n:labels { "foo": {foo} })-[r:TYPE { "foo": {bar} }]-(n2:labels { "bar": {bar} }) WITH n, n2, r WHERE n.foo = {bar}, n2.bar = {foobar}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
+            $e = 'MATCH (n:labels { foo: {foo} })-[r:TYPE { foo: {bar} }]-(n2:labels { bar: {bar} }) WITH n, n2, r WHERE n.foo = {bar}, n2.bar = {foobar}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
             (string) $q
         );
         $this->assertSame($e, $q->cypher());

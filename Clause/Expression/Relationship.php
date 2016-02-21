@@ -68,7 +68,7 @@ class Relationship
                     ->properties
                     ->walk(function (&$element, $index) {
                         $element = sprintf(
-                            '"%s": %s',
+                            '%s: %s',
                             $index,
                             $element
                         );

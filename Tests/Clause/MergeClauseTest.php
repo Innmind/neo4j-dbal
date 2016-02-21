@@ -40,7 +40,7 @@ class MergeClauseTest extends \PHPUnit_Framework_TestCase
                 ->withParameter('wat', 'ever');
 
         $this->assertSame(
-            '(a:A { "a": {a} })-[:TYPE|ANOTHER { "t": {baz} }]->(b:B { "b": {b} })<-[r { "r": {wat} }]-()',
+            '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
             (string) $c
         );
         $this->assertTrue($c->hasParameters());

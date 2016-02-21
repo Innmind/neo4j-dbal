@@ -18,7 +18,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($p, $p->withProperty('foo', ''));
         $this->assertInstanceOf(Path::class, $p->withProperty('foo', ''));
         $this->assertSame(
-            '(foo:Bar { "prop": {value} })',
+            '(foo:Bar { prop: {value} })',
             (string) $p->withProperty('prop', '{value}')
         );
     }
@@ -33,7 +33,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('()', (string) $p);
         $this->assertSame('()-[]-(bar:Baz)', (string) $p2);
         $this->assertSame(
-            '()-[]-(bar:Baz { "prop": {value} })',
+            '()-[]-(bar:Baz { prop: {value} })',
             (string) $p2->withProperty('prop', '{value}')
         );
     }
@@ -56,7 +56,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('()-[]-()', (string) $p);
         $this->assertSame('()-[:BAR]-()', (string) $p2);
         $this->assertSame(
-            '()-[a:BAR { "foo": {value} }]->()',
+            '()-[a:BAR { foo: {value} }]->()',
             (string) $p
                 ->through('a', 'BAR', Relationship::RIGHT)
                 ->withProperty('foo', '{value}')
@@ -91,7 +91,7 @@ class PathTest extends \PHPUnit_Framework_TestCase
                 ->withParameter('wat', 'ever');
 
         $this->assertSame(
-            '(a:A { "a": {a} })-[:TYPE|ANOTHER { "t": {baz} }]->(b:B { "b": {b} })<-[r { "r": {wat} }]-()',
+            '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
             (string) $p
         );
         $this->assertSame(4, $p->parameters()->count());
