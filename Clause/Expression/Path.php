@@ -81,7 +81,6 @@ class Path
             throw new LogicException;
         }
 
-        $node = $this->elements->last();
         $path = new self;
         $path->elements = $this
             ->elements
