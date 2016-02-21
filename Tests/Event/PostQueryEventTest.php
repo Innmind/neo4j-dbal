@@ -1,40 +1,50 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Tests\Event;
 
 use Innmind\Neo4j\DBAL\Event\PostQueryEvent;
-use GuzzleHttp\Message\Response;
+use Innmind\Neo4j\DBAL\QueryInterface;
+use Innmind\Neo4j\DBAL\ResultInterface;
+use Innmind\Immutable\TypedCollectionInterface;
 
 class PostQueryEventTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetStatements()
+    public function testGetters()
     {
-        $e = new PostQueryEvent(['foo' => 'bar'], [], new Response(200));
+        $q = new class implements QueryInterface {
+            public function cypher(): string
+            {
+            }
 
-        $this->assertSame(
-            ['foo' => 'bar'],
-            $e->getStatements()
-        );
-    }
+            public function __toString(): string
+            {
+            }
 
-    public function testGetContent()
-    {
-        $e = new PostQueryEvent([], ['foo' => 'bar'], new Response(200));
+            public function parameters(): TypedCollectionInterface
+            {
+            }
 
-        $this->assertSame(
-            ['foo' => 'bar'],
-            $e->getContent()
-        );
-    }
+            public function hasParameters(): bool
+            {
+            }
+        };
+        $r = new class implements ResultInterface {
+            public function nodes(): TypedCollectionInterface
+            {
+            }
 
-    public function testGetResponse()
-    {
-        $r = new Response(200);
-        $e = new PostQueryEvent([], ['foo' => 'bar'], $r);
+            public function relationships(): TypedCollectionInterface
+            {
+            }
 
-        $this->assertSame(
-            $r,
-            $e->getResponse()
-        );
+            public function rows(): TypedCollectionInterface
+            {
+            }
+        };
+        $e = new PostQueryEvent($q, $r);
+
+        $this->assertSame($q, $e->query());
+        $this->assertSame($r, $e->result());
     }
 }

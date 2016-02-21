@@ -1,50 +1,28 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-use GuzzleHttp\Message\ResponseInterface;
+use Innmind\Neo4j\DBAL\QueryInterface;
+use Innmind\Neo4j\DBAL\ResultInterface;
 
-class PostQueryEvent extends Event
+class PostQueryEvent extends PreQueryEvent
 {
-    protected $statements;
-    protected $content;
-    protected $response;
+    private $result;
 
-    public function __construct(array $statements, $content, ResponseInterface $response)
+    public function __construct(QueryInterface $query, ResultInterface $result)
     {
-        $this->statements = $statements;
-        $this->content = $content;
-        $this->response = $response;
+        parent::__construct($query);
+        $this->result = $result;
     }
 
     /**
-     * Return the statements to be executed
+     * Return the query result
      *
-     * @return array
+     * @return ResultInterface
      */
-    public function getStatements()
+    public function result(): ResultInterface
     {
-        return $this->statements;
-    }
-
-    /**
-     * Return the decoded json response
-     *
-     * @return array
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * Return the response object
-     *
-     * @return ResponseInterface
-     */
-    public function getResponse()
-    {
-        return $this->response;
+        return $this->result;
     }
 }

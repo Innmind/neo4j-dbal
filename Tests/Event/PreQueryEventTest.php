@@ -1,51 +1,35 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Tests\Event;
 
 use Innmind\Neo4j\DBAL\Event\PreQueryEvent;
+use Innmind\Neo4j\DBAL\QueryInterface;
+use Innmind\Immutable\TypedCollectionInterface;
 
 class PreQueryEventTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSetStatements()
+    public function testGetQuery()
     {
-        $e = new PreQueryEvent(['foo' => 'bar']);
+        $q = new class implements QueryInterface {
+            public function cypher(): string
+            {
+            }
 
-        $this->assertSame(
-            ['foo' => 'bar'],
-            $e->getStatements()
-        );
-        $this->assertSame(
-            $e,
-            $e->setStatements([
-                [
-                    'statement' => 'foo',
-                    'resultDataContents' => ['graph', 'row']
-                ]
-            ])
-        );
-        $this->assertSame(
-            [
-                [
-                    'statement' => 'foo',
-                    'resultDataContents' => ['graph', 'row']
-                ]
-            ],
-            $e->getStatements()
-        );
-    }
+            public function __toString(): string
+            {
+            }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage A statement must have the key "resultDataContents" set to "['graph', 'row']"
-     */
-    public function testThrowIfSettingStatementWithoutResultDataContents()
-    {
-        $e = new PreQueryEvent([]);
+            public function parameters(): TypedCollectionInterface
+            {
+            }
 
-        $e->setStatements([
-            [
-                'statement' => 'MATCH (a) RETURN a;',
-            ],
-        ]);
+            public function hasParameters(): bool
+            {
+            }
+        };
+        $e = new PreQueryEvent($q);
+
+        $this->assertSame($q, $e->query());
     }
 }

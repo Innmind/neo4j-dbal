@@ -1,44 +1,31 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Tests;
 
-use Innmind\Neo4j\DBAL\ConnectionFactory;
-use Innmind\Neo4j\DBAL\Events;
+use Innmind\Neo4j\DBAL\{
+    ConnectionFactory,
+    ConnectionInterface
+};
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\ImmutableEventDispatcher;
 
 class ConnectionFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateDefaultEventDispatcher()
+    public function testInterface()
     {
-        $conn = ConnectionFactory::make();
+        $connection = ConnectionFactory::on('localhost')
+            ->for('neo4j', 'neo4j')
+            ->useDispatcher($d = new EventDispatcher)
+            ->build();
 
-        $this->assertTrue($conn->getDispatcher() instanceof EventDispatcher);
-    }
+        $this->assertInstanceOf(ConnectionInterface::class, $connection);
+        $this->assertSame($d, $connection->dispatcher());
 
-    public function testSetDefaultEventListener()
-    {
-        $conn = ConnectionFactory::make();
+        $connection = ConnectionFactory::on('localhost')
+            ->for('neo4j', 'neo4j')
+            ->build();
 
-        $this->assertTrue($conn->getDispatcher()->hasListeners(Events::API_RESPONSE));
-        $this->assertEquals(1, count($conn->getDispatcher()->getListeners(Events::API_RESPONSE)));
-    }
-
-    public function testDontSetListenerForImmutableDispatcher()
-    {
-        $conn = ConnectionFactory::make([], new ImmutableEventDispatcher(new EventDispatcher));
-
-        $this->assertFalse($conn->getDispatcher()->hasListeners(Events::API_RESPONSE));
-    }
-
-    public function testCreateCluster()
-    {
-        $conn = ConnectionFactory::make([
-            'cluster' => [
-                'foo' => []
-            ]
-        ]);
-
-        $this->assertInstanceOf('Innmind\\Neo4j\\DBAL\\DelegateConnection', $conn);
+        $this->assertInstanceOf(ConnectionInterface::class, $connection);
+        $this->assertInstanceOf(EventDispatcher::class, $connection->dispatcher());
     }
 }

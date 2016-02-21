@@ -1,52 +1,27 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Event;
 
+use Innmind\Neo4j\DBAL\QueryInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class PreQueryEvent extends Event
 {
-    protected $statements;
+    private $query;
 
-    public function __construct(array $statements)
+    public function __construct(QueryInterface $query)
     {
-        $this->statements = $statements;
+        $this->query = $query;
     }
 
     /**
-     * Return the statements to be executed
+     * Return the query about to be executed
      *
-     * @return array
+     * @return QueryInterface
      */
-    public function getStatements()
+    public function query(): QueryInterface
     {
-        return $this->statements;
-    }
-
-    /**
-     * Replace the statements to be executed by the ones passed as argument
-     *
-     * @param array $statements
-     *
-     * @throws InvalidArgumentException if there's no resultDataContents
-     *
-     * @return PreQueryEvent self
-     */
-    public function setStatements(array $statements)
-    {
-        foreach ($statements as $statement) {
-            if (
-                !isset($statement['resultDataContents']) ||
-                $statement['resultDataContents'] !== ['graph', 'row']
-            ) {
-                throw new \InvalidArgumentException(
-                    'A statement must have the key "resultDataContents" set to "[\'graph\', \'row\']"'
-                );
-            }
-        }
-
-        $this->statements = $statements;
-
-        return $this;
+        return $this->query;
     }
 }
