@@ -1,243 +1,119 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Tests;
 
-use Innmind\Neo4j\DBAL\Connection;
-use Innmind\Neo4j\DBAL\CypherBuilder;
-use Innmind\Neo4j\DBAL\Query;
+use Innmind\Neo4j\DBAL\{
+    Connection,
+    ConnectionInterface,
+    Server,
+    Authentication,
+    Transactions,
+    Transport\Http,
+    QueryInterface,
+    ResultInterface,
+    Translator\HttpTranslator,
+    Query
+};
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
-    protected $host = 'docker';
-    protected $password = 'ci';
+    private $c;
+    private $d;
 
     public function setUp()
     {
-        if (getenv('CI')) {
-            $this->host = 'localhost';
-        }
-    }
-
-    /**
-     * @expectedException Symfony\Component\OptionsResolver\Exception\InvalidArgumentException
-     */
-    public function testInvalidSchemeType()
-    {
-        new Connection(
-            ['scheme' => null],
-            new EventDispatcher,
-            new CypherBuilder
+        $server = new Server(
+            'http',
+            getenv('CI') ? 'localhost' : 'docker',
+            7474
         );
-    }
-
-    /**
-     * @expectedException Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     */
-    public function testInvalidSchemeValue()
-    {
-        new Connection(
-            ['scheme' => 'ftp'],
-            new EventDispatcher,
-            new CypherBuilder
-        );
-    }
-
-    public function testApiBaseUrl()
-    {
-        $conn = new Connection(
-            [],
-            new EventDispatcher,
-            new CypherBuilder
-        );
-
-        $refl = new \ReflectionObject($conn);
-        $http = $refl->getProperty('http');
-        $http->setAccessible(true);
-        $http = $http->getValue($conn);
-        $refl = new \ReflectionObject($http);
-        $base = $refl->getProperty('baseUrl');
-        $base->setAccessible(true);
-
-        $this->assertEquals(
-            'http://localhost:7474/db/data/',
-            (string) $base->getValue($http)
-        );
-    }
-
-    public function testApiCredentials()
-    {
-        $conn = new Connection(
-            ['username' => 'foo', 'password' => 'bar'],
-            new EventDispatcher,
-            new CypherBuilder
-        );
-
-        $refl = new \ReflectionObject($conn);
-        $http = $refl->getProperty('http');
-        $http->setAccessible(true);
-        $http = $http->getValue($conn);
-        $refl = new \ReflectionObject($http);
-        $defaults = $refl->getProperty('defaults');
-        $defaults->setAccessible(true);
-
-        $this->assertEquals(
-            'Basic Zm9vOmJhcg==',
-            $defaults->getValue($http)['headers']['Authorization']
-        );
-    }
-
-    public function testGetDispatcher()
-    {
-        $d = new EventDispatcher;
-        $conn = new Connection([], $d, new CypherBuilder);
-
-        $this->assertEquals($d, $conn->getDispatcher());
-    }
-
-    public function testExecuteQuery()
-    {
-        $p = ['host' => $this->host];
-        if ($this->password) {
-            $p['username'] = 'neo4j';
-            $p['password'] = $this->password;
-        }
-
-        $conn = new Connection(
-            $p,
-            new EventDispatcher,
-            new CypherBuilder
-        );
-        $q = new Query;
-        $q
-            ->create('(a:Foo:Bar {props})')
-            ->addParameter('props', [
-                'name' => 'foo'
-            ])
-            ->setReturn('a');
-
-        $response = $conn->executeQuery($q);
-
-        $this->assertEquals(1, count($response['nodes']));
-        $this->assertEquals(1, count($response['results']));
-        $this->assertEquals(
-            ['Foo', 'Bar'],
-            current($response['nodes'])['labels']
-        );
-        $this->assertEquals(
-            ['name' => 'foo'],
-            current($response['nodes'])['properties']
+        $auth = new Authentication('neo4j', 'ci');
+        $transactions = new Transactions($server, $auth);
+        $this->c = new Connection(
+            new Http(
+                new HttpTranslator($transactions),
+                $this->d = new EventDispatcher,
+                $server,
+                $auth
+            ),
+            $transactions
         );
     }
 
     public function testExecute()
     {
-        $p = ['host' => $this->host];
-        if ($this->password) {
-            $p['username'] = 'neo4j';
-            $p['password'] = $this->password;
-        }
-
-        $conn = new Connection(
-            $p,
-            new EventDispatcher,
-            new CypherBuilder
-        );
-
-        $response = $conn->execute(
-            'CREATE (a:Baz {props})-[r:Test]->(b:Baz {props}) RETURN a, b, r',
-            ['props' => ['name' => 'baz']]
-        );
-
-        $this->assertEquals(2, count($response['nodes']));
-        $this->assertEquals(1, count($response['relationships']));
-        $this->assertEquals(3, count($response['rows']));
-        $this->assertEquals(1, count($response['results']));
-        $this->assertEquals(
-            ['Baz'],
-            current($response['nodes'])['labels']
-        );
-        $this->assertEquals(
-            ['name' => 'baz'],
-            current($response['nodes'])['properties']
-        );
-        $this->assertEquals(
-            'Test',
-            current($response['relationships'])['type']
-        );
-
-        $expectedRows = [
-            'a' => [[
-                'name' => 'baz',
-            ]],
-            'b' => [[
-                'name' => 'baz',
-            ]],
-            'r' => [[]],
-        ];
-        $this->assertEquals(
-            $expectedRows,
-            $response['rows']
-        );
-        $this->assertEquals(
-            $expectedRows,
-            $response['results'][0]['rows']
-        );
-    }
-
-    public function testExecuteQueries()
-    {
-        $p = ['host' => $this->host];
-        if ($this->password) {
-            $p['username'] = 'neo4j';
-            $p['password'] = $this->password;
-        }
-
-        $conn = new Connection(
-            $p,
-            new EventDispatcher,
-            new CypherBuilder
-        );
-        $q = new Query;
+        $q = $this->getMock(QueryInterface::class);
         $q
-            ->create('(a {props})')
-            ->addParameter('props', ['name' => 'foo'])
-            ->setReturn('a');
+            ->method('cypher')
+            ->willReturn('match n return n');
 
-        $response = $conn->executeQueries([
-            $q,
-            [
-                'query' => 'CREATE (b {props}) RETURN b',
-                'parameters' => ['props' => ['name' => 'bar']],
-            ]
-        ]);
+        $r = $this->c->execute($q);
 
-        $this->assertEquals(2, count($response['nodes']));
-        $this->assertEquals(2, count($response['results']));
+        $this->assertInstanceOf(ResultInterface::class, $r);
     }
 
-    public function testIsAlive()
+    public function testTransactions()
     {
-        $p = ['host' => $this->host];
-        if ($this->password) {
-            $p['username'] = 'neo4j';
-            $p['password'] = $this->password;
-        }
+        $this->assertFalse($this->c->isTransactionOpened());
+        $this->assertSame($this->c, $this->c->openTransaction());
+        $this->assertTrue($this->c->isTransactionOpened());
+        $this->assertSame($this->c, $this->c->commit());
+        $this->assertFalse($this->c->isTransactionOpened());
+        $this->c->openTransaction();
+        $this->assertTrue($this->c->isTransactionOpened());
+        $this->assertSame($this->c, $this->c->rollback());
+        $this->assertFalse($this->c->isTransactionOpened());
+    }
 
-        $conn = new Connection(
-            $p,
-            new EventDispatcher,
-            new CypherBuilder
+    public function testAlive()
+    {
+        $this->assertTrue($this->c->isAlive());
+
+        $server = new Server(
+            'http',
+            'localhost',
+            1337
+        );
+        $auth = new Authentication('neo4j', 'ci');
+        $transactions = new Transactions($server, $auth);
+        $c = new Connection(
+            new Http(
+                new HttpTranslator($transactions),
+                new EventDispatcher,
+                $server,
+                $auth
+            ),
+            $transactions
         );
 
-        $this->assertTrue($conn->isAlive());
+        $this->assertFalse($c->isAlive());
+    }
 
-        $conn = new Connection(
-            ['host' => 'foo'],
-            new EventDispatcher,
-            new CypherBuilder
+    public function testDispatcher()
+    {
+        $this->assertSame($this->d, $this->c->dispatcher());
+    }
+
+    public function testConcrete()
+    {
+        $q = (new Query)
+            ->create('n', ['Foo', 'Bar'])
+            ->withProperty('foo', '{bar}')
+            ->withParameter('bar', 'baz')
+            ->return('n');
+
+        $r = $this->c->execute($q);
+
+        $this->assertSame(1, $r->nodes()->count());
+        $this->assertSame(
+            ['Bar', 'Foo'],
+            $r->nodes()->first()->labels()->toPrimitive()
         );
-
-        $this->assertFalse($conn->isAlive());
+        $this->assertSame(
+            ['foo' => 'baz'],
+            $r->nodes()->first()->properties()->toPrimitive()
+        );
     }
 }

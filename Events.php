@@ -1,10 +1,10 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-class Events
+final class Events
 {
-    const API_RESPONSE = 'innmind.neo4j.dbal.api_response';
-    const PRE_QUERY = 'innmind.neo4j.dbal.pre.query';
-    const POST_QUERY = 'innmind.neo4j.dbal.post.query';
+    const PRE_QUERY = 'innmind.neo4j.dbal.query.pre';
+    const POST_QUERY = 'innmind.neo4j.dbal.query.post';
 }

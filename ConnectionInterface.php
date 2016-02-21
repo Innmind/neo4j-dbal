@@ -1,92 +1,51 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
 interface ConnectionInterface
 {
     /**
-     * Create a query instance
+     * Execute a cypher query
      *
-     * @return Query
+     * @param QueryInterface $query
+     *
+     * @return ResultInterface
      */
-    public function createQuery();
-
-    /**
-     * Execute a query object
-     *
-     * @param Query $query
-     *
-     * @return mixed
-     */
-    public function executeQuery(Query $query);
-
-    /**
-     * Execute the given cypher query
-     *
-     * @param string $query
-     * @param array $parameters
-     *
-     * @return mixed
-     */
-    public function execute($query, array $parameters = []);
-
-    /**
-     * Execute multiple queries in a single API call
-     *
-     * @param array $queries
-     *
-     * @return array
-     */
-    public function executeQueries(array $queries);
+    public function execute(QueryInterface $query): ResultInterface;
 
     /**
      * Open a new transaction
      *
-     * @throws LogicException If a transaction is already opened
-     *
-     * @return ConnectionInterface self
+     * @return self
      */
-    public function openTransaction();
+    public function openTransaction(): self;
 
     /**
-     * Check if a transaction is already opened
+     * Check if a transaction is opened
      *
      * @return bool
      */
-    public function isTransactionOpened();
-
-    /**
-     * Reset the timeout before the transaction closing
-     *
-     * @throws LogicException If no transaction opened
-     *
-     * @return ConnectionInterface self
-     */
-    public function resetTransactionTimeout();
+    public function isTransactionOpened(): bool;
 
     /**
      * Commit the current transaction
      *
-     * @throws LogicException If no transaction opened
-     *
-     * @return ConnectionInterface self
+     * @return self
      */
-    public function commit();
+    public function commit(): self;
 
     /**
      * Rollback the current transaction
      *
-     * @throws LogicException If no transaction opened
-     *
-     * @return ConnectionInterface self
+     * @return self
      */
-    public function rollback();
+    public function rollback(): self;
 
     /**
-     * Check if the connection is working
-     * (meaning the server is up and reachable)
+     * Check if the server is up and running
      *
      * @return bool
      */
-    public function isAlive();
+    public function isAlive(): bool;
 }

@@ -1,41 +1,64 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\ImmutableEventDispatcher;
-use Innmind\Neo4j\DBAL\EventListener\ResponseListener;
+use Innmind\Neo4j\DBAL\{
+    Transport\Http,
+    Translator\HttpTranslator
+};
+use Symfony\Component\EventDispatcher\{
+    EventDispatcher,
+    EventDispatcherInterface
+};
 
 class ConnectionFactory
 {
-    static protected $cypherBuilder;
+    private $server;
+    private $authentication;
+    private $dispatcher;
 
-    public static function make(array $params = [], EventDispatcherInterface $dispatcher = null)
+    private function __construct()
     {
-        if ($dispatcher === null) {
-            $dispatcher = new EventDispatcher();
-        }
+    }
 
-        if (self::$cypherBuilder === null) {
-            self::$cypherBuilder = new CypherBuilder;
-        }
+    public static function on(string $host, string $scheme = 'https', int $port = 7474): self
+    {
+        $factory = new self;
+        $factory->server = new Server($scheme, $host, $port);
 
-        if (isset($params['cluster']) && is_array($params['cluster'])) {
-            $conn = new DelegateConnection;
+        return $factory;
+    }
 
-            foreach ($params['cluster'] as $name => $connParams) {
-                $conn->addConnection($name, self::make($connParams, $dispatcher));
-            }
-        } else {
-            $conn = new Connection($params, $dispatcher, self::$cypherBuilder);
-        }
+    public function for(string $user, string $password): self
+    {
+        $this->authentication = new Authentication($user, $password);
 
-        if (!($dispatcher instanceof ImmutableEventDispatcher)) {
-            $listener = new ResponseListener();
-            $dispatcher->addListener(Events::API_RESPONSE, [$listener, 'handle']);
-        }
+        return $this;
+    }
 
-        return $conn;
+    public function useDispatcher(EventDispatcherInterface $dispatcher): self
+    {
+        $this->dispatcher = $dispatcher;
+
+        return $this;
+    }
+
+    public function build(): ConnectionInterface
+    {
+        $transactions = new Transactions(
+            $this->server,
+            $this->authentication
+        );
+
+        return new Connection(
+            new Http(
+                new HttpTranslator($transactions),
+                $this->dispatcher ?? new EventDispatcher,
+                $this->server,
+                $this->authentication
+            ),
+            $transactions
+        );
     }
 }
