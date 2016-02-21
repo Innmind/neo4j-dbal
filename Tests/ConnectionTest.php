@@ -107,7 +107,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $r = $this->c->execute($q);
 
         $this->assertSame(1, $r->nodes()->count());
-        $this->assertSame(
+        $this->assertEquals(
             ['Bar', 'Foo'],
             $r->nodes()->first()->labels()->toPrimitive()
         );
