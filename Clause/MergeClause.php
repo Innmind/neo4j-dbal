@@ -5,9 +5,16 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class MergeClause extends MatchClause
+class MergeClause implements ClauseInterface, PathAwareInterface
 {
+    use PathAware;
+
     const IDENTIFIER = 'MERGE';
+
+    public function __construct(Expression\Path $path)
+    {
+        $this->path = $path;
+    }
 
     /**
      * {@inheritdoc}

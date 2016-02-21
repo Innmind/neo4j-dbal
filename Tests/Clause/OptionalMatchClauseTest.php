@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Tests\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\OptionalMatchClause;
-use Innmind\Neo4j\DBAL\Clause\MatchClause;
 use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
+use Innmind\Neo4j\DBAL\Clause\PathAwareInterface;
 use Innmind\Neo4j\DBAL\ClauseInterface;
 use Innmind\Neo4j\DBAL\Clause\Expression\Path;
 use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
@@ -18,7 +18,7 @@ class OptionalMatchClauseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ClauseInterface::class, $c);
         $this->assertInstanceOf(ParametrableInterface::class, $c);
-        $this->assertInstanceOf(MatchClause::class, $c);
+        $this->assertInstanceOf(PathAwareInterface::class, $c);
         $this->assertSame('()', (string) $c);
         $this->assertSame('OPTIONAL MATCH', $c->identifier());
     }
@@ -45,5 +45,6 @@ class OptionalMatchClauseTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertTrue($c->hasParameters());
         $this->assertSame(4, $c->parameters()->count());
+        $this->assertInstanceOf(OptionalMatchClause::class, $c);
     }
 }

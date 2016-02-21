@@ -5,6 +5,7 @@ namespace Innmind\Neo4j\DBAL\Tests\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\MatchClause;
 use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
+use Innmind\Neo4j\DBAL\Clause\PathAwareInterface;
 use Innmind\Neo4j\DBAL\ClauseInterface;
 use Innmind\Neo4j\DBAL\Clause\Expression\Path;
 use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
@@ -17,6 +18,7 @@ class MatchClauseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ClauseInterface::class, $c);
         $this->assertInstanceOf(ParametrableInterface::class, $c);
+        $this->assertInstanceOf(PathAwareInterface::class, $c);
         $this->assertSame('()', (string) $c);
         $this->assertSame('MATCH', $c->identifier());
     }
@@ -43,5 +45,6 @@ class MatchClauseTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertTrue($c->hasParameters());
         $this->assertSame(4, $c->parameters()->count());
+        $this->assertInstanceOf(MatchClause::class, $c);
     }
 }

@@ -4,30 +4,18 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Immutable\TypedCollectionInterface;
 
-class CreateClause implements ClauseInterface, PathAwareInterface
+trait PathAware
 {
-    use PathAware;
-
-    const IDENTIFIER = 'CREATE';
-
     private $path;
-    private $unique;
-
-    public function __construct(
-        Expression\Path $path,
-        bool $unique
-    ) {
-        $this->path = $path;
-        $this->unique = $unique;
-    }
 
     /**
      * {@inheritdoc}
      */
-    public function identifier(): string
+    public function __toString(): string
     {
-        return self::IDENTIFIER . ($this->unique ? ' UNIQUE' : '');
+        return (string) $this->path;
     }
 
     /**
@@ -38,8 +26,7 @@ class CreateClause implements ClauseInterface, PathAwareInterface
         array $labels = []
     ): ClauseInterface {
         return new self(
-            $this->path->linkedTo($variable, $labels),
-            $this->unique
+            $this->path->linkedTo($variable, $labels)
         );
     }
 
@@ -52,8 +39,7 @@ class CreateClause implements ClauseInterface, PathAwareInterface
         string $direction = Expression\Relationship::BOTH
     ): ClauseInterface {
         return new self(
-            $this->path->through($variable, $type, $direction),
-            $this->unique
+            $this->path->through($variable, $type, $direction)
         );
     }
 
@@ -65,8 +51,7 @@ class CreateClause implements ClauseInterface, PathAwareInterface
         string $cypher
     ): ClauseInterface {
         return new self(
-            $this->path->withProperty($property, $cypher),
-            $this->unique
+            $this->path->withProperty($property, $cypher)
         );
     }
 
@@ -76,8 +61,23 @@ class CreateClause implements ClauseInterface, PathAwareInterface
     public function withParameter(string $key, $value): ClauseInterface
     {
         return new self(
-            $this->path->withParameter($key, $value),
-            $this->unique
+            $this->path->withParameter($key, $value)
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasParameters(): bool
+    {
+        return $this->path->parameters()->count() > 0;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parameters(): TypedCollectionInterface
+    {
+        return $this->path->parameters();
     }
 }

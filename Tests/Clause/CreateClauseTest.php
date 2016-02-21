@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Tests\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\CreateClause;
-use Innmind\Neo4j\DBAL\Clause\MatchClause;
+use Innmind\Neo4j\DBAL\Clause\PathAwareInterface;
 use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
 use Innmind\Neo4j\DBAL\ClauseInterface;
 use Innmind\Neo4j\DBAL\Clause\Expression\Path;
@@ -17,7 +17,7 @@ class CreateClauseTest extends \PHPUnit_Framework_TestCase
         $c = new CreateClause(Path::startWithNode(), false);
 
         $this->assertInstanceOf(ClauseInterface::class, $c);
-        $this->assertInstanceOf(MatchClause::class, $c);
+        $this->assertInstanceOf(PathAwareInterface::class, $c);
         $this->assertInstanceOf(ParametrableInterface::class, $c);
         $this->assertSame('()', (string) $c);
         $this->assertSame('CREATE', $c->identifier());
@@ -49,5 +49,6 @@ class CreateClauseTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertTrue($c->hasParameters());
         $this->assertSame(4, $c->parameters()->count());
+        $this->assertInstanceOf(CreateClause::class, $c);
     }
 }
