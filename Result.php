@@ -83,15 +83,15 @@ class Result implements ResultInterface
     }
 
     /**
-     * @param array $response
+     * @param array $data
      *
      * @return array
      */
-    private static function buildNodes(array $response): array
+    private static function buildNodes(array $data): array
     {
         $nodes = [];
 
-        if (isset($response['graph']['nodes'])) {
+        foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
                 $nodes[] = new Node(
                     new Id((int) $node['id']),
@@ -105,15 +105,15 @@ class Result implements ResultInterface
     }
 
     /**
-     * @param array $response
+     * @param array $data
      *
      * @return array
      */
-    private static function buildRelationships(array $response): array
+    private static function buildRelationships(array $data): array
     {
         $relationships = [];
 
-        if (isset($response['graph']['relationships'])) {
+       foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
                 $relationships[] = new Relationship(
                     new Id((int) $rel['id']),
@@ -129,15 +129,15 @@ class Result implements ResultInterface
     }
 
     /**
-     * @param array $response
+     * @param array $data
      *
      * @return array
      */
-    public static function buildRows(array $response): array
+    public static function buildRows(array $data): array
     {
         $rows = [];
 
-        if (isset($response['row'])) {
+        foreach ($data as $response) {
             foreach ($response['row'] as $row) {
                 $rows[] = new Row($row);
             }

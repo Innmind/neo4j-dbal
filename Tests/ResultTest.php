@@ -28,7 +28,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $r->rows()->count());
 
         $r = Result::fromRaw([
-            'data' => [
+            'data' => [[
                 'row' => [[
                     'name' => 'value',
                 ]],
@@ -70,7 +70,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-            ],
+            ]],
         ]);
 
         $this->assertSame(2, $r->nodes()->count());
