@@ -12,7 +12,8 @@ use Innmind\Neo4j\DBAL\{
     Transport\Http,
     QueryInterface,
     ResultInterface,
-    Translator\HttpTranslator
+    Translator\HttpTranslator,
+    Query
 };
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -93,5 +94,26 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function testDispatcher()
     {
         $this->assertSame($this->d, $this->c->dispatcher());
+    }
+
+    public function testConcrete()
+    {
+        $q = (new Query)
+            ->create('n', ['Foo', 'Bar'])
+            ->withProperty('foo', '{bar}')
+            ->withParameter('bar', 'baz')
+            ->return('n');
+
+        $r = $this->c->execute($q);
+
+        $this->assertSame(1, $r->nodes()->count());
+        $this->assertSame(
+            ['Bar', 'Foo'],
+            $r->nodes()->first()->labels()->toPrimitive()
+        );
+        $this->assertSame(
+            ['foo' => 'baz'],
+            $r->nodes()->first()->properties()->toPrimitive()
+        );
     }
 }
