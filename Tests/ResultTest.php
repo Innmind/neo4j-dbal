@@ -80,10 +80,12 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             $r->rows()->first()->value()
         );
         $this->assertSame('baz', $r->rows()->first()->column());
+        $this->assertSame(['baz'], $r->rows()->keys()->toPrimitive());
         $this->assertSame(
             19,
             $r->nodes()->first()->id()->value()
         );
+        $this->assertSame([19, 21], $r->nodes()->keys()->toPrimitive());
         $this->assertSame(
             ['Bike'],
             $r->nodes()->first()->labels()->toPrimitive()
@@ -97,6 +99,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             9,
             $r->relationships()->first()->id()->value()
         );
+        $this->assertSame([9, 10], $r->relationships()->keys()->toPrimitive());
         $this->assertSame(
             'HAS',
             $r->relationships()->first()->type()->value()

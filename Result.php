@@ -93,7 +93,7 @@ class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
-                $nodes[] = new Node(
+                $nodes[(int) $node['id']] = new Node(
                     new Id((int) $node['id']),
                     new Collection($node['labels']),
                     new Collection($node['properties'])
@@ -115,7 +115,7 @@ class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
-                $relationships[] = new Relationship(
+                $relationships[(int) $rel['id']] = new Relationship(
                     new Id((int) $rel['id']),
                     new Type($rel['type']),
                     new Id((int) $rel['startNode']),
@@ -140,7 +140,7 @@ class Result implements ResultInterface
 
         foreach ($responses as $response) {
             foreach ($response['row'] as $idx => $row) {
-                $rows[] = new Row(
+                $rows[$data['columns'][$idx]] = new Row(
                     $data['columns'][$idx],
                     $row
                 );
