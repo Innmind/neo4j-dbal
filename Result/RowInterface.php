@@ -11,4 +11,11 @@ interface RowInterface
      * @return array
      */
     public function value(): array;
+
+    /**
+     * Return the column referencing this row
+     *
+     * @return string
+     */
+    public function column(): string;
 }

@@ -117,5 +117,13 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             ['foo' => 'baz'],
             $r->nodes()->first()->properties()->toPrimitive()
         );
+        $this->assertSame(
+            'n',
+            $r->rows()->first()->column()
+        );
+        $this->assertSame(
+            ['foo' => 'baz'],
+            $r->rows()->first()->value()
+        );
     }
 }

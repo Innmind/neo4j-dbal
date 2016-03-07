@@ -40,16 +40,16 @@ class Result implements ResultInterface
      */
     public static function fromRaw(array $response): self
     {
-        $response = $response['data'] ?? [];
+        $data = $response['data'] ?? [];
 
         return new self(
             new TypedCollection(
                 NodeInterface::class,
-                self::buildNodes($response)
+                self::buildNodes($data)
             ),
             new TypedCollection(
                 RelationshipInterface::class,
-                self::buildRelationships($response)
+                self::buildRelationships($data)
             ),
             new TypedCollection(
                 RowInterface::class,
@@ -136,10 +136,14 @@ class Result implements ResultInterface
     public static function buildRows(array $data): array
     {
         $rows = [];
+        $responses = $data['data'] ?? [];
 
-        foreach ($data as $response) {
-            foreach ($response['row'] as $row) {
-                $rows[] = new Row($row);
+        foreach ($responses as $response) {
+            foreach ($response['row'] as $idx => $row) {
+                $rows[] = new Row(
+                    $data['columns'][$idx],
+                    $row
+                );
             }
         }
 

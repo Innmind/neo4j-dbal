@@ -9,8 +9,9 @@ class RowTest extends \PHPUnit_Framework_TestCase
 {
     public function testRow()
     {
-        $r = new Row(['foo' => 'bar']);
+        $r = new Row('baz', ['foo' => 'bar']);
 
         $this->assertSame(['foo' => 'bar'], $r->value());
+        $this->assertSame('baz', $r->column());
     }
 }

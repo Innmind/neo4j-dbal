@@ -28,6 +28,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $r->rows()->count());
 
         $r = Result::fromRaw([
+            'columns' => ['baz'],
             'data' => [[
                 'row' => [[
                     'name' => 'value',
@@ -78,6 +79,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             ['name' => 'value'],
             $r->rows()->first()->value()
         );
+        $this->assertSame('baz', $r->rows()->first()->column());
         $this->assertSame(
             19,
             $r->nodes()->first()->id()->value()
