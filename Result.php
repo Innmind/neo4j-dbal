@@ -40,16 +40,16 @@ class Result implements ResultInterface
      */
     public static function fromRaw(array $response): self
     {
-        $response = $response['data'] ?? [];
+        $data = $response['data'] ?? [];
 
         return new self(
             new TypedCollection(
                 NodeInterface::class,
-                self::buildNodes($response)
+                self::buildNodes($data)
             ),
             new TypedCollection(
                 RelationshipInterface::class,
-                self::buildRelationships($response)
+                self::buildRelationships($data)
             ),
             new TypedCollection(
                 RowInterface::class,
@@ -93,7 +93,7 @@ class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
-                $nodes[] = new Node(
+                $nodes[(int) $node['id']] = new Node(
                     new Id((int) $node['id']),
                     new Collection($node['labels']),
                     new Collection($node['properties'])
@@ -115,7 +115,7 @@ class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
-                $relationships[] = new Relationship(
+                $relationships[(int) $rel['id']] = new Relationship(
                     new Id((int) $rel['id']),
                     new Type($rel['type']),
                     new Id((int) $rel['startNode']),
@@ -136,10 +136,14 @@ class Result implements ResultInterface
     public static function buildRows(array $data): array
     {
         $rows = [];
+        $responses = $data['data'] ?? [];
 
-        foreach ($data as $response) {
-            foreach ($response['row'] as $row) {
-                $rows[] = new Row($row);
+        foreach ($responses as $response) {
+            foreach ($response['row'] as $idx => $row) {
+                $rows[$data['columns'][$idx]] = new Row(
+                    $data['columns'][$idx],
+                    $row
+                );
             }
         }
 
