@@ -274,7 +274,7 @@ class Query implements QueryInterface
             throw new NonPathAwareClauseException;
         }
 
-        $clause = $clause->through($type, $variable, $direction);
+        $clause = $clause->through($variable, $type, $direction);
         $query = new self;
         $query->clauses = $this
             ->clauses
