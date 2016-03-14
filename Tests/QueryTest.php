@@ -22,7 +22,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
             ->linkedTo('n2', ['labels'])
                 ->withProperties(['bar' => '{bar}'])
                 ->withParameters(['bar' => 'baz'])
-            ->through('r', 'TYPE')
+            ->through('TYPE', 'r')
                 ->withProperties(['foo' => '{bar}'])
                 ->withParameters(['bar' => 'foobar'])
             ->with('n', 'n2', 'r')
