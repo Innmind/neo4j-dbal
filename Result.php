@@ -140,7 +140,7 @@ class Result implements ResultInterface
 
         foreach ($responses as $response) {
             foreach ($response['row'] as $idx => $row) {
-                $rows[$data['columns'][$idx]] = new Row(
+                $rows[] = new Row(
                     $data['columns'][$idx],
                     $row
                 );

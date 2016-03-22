@@ -80,7 +80,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             $r->rows()->first()->value()
         );
         $this->assertSame('baz', $r->rows()->first()->column());
-        $this->assertSame(['baz'], $r->rows()->keys()->toPrimitive());
+        $this->assertSame([0], $r->rows()->keys()->toPrimitive());
         $this->assertSame(
             19,
             $r->nodes()->first()->id()->value()
@@ -116,5 +116,173 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             ['position' => 1],
             $r->relationships()->first()->properties()->toPrimitive()
         );
+    }
+
+    public function testFromRawWithMultipleRows()
+    {
+        $r = Result::fromRaw([
+            'columns' => [
+                'entity',
+                'n2',
+            ],
+            'data' => [
+                [
+                    'row' => [
+                        [
+                            'uuid' => '31111111-1111-1111-1111-111111111111',
+                        ],
+                        [],
+                    ],
+                    'graph' => [
+                        'nodes' => [
+                            [
+                                'id' => '288',
+                                'labels' => [
+                                    'Bar',
+                                ],
+                                'properties' => [],
+                            ],
+                            [
+                                'id' => '283',
+                                'labels' => [
+                                    'Label',
+                                ],
+                                'properties' => [
+                                    'uuid' => '31111111-1111-1111-1111-111111111111',
+                                ],
+                            ],
+                        ],
+                        'relationships' => [],
+                    ],
+                ],
+                [
+                    'row' => [
+                        [
+                            'uuid' => '41111111-1111-1111-1111-111111111111',
+                        ],
+                        [],
+                    ],
+                    'graph' => [
+                        'nodes' => [
+                            [
+                                'id' => '288',
+                                'labels' => [
+                                    'Bar',
+                                ],
+                                'properties' => [],
+                            ],
+                            [
+                                'id' => '284',
+                                'labels' => [
+                                    'Label',
+                                ],
+                                'properties' => [
+                                    'uuid' => '41111111-1111-1111-1111-111111111111',
+                                ],
+                            ],
+                        ],
+                        'relationships' => [],
+                    ],
+                ],
+                [
+                    'row' => [
+                        [
+                            'uuid' => '51111111-1111-1111-1111-111111111111',
+                            'content' => 'foo',
+                        ],
+                        [],
+                    ],
+                    'graph' => [
+                        'nodes' => [
+                            [
+                                'id' => '288',
+                                'labels' => [
+                                    'Bar',
+                                ],
+                                'properties' => [],
+                            ],
+                            [
+                                'id' => '285',
+                                'labels' => [
+                                    'Label',
+                                ],
+                                'properties' => [
+                                    'uuid' => '51111111-1111-1111-1111-111111111111',
+                                    'content' => 'foo',
+                                ],
+                            ],
+                        ],
+                        'relationships' => [],
+                    ],
+                ],
+                [
+                    'row' => [
+                        [
+                            'uuid' => '61111111-1111-1111-1111-111111111111',
+                            'content' => 'foobar',
+                        ],
+                        [],
+                    ],
+                    'graph' => [
+                        'nodes' => [
+                            [
+                                'id' => '288',
+                                'labels' => [
+                                    'Bar',
+                                ],
+                                'properties' => [],
+                            ],
+                            [
+                                'id' => '286',
+                                'labels' => [
+                                    'Label',
+                                ],
+                                'properties' => [
+                                    'uuid' => '61111111-1111-1111-1111-111111111111',
+                                    'content' => 'foobar',
+                                ],
+                            ],
+                        ],
+                        'relationships' => [],
+                    ]
+                ],
+                [
+                    'row' => [
+                        [
+                            'uuid' => '71111111-1111-1111-1111-111111111111',
+                            'content' => 'bar',
+                        ],
+                        [],
+                    ],
+                    'graph' => [
+                        'nodes' => [
+                            [
+                                'id' => '288',
+                                'labels' => [
+                                    'Bar',
+                                ],
+                                'properties' => [],
+                            ],
+                            [
+                                'id' => '287',
+                                'labels' => [
+                                    'Label',
+                                ],
+                                'properties' => [
+                                    'uuid' => '71111111-1111-1111-1111-111111111111',
+                                    'content' => 'bar',
+                                ],
+                            ],
+                        ],
+                        'relationships' => [],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertSame(10, $r->rows()->count());
+        $this->assertSame(6, $r->nodes()->count());
+        $this->assertSame(0, $r->relationships()->count());
+        $this->assertSame(range(0, 9), $r->rows()->keys()->toPrimitive());
     }
 }
