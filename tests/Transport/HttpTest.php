@@ -83,7 +83,7 @@ class HttpTest extends \PHPUnit_Framework_TestCase
                 $postFired = true;
             }
         );
-        $q = $this->getMock(QueryInterface::class);
+        $q = $this->createMock(QueryInterface::class);
         $q
             ->method('cypher')
             ->willReturn('match n return n;');
@@ -102,7 +102,7 @@ class HttpTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenQueryFailed()
     {
-        $q = $this->getMock(QueryInterface::class);
+        $q = $this->createMock(QueryInterface::class);
         $q
             ->method('cypher')
             ->willReturn('foo');

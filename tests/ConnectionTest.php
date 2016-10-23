@@ -44,7 +44,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        $q = $this->getMock(QueryInterface::class);
+        $q = $this->createMock(QueryInterface::class);
         $q
             ->method('cypher')
             ->willReturn('match n return n');

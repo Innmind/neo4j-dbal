@@ -35,7 +35,7 @@ class HttpTranslatorTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslate()
     {
-        $q = $this->getMock(QueryInterface::class);
+        $q = $this->createMock(QueryInterface::class);
         $q
             ->method('cypher')
             ->willReturn('match n return n;');
