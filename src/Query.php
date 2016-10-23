@@ -32,13 +32,13 @@ class Query implements QueryInterface
 
         $previous = $this->clauses->first();
         $clauses = $this->clauses->shift();
-        $cypher = $previous->identifier() . ' ' . (string) $previous;
+        $cypher = $previous->identifier().' '.(string) $previous;
 
         foreach ($clauses as $clause) {
             if ($clause->identifier() === $previous->identifier()) {
                 $cypher .= ', ';
             } else {
-                $cypher .= ' ' . $clause->identifier() . ' ';
+                $cypher .= ' '.$clause->identifier().' ';
             }
 
             $cypher .= (string) $clause;

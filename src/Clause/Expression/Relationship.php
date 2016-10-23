@@ -81,7 +81,7 @@ class Relationship
             '%s-[%s%s%s]-%s',
             $this->direction === self::LEFT ? '<' : null,
             $this->variable,
-            $this->type ? ':' . $this->type : null,
+            $this->type ? ':'.$this->type : null,
             $properties,
             $this->direction === self::RIGHT ? '>' : null
         );

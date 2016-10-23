@@ -53,7 +53,7 @@ class Node
         $labels = $properties = '';
 
         if ($this->labels->count() > 0) {
-            $labels = ':' . $this->labels->join(':');
+            $labels = ':'.$this->labels->join(':');
         }
 
         if ($this->properties->count() > 0) {
