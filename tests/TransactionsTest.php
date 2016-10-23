@@ -17,7 +17,7 @@ class TransactionsTest extends \PHPUnit_Framework_TestCase
     {
         $this->s = new Server(
             'http',
-            getenv('CI') ? 'localhost' : 'docker',
+            'localhost',
             7474
         );
         $auth = new Authentication('neo4j', 'ci');

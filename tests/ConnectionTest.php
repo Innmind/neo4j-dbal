@@ -26,7 +26,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $server = new Server(
             'http',
-            getenv('CI') ? 'localhost' : 'docker',
+            'localhost',
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
