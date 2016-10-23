@@ -25,9 +25,10 @@ trait PathAware
         string $variable = null,
         array $labels = []
     ): ClauseInterface {
-        return new self(
-            $this->path->linkedTo($variable, $labels)
-        );
+        $clause = clone $this;
+        $clause->path = $this->path->linkedTo($variable, $labels);
+
+        return $clause;
     }
 
     /**
@@ -38,9 +39,10 @@ trait PathAware
         string $type = null,
         string $direction = Expression\Relationship::BOTH
     ): ClauseInterface {
-        return new self(
-            $this->path->through($variable, $type, $direction)
-        );
+        $clause = clone $this;
+        $clause->path = $this->path->through($variable, $type, $direction);
+
+        return $clause;
     }
 
     /**
@@ -50,9 +52,10 @@ trait PathAware
         string $property,
         string $cypher
     ): ClauseInterface {
-        return new self(
-            $this->path->withProperty($property, $cypher)
-        );
+        $clause = clone $this;
+        $clause->path = $this->path->withProperty($property, $cypher);
+
+        return $clause;
     }
 
     /**
@@ -60,9 +63,10 @@ trait PathAware
      */
     public function withParameter(string $key, $value): ClauseInterface
     {
-        return new self(
-            $this->path->withParameter($key, $value)
-        );
+        $clause = clone $this;
+        $clause->path = $this->path->withParameter($key, $value);
+
+        return $clause;
     }
 
     /**
