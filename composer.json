@@ -17,14 +17,14 @@
     "require": {
         "php": ">=7.0",
         "symfony/event-dispatcher": "~2.7|~3.0",
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "^6.2.1",
         "innmind/immutable": "~1.0",
         "psr/http-message": "^1.0"
     },
     "autoload": {
-        "psr-0": {
-            "Innmind\\Neo4j\\DBAL": ""
+        "psr-4": {
+            "Innmind\\Neo4j\\DBAL\\": "src/",
+            "Tests\\Innmind\\Neo4j\\DBAL\\": "tests/"
         }
-    },
-    "target-dir": "Innmind/Neo4j/DBAL"
+    }
 }
