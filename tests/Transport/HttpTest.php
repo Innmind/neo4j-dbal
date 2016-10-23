@@ -86,7 +86,7 @@ class HttpTest extends \PHPUnit_Framework_TestCase
         $q = $this->createMock(QueryInterface::class);
         $q
             ->method('cypher')
-            ->willReturn('match n return n;');
+            ->willReturn('match (n) return n;');
 
         $r = $this->t->execute($q);
 
