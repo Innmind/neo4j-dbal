@@ -26,6 +26,5 @@
             "Innmind\\Neo4j\\DBAL\\": "src/",
             "Tests\\Innmind\\Neo4j\\DBAL\\": "tests/"
         }
-    },
-    "target-dir": "Innmind/Neo4j/DBAL"
+    }
 }
