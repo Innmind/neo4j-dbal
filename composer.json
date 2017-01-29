@@ -27,5 +27,8 @@
             "Innmind\\Neo4j\\DBAL\\": "src/",
             "Tests\\Innmind\\Neo4j\\DBAL\\": "tests/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.6"
     }
 }
