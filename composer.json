@@ -24,7 +24,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Innmind\\Neo4j\\DBAL\\": "src/",
+            "Innmind\\Neo4j\\DBAL\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\Innmind\\Neo4j\\DBAL\\": "tests/"
         }
     },
