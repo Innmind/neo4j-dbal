@@ -6,8 +6,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Event;
 use Innmind\Neo4j\DBAL\Event\PreQueryEvent;
 use Innmind\Neo4j\DBAL\QueryInterface;
 use Innmind\Immutable\TypedCollectionInterface;
+use PHPUnit\Framework\TestCase;
 
-class PreQueryEventTest extends \PHPUnit_Framework_TestCase
+class PreQueryEventTest extends TestCase
 {
     public function testGetQuery()
     {

@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Neo4j\DBAL\Result\Id;
+use PHPUnit\Framework\TestCase;
 
-class IdTest extends \PHPUnit_Framework_TestCase
+class IdTest extends TestCase
 {
     public function testId()
     {

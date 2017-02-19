@@ -5,8 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\OnMatchClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use PHPUnit\Framework\TestCase;
 
-class OnMatchClauseTest extends \PHPUnit_Framework_TestCase
+class OnMatchClauseTest extends TestCase
 {
     public function testInterface()
     {

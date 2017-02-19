@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\Query\Parameter;
+use PHPUnit\Framework\TestCase;
 
-class ParameterTest extends \PHPUnit_Framework_TestCase
+class ParameterTest extends TestCase
 {
     public function testInterface()
     {

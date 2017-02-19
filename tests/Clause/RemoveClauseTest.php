@@ -5,8 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\RemoveClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use PHPUnit\Framework\TestCase;
 
-class RemoveClauseTest extends \PHPUnit_Framework_TestCase
+class RemoveClauseTest extends TestCase
 {
     public function testInterface()
     {

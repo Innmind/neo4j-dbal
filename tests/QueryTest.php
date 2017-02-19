@@ -4,8 +4,9 @@ namespace Tests\Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Query;
 use Innmind\Neo4j\DBAL\QueryInterface;
+use PHPUnit\Framework\TestCase;
 
-class QueryTest extends \PHPUnit_Framework_TestCase
+class QueryTest extends TestCase
 {
     public function testInterface()
     {

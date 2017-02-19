@@ -6,8 +6,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 use Innmind\Neo4j\DBAL\Clause\Expression\Path;
 use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
 use Innmind\Neo4j\DBAL\Query\Parameter;
+use PHPUnit\Framework\TestCase;
 
-class PathTest extends \PHPUnit_Framework_TestCase
+class PathTest extends TestCase
 {
     public function testStartWithNode()
     {

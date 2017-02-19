@@ -7,8 +7,9 @@ use Innmind\Neo4j\DBAL\Clause\SetClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
 use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
 use Innmind\Neo4j\DBAL\Query\Parameter;
+use PHPUnit\Framework\TestCase;
 
-class SetClauseTest extends \PHPUnit_Framework_TestCase
+class SetClauseTest extends TestCase
 {
     public function testInterface()
     {

@@ -8,8 +8,9 @@ use Innmind\Neo4j\DBAL\Result\RelationshipInterface;
 use Innmind\Neo4j\DBAL\Result\Id;
 use Innmind\Neo4j\DBAL\Result\Type;
 use Innmind\Immutable\Collection;
+use PHPUnit\Framework\TestCase;
 
-class RelationshipTest extends \PHPUnit_Framework_TestCase
+class RelationshipTest extends TestCase
 {
     public function testRelationship()
     {

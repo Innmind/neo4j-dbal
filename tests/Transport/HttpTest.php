@@ -16,8 +16,9 @@ use Innmind\Neo4j\DBAL\{
     Event\PostQueryEvent
 };
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use PHPUnit\Framework\TestCase;
 
-class HttpTest extends \PHPUnit_Framework_TestCase
+class HttpTest extends TestCase
 {
     private $t;
     private $d;

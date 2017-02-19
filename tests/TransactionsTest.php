@@ -7,8 +7,9 @@ use Innmind\Neo4j\DBAL\Transactions;
 use Innmind\Neo4j\DBAL\Transaction;
 use Innmind\Neo4j\DBAL\Server;
 use Innmind\Neo4j\DBAL\Authentication;
+use PHPUnit\Framework\TestCase;
 
-class TransactionsTest extends \PHPUnit_Framework_TestCase
+class TransactionsTest extends TestCase
 {
     private $t;
     private $s;

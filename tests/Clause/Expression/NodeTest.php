@@ -6,8 +6,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 use Innmind\Neo4j\DBAL\Clause\Expression\Node;
 use Innmind\Neo4j\DBAL\Query\Parameter;
 use Innmind\Immutable\TypedCollectionInterface;
+use PHPUnit\Framework\TestCase;
 
-class NodeTest extends \PHPUnit_Framework_TestCase
+class NodeTest extends TestCase
 {
     public function testParameters()
     {

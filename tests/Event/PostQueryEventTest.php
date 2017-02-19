@@ -7,8 +7,9 @@ use Innmind\Neo4j\DBAL\Event\PostQueryEvent;
 use Innmind\Neo4j\DBAL\QueryInterface;
 use Innmind\Neo4j\DBAL\ResultInterface;
 use Innmind\Immutable\TypedCollectionInterface;
+use PHPUnit\Framework\TestCase;
 
-class PostQueryEventTest extends \PHPUnit_Framework_TestCase
+class PostQueryEventTest extends TestCase
 {
     public function testGetters()
     {

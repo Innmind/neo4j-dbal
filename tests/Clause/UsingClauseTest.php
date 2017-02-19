@@ -5,8 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\UsingClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use PHPUnit\Framework\TestCase;
 
-class UsingClauseTest extends \PHPUnit_Framework_TestCase
+class UsingClauseTest extends TestCase
 {
     public function testInterface()
     {

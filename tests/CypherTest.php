@@ -6,8 +6,9 @@ namespace Tests\Innmind\Neo4j\DBAL;
 use Innmind\Neo4j\DBAL\Cypher;
 use Innmind\Neo4j\DBAL\QueryInterface;
 use Innmind\Neo4j\DBAL\Query\Parameter;
+use PHPUnit\Framework\TestCase;
 
-class CypherTest extends \PHPUnit_Framework_TestCase
+class CypherTest extends TestCase
 {
     public function testInterface()
     {

@@ -7,8 +7,9 @@ use Innmind\Neo4j\DBAL\Result\Node;
 use Innmind\Neo4j\DBAL\Result\NodeInterface;
 use Innmind\Neo4j\DBAL\Result\Id;
 use Innmind\Immutable\Collection;
+use PHPUnit\Framework\TestCase;
 
-class NodeTest extends \PHPUnit_Framework_TestCase
+class NodeTest extends TestCase
 {
     public function testNode()
     {

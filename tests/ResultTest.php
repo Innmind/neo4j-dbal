@@ -10,8 +10,9 @@ use Innmind\Neo4j\DBAL\{
     Result\RowInterface
 };
 use Innmind\Immutable\TypedCollectionInterface;
+use PHPUnit\Framework\TestCase;
 
-class ResultTest extends \PHPUnit_Framework_TestCase
+class ResultTest extends TestCase
 {
     public function testFromRaw()
     {

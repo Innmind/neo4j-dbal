@@ -9,8 +9,9 @@ use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
 use Innmind\Neo4j\DBAL\ClauseInterface;
 use Innmind\Neo4j\DBAL\Clause\Expression\Path;
 use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
+use PHPUnit\Framework\TestCase;
 
-class CreateClauseTest extends \PHPUnit_Framework_TestCase
+class CreateClauseTest extends TestCase
 {
     public function testInterface()
     {

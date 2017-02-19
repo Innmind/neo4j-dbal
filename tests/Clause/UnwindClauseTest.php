@@ -5,8 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\UnwindClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use PHPUnit\Framework\TestCase;
 
-class UnwindClauseTest extends \PHPUnit_Framework_TestCase
+class UnwindClauseTest extends TestCase
 {
     public function testInterface()
     {

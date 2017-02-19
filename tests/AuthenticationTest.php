@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Authentication;
+use PHPUnit\Framework\TestCase;
 
-class AuthenticationTest extends \PHPUnit_Framework_TestCase
+class AuthenticationTest extends TestCase
 {
     public function testGetters()
     {

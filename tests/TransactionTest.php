@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Transaction;
+use PHPUnit\Framework\TestCase;
 
-class TransactionTest extends \PHPUnit_Framework_TestCase
+class TransactionTest extends TestCase
 {
     public function testInterface()
     {

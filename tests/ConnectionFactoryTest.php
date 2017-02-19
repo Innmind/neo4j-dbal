@@ -8,8 +8,9 @@ use Innmind\Neo4j\DBAL\{
     ConnectionInterface
 };
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionFactoryTest extends \PHPUnit_Framework_TestCase
+class ConnectionFactoryTest extends TestCase
 {
     public function testInterface()
     {

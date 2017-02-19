@@ -16,8 +16,9 @@ use Innmind\Neo4j\DBAL\{
     Query
 };
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionTest extends \PHPUnit_Framework_TestCase
+class ConnectionTest extends TestCase
 {
     private $c;
     private $d;

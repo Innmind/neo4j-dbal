@@ -14,8 +14,9 @@ use Innmind\Neo4j\DBAL\{
 use Innmind\Immutable\TypedCollection;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Framework\TestCase;
 
-class LoggerConnectionTest extends \PHPUnit_Framework_TestCase
+class LoggerConnectionTest extends TestCase
 {
     public function testInterface()
     {

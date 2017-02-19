@@ -5,8 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\UnionClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use PHPUnit\Framework\TestCase;
 
-class UnionClauseTest extends \PHPUnit_Framework_TestCase
+class UnionClauseTest extends TestCase
 {
     public function testInterface()
     {

@@ -6,8 +6,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\Clause\ForeachClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
 use Innmind\Neo4j\DBAL\Query\Parameter;
+use PHPUnit\Framework\TestCase;
 
-class ForeachClauseTest extends \PHPUnit_Framework_TestCase
+class ForeachClauseTest extends TestCase
 {
     public function testInterface()
     {

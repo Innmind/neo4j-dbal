@@ -5,8 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause\OrderByClause;
 use Innmind\Neo4j\DBAL\ClauseInterface;
+use PHPUnit\Framework\TestCase;
 
-class OrderByClauseTest extends \PHPUnit_Framework_TestCase
+class OrderByClauseTest extends TestCase
 {
     public function testInterface()
     {

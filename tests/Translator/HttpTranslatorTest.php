@@ -11,8 +11,9 @@ use Innmind\Neo4j\DBAL\QueryInterface;
 use Innmind\Neo4j\DBAL\Query\Parameter;
 use Innmind\Immutable\TypedCollection;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
-class HttpTranslatorTest extends \PHPUnit_Framework_TestCase
+class HttpTranslatorTest extends TestCase
 {
     private $t;
 
