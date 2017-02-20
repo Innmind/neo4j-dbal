@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\OnCreateClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    Clause\OnCreateClause,
+    ClauseInterface
+};
 use PHPUnit\Framework\TestCase;
 
 class OnCreateClauseTest extends TestCase

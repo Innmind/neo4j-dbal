@@ -2,8 +2,10 @@
 
 namespace Tests\Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Query;
-use Innmind\Neo4j\DBAL\QueryInterface;
+use Innmind\Neo4j\DBAL\{
+    Query,
+    QueryInterface
+};
 use PHPUnit\Framework\TestCase;
 
 class QueryTest extends TestCase

@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Transactions;
-use Innmind\Neo4j\DBAL\Transaction;
-use Innmind\Neo4j\DBAL\Server;
-use Innmind\Neo4j\DBAL\Authentication;
+use Innmind\Neo4j\DBAL\{
+    Transactions,
+    Transaction,
+    Server,
+    Authentication
+};
 use PHPUnit\Framework\TestCase;
 
 class TransactionsTest extends TestCase

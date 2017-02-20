@@ -3,9 +3,11 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\SkipClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Clause\SkipClause,
+    ClauseInterface,
+    Query\Parameter
+};
 use PHPUnit\Framework\TestCase;
 
 class SkipClauseTest extends TestCase

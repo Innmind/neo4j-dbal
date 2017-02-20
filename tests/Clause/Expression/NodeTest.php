@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 
-use Innmind\Neo4j\DBAL\Clause\Expression\Node;
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Clause\Expression\Node,
+    Query\Parameter
+};
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
 

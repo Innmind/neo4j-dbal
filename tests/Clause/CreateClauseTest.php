@@ -3,12 +3,14 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\CreateClause;
-use Innmind\Neo4j\DBAL\Clause\PathAwareInterface;
-use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Clause\Expression\Path;
-use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
+use Innmind\Neo4j\DBAL\{
+    Clause\CreateClause,
+    Clause\PathAwareInterface,
+    Clause\ParametrableInterface,
+    ClauseInterface,
+    Clause\Expression\Path,
+    Clause\Expression\Relationship
+};
 use PHPUnit\Framework\TestCase;
 
 class CreateClauseTest extends TestCase
