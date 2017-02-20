@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class DeleteClause implements ClauseInterface
+final class DeleteClause implements ClauseInterface
 {
     const IDENTIFIER = 'DELETE';
 

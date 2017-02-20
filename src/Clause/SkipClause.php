@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class SkipClause implements ClauseInterface
+final class SkipClause implements ClauseInterface
 {
     const IDENTIFIER = 'SKIP';
 

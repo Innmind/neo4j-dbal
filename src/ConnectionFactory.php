@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\{
     EventDispatcherInterface
 };
 
-class ConnectionFactory
+final class ConnectionFactory
 {
     private $server;
     private $authentication;

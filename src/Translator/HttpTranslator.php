@@ -13,7 +13,7 @@ use Psr\Http\Message\RequestInterface;
 /**
  * Translate a dbal query into a http request
  */
-class HttpTranslator
+final class HttpTranslator
 {
     private $transactions;
 

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-class Row implements RowInterface
+final class Row implements RowInterface
 {
     private $column;
     private $value;

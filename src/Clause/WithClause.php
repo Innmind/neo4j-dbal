@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class WithClause implements ClauseInterface
+final class WithClause implements ClauseInterface
 {
     const IDENTIFIER = 'WITH';
 

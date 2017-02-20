@@ -10,7 +10,7 @@ use Innmind\Immutable\{
     Set
 };
 
-class Node
+final class Node
 {
     private $variable;
     private $labels;

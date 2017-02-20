@@ -21,7 +21,7 @@ use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class Http implements TransportInterface
+final class Http implements TransportInterface
 {
     private $translator;
     private $dispatcher;

@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class Connection implements ConnectionInterface
+final class Connection implements ConnectionInterface
 {
     private $transport;
     private $transactions;

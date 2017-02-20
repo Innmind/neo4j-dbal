@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Exception;
 
-class NonParametrableClauseException extends LogicException
+final class NonParametrableClauseException extends LogicException
 {
 }

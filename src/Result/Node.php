@@ -9,7 +9,7 @@ use Innmind\Immutable\{
     MapInterface
 };
 
-class Node implements NodeInterface
+final class Node implements NodeInterface
 {
     private $id;
     private $labels;

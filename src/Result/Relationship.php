@@ -6,7 +6,7 @@ namespace Innmind\Neo4j\DBAL\Result;
 use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
 use Innmind\Immutable\MapInterface;
 
-class Relationship implements RelationshipInterface
+final class Relationship implements RelationshipInterface
 {
     private $id;
     private $type;

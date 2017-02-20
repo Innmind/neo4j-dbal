@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     ResultInterface
 };
 
-class PostQueryEvent extends PreQueryEvent
+final class PostQueryEvent extends PreQueryEvent
 {
     private $result;
 

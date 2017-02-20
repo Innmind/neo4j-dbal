@@ -12,7 +12,7 @@ use Innmind\Immutable\{
     Map
 };
 
-class WhereClause implements ClauseInterface, ParametrableInterface
+final class WhereClause implements ClauseInterface, ParametrableInterface
 {
     const IDENTIFIER = 'WHERE';
 

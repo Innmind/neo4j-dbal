@@ -16,7 +16,7 @@ use Innmind\Immutable\{
     Stream
 };
 
-class Query implements QueryInterface
+final class Query implements QueryInterface
 {
     private $clauses;
     private $parameters;

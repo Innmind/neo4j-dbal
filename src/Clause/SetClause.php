@@ -12,7 +12,7 @@ use Innmind\Immutable\{
     Map
 };
 
-class SetClause implements ClauseInterface, ParametrableInterface
+final class SetClause implements ClauseInterface, ParametrableInterface
 {
     const IDENTIFIER = 'SET';
 

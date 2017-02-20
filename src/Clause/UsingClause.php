@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class UsingClause implements ClauseInterface
+final class UsingClause implements ClauseInterface
 {
     const IDENTIFIER = 'USING';
 

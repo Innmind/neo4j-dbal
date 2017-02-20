@@ -9,7 +9,7 @@ use Innmind\Immutable\{
     Map
 };
 
-class Cypher implements QueryInterface
+final class Cypher implements QueryInterface
 {
     private $cypher;
     private $parameters;

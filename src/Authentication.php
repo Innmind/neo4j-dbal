@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-class Authentication
+final class Authentication
 {
     private $user;
     private $password;

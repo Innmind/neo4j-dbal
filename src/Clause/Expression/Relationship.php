@@ -9,7 +9,7 @@ use Innmind\Immutable\{
     Map
 };
 
-class Relationship
+final class Relationship
 {
     const LEFT = 'LEFT';
     const RIGHT = 'RIGHT';

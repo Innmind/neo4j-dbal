@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class OnCreateClause implements ClauseInterface
+final class OnCreateClause implements ClauseInterface
 {
     const IDENTIFIER = 'ON CREATE';
 

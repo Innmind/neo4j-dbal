@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class OnMatchClause implements ClauseInterface
+final class OnMatchClause implements ClauseInterface
 {
     const IDENTIFIER = 'ON MATCH';
 

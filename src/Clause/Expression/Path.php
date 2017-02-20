@@ -13,7 +13,7 @@ use Innmind\Immutable\{
     Stream
 };
 
-class Path
+final class Path
 {
     private $elements;
     private $lastOperation;

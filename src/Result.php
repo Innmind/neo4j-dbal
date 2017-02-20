@@ -21,7 +21,7 @@ use Innmind\Immutable\{
     Set
 };
 
-class Result implements ResultInterface
+final class Result implements ResultInterface
 {
     private $nodes;
     private $relationships;

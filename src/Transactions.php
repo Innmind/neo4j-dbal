@@ -6,7 +6,7 @@ namespace Innmind\Neo4j\DBAL;
 use Innmind\Immutable\Stream;
 use GuzzleHttp\Client;
 
-class Transactions
+final class Transactions
 {
     private $transactions;
     private $http;

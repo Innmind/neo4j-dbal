@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class UnwindClause implements ClauseInterface
+final class UnwindClause implements ClauseInterface
 {
     const IDENTIFIER = 'UNWIND';
 

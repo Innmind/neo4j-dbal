@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class OrderByClause implements ClauseInterface
+final class OrderByClause implements ClauseInterface
 {
     const IDENTIFIER = 'ORDER BY';
     const ASC = 'ASC';

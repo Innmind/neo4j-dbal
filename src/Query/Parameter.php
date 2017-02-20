@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Query;
 
-class Parameter
+final class Parameter
 {
     private $key;
     private $value;

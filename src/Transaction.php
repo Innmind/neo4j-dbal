@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-class Transaction
+final class Transaction
 {
     private $endpoint;
     private $expiration;

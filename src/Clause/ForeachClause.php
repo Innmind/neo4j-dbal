@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class ForeachClause implements ClauseInterface
+final class ForeachClause implements ClauseInterface
 {
     const IDENTIFIER = 'FOREACH';
 

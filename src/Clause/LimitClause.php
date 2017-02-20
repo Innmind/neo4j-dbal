@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class LimitClause implements ClauseInterface
+final class LimitClause implements ClauseInterface
 {
     const IDENTIFIER = 'LIMIT';
 
