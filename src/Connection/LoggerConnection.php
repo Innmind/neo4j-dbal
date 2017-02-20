@@ -38,12 +38,12 @@ final class LoggerConnection implements ConnectionInterface
                     'parameters' => $query
                         ->parameters()
                         ->reduce(
-                            function(array $carry, Parameter $parameter): array {
+                            [],
+                            function(array $carry, string $key, Parameter $parameter): array {
                                 $carry[$parameter->key()] = $parameter->value();
 
                                 return $carry;
-                            },
-                            []
+                            }
                         ),
                 ]
             );

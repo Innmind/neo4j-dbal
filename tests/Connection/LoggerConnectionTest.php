@@ -11,7 +11,7 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     Exception\QueryException
 };
-use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\Map;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
@@ -51,10 +51,8 @@ class LoggerConnectionTest extends TestCase
             ->expects($this->once())
             ->method('parameters')
             ->willReturn(
-                new TypedCollection(
-                    Parameter::class,
-                    [new Parameter('bar', 'baz')]
-                )
+                (new Map('string', Parameter::class))
+                    ->put('bar', new Parameter('bar', 'baz'))
             );
         $logger
             ->expects($this->once())

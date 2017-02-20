@@ -8,7 +8,7 @@ class Row implements RowInterface
     private $column;
     private $value;
 
-    public function __construct(string $column, array $value)
+    public function __construct(string $column, $value)
     {
         $this->column = $column;
         $this->value = $value;
@@ -17,7 +17,7 @@ class Row implements RowInterface
     /**
      * {@inheritdoc}
      */
-    public function value(): array
+    public function value()
     {
         return $this->value;
     }

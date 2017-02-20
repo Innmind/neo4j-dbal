@@ -109,22 +109,23 @@ class ConnectionTest extends TestCase
 
         $this->assertSame(1, $r->nodes()->count());
         $this->assertTrue(
-            in_array('Bar', $r->nodes()->first()->labels()->toPrimitive())
+            in_array('Bar', $r->nodes()->current()->labels()->toPrimitive())
         );
         $this->assertTrue(
-            in_array('Foo', $r->nodes()->first()->labels()->toPrimitive())
+            in_array('Foo', $r->nodes()->current()->labels()->toPrimitive())
         );
+        $this->assertCount(1, $r->nodes()->current()->properties());
         $this->assertSame(
-            ['foo' => 'baz'],
-            $r->nodes()->first()->properties()->toPrimitive()
+            'baz',
+            $r->nodes()->current()->properties()->get('foo')
         );
         $this->assertSame(
             'n',
-            $r->rows()->first()->column()
+            $r->rows()->current()->column()
         );
         $this->assertSame(
             ['foo' => 'baz'],
-            $r->rows()->first()->value()
+            $r->rows()->current()->value()
         );
     }
 }

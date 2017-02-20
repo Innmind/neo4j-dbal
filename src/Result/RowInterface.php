@@ -8,9 +8,9 @@ interface RowInterface
     /**
      * Return the row value
      *
-     * @return array
+     * @return mixed
      */
-    public function value(): array;
+    public function value();
 
     /**
      * Return the column referencing this row

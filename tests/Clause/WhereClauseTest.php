@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\WhereClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Clause\WhereClause,
+    ClauseInterface,
+    Clause\ParametrableInterface,
+    Query\Parameter
+};
 use PHPUnit\Framework\TestCase;
 
 class WhereClauseTest extends TestCase
@@ -22,7 +24,8 @@ class WhereClauseTest extends TestCase
         $this->assertNotSame($c, $c->withParameter('foo', 'bar'));
         $this->assertFalse($c->hasParameters());
         $this->assertTrue($c->withParameter('dumb', 'dumb')->hasParameters());
-        $this->assertSame(1, $c->withParameter('dumb', 'dumb')->parameters()->count());
-        $this->assertSame(Parameter::class, $c->parameters()->getType());
+        $this->assertSame('string', (string) $c->parameters()->keyType());
+        $this->assertSame(Parameter::class, (string) $c->parameters()->valueType());
+        $this->assertCount(1, $c->withParameter('dumb', 'dumb')->parameters());
     }
 }

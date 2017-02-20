@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Neo4j\DBAL\Result\Relationship;
-use Innmind\Neo4j\DBAL\Result\RelationshipInterface;
-use Innmind\Neo4j\DBAL\Result\Id;
-use Innmind\Neo4j\DBAL\Result\Type;
-use Innmind\Immutable\Collection;
+use Innmind\Neo4j\DBAL\Result\{
+    Relationship,
+    RelationshipInterface,
+    Id,
+    Type
+};
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class RelationshipTest extends TestCase
@@ -19,7 +21,8 @@ class RelationshipTest extends TestCase
             $t = new Type('foo'),
             $s = new Id(24),
             $e = new Id(66),
-            $p = new Collection(['foo' => 'bar'])
+            $p = (new Map('string', 'variable'))
+                ->put('foo', 'bar')
         );
 
         $this->assertInstanceOf(RelationshipInterface::class, $r);
@@ -35,9 +38,23 @@ class RelationshipTest extends TestCase
             $t = new Type('foo'),
             $s = new Id(24),
             $e = new Id(66),
-            $p = new Collection([])
+            $p = new Map('string', 'variable')
         );
 
         $this->assertFalse($r->hasProperties());
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenInvalidPropertyMap()
+    {
+        new Relationship(
+            new Id(42),
+            new Type('foo'),
+            new Id(24),
+            new Id(66),
+            new Map('string', 'scalar')
+        );
     }
 }

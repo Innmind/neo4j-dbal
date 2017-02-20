@@ -3,10 +3,15 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Event;
 
-use Innmind\Neo4j\DBAL\Event\PostQueryEvent;
-use Innmind\Neo4j\DBAL\QueryInterface;
-use Innmind\Neo4j\DBAL\ResultInterface;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    Event\PostQueryEvent,
+    QueryInterface,
+    ResultInterface
+};
+use Innmind\Immutable\{
+    MapInterface,
+    StreamInterface
+};
 use PHPUnit\Framework\TestCase;
 
 class PostQueryEventTest extends TestCase
@@ -22,7 +27,7 @@ class PostQueryEventTest extends TestCase
             {
             }
 
-            public function parameters(): TypedCollectionInterface
+            public function parameters(): MapInterface
             {
             }
 
@@ -31,15 +36,15 @@ class PostQueryEventTest extends TestCase
             }
         };
         $r = new class implements ResultInterface {
-            public function nodes(): TypedCollectionInterface
+            public function nodes(): MapInterface
             {
             }
 
-            public function relationships(): TypedCollectionInterface
+            public function relationships(): MapInterface
             {
             }
 
-            public function rows(): TypedCollectionInterface
+            public function rows(): StreamInterface
             {
             }
         };

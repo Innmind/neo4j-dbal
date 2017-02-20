@@ -3,13 +3,15 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Translator;
 
-use Innmind\Neo4j\DBAL\Translator\HttpTranslator;
-use Innmind\Neo4j\DBAL\Transactions;
-use Innmind\Neo4j\DBAL\Server;
-use Innmind\Neo4j\DBAL\Authentication;
-use Innmind\Neo4j\DBAL\QueryInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollection;
+use Innmind\Neo4j\DBAL\{
+    Translator\HttpTranslator,
+    Transactions,
+    Server,
+    Authentication,
+    QueryInterface,
+    Query\Parameter
+};
+use Innmind\Immutable\Map;
 use Psr\Http\Message\RequestInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -45,10 +47,10 @@ class HttpTranslatorTest extends TestCase
             ->willReturn(true);
         $q
             ->method('parameters')
-            ->willReturn(new TypedCollection(
-                Parameter::class,
-                [new Parameter('foo', 'bar')]
-            ));
+            ->willReturn(
+                (new Map('string', Parameter::class))
+                    ->put('foo', new Parameter('foo', 'bar'))
+            );
 
         $r = $this->t->translate($q);
 

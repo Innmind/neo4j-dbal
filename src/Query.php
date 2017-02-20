@@ -3,12 +3,18 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Neo4j\DBAL\Exception\NonParametrableClauseException;
-use Innmind\Neo4j\DBAL\Exception\NonPathAwareClauseException;
-use Innmind\Neo4j\DBAL\Exception\NonMergeClauseException;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    Query\Parameter,
+    Clause\ParametrableInterface,
+    Exception\NonParametrableClauseException,
+    Exception\NonPathAwareClauseException,
+    Exception\NonMergeClauseException
+};
+use Innmind\Immutable\{
+    MapInterface,
+    Map,
+    Stream
+};
 
 class Query implements QueryInterface
 {
@@ -18,7 +24,7 @@ class Query implements QueryInterface
 
     public function __construct()
     {
-        $this->clauses = new TypedCollection(ClauseInterface::class, []);
+        $this->clauses = new Stream(ClauseInterface::class);
     }
 
     /**
@@ -31,7 +37,7 @@ class Query implements QueryInterface
         }
 
         $previous = $this->clauses->first();
-        $clauses = $this->clauses->shift();
+        $clauses = $this->clauses->drop(1);
         $cypher = $previous->identifier().' '.(string) $previous;
 
         foreach ($clauses as $clause) {
@@ -61,23 +67,23 @@ class Query implements QueryInterface
     /**
      * {@inheritdoc}
      */
-    public function parameters(): TypedCollectionInterface
+    public function parameters(): MapInterface
     {
         if ($this->parameters) {
             return $this->parameters;
         }
 
-        $this->parameters = new TypedCollection(Parameter::class, []);
-
-        $this->clauses->each(function($index, ClauseInterface $clause) {
-            if ($clause instanceof Clause\ParametrableInterface) {
-                $this->parameters = $this->parameters->merge(
-                    $clause->parameters()
-                );
-            }
-        });
-
-        return $this->parameters;
+        return $this->parameters = $this
+            ->clauses
+            ->filter(function(ClauseInterface $clause): bool {
+                return $clause instanceof ParametrableInterface;
+            })
+            ->reduce(
+                new Map('string', Parameter::class),
+                function(Map $carry, ParametrableInterface $clause): Map {
+                    return $carry->merge($clause->parameters());
+                }
+            );
     }
 
     /**
@@ -85,7 +91,7 @@ class Query implements QueryInterface
      */
     public function hasParameters(): bool
     {
-        return $this->parameters()->count() > 0;
+        return $this->parameters()->size() > 0;
     }
 
     /**
@@ -99,7 +105,7 @@ class Query implements QueryInterface
     public function match(string $variable = null, array $labels = []): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\MatchClause(
                 Clause\Expression\Path::startWithNode($variable, $labels)
             )
@@ -119,7 +125,7 @@ class Query implements QueryInterface
     public function maybeMatch(string $variable = null, array $labels = []): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\OptionalMatchClause(
                 Clause\Expression\Path::startWithNode($variable, $labels)
             )
@@ -170,8 +176,8 @@ class Query implements QueryInterface
         $query = new self;
         $query->clauses = $this
             ->clauses
-            ->pop()
-            ->push($clause);
+            ->dropEnd(1)
+            ->add($clause);
 
         return $query;
     }
@@ -218,8 +224,8 @@ class Query implements QueryInterface
         $query = new self;
         $query->clauses = $this
             ->clauses
-            ->pop()
-            ->push($clause);
+            ->dropEnd(1)
+            ->add($clause);
 
         return $query;
     }
@@ -246,8 +252,8 @@ class Query implements QueryInterface
         $query = new self;
         $query->clauses = $this
             ->clauses
-            ->pop()
-            ->push($clause);
+            ->dropEnd(1)
+            ->add($clause);
 
         return $query;
     }
@@ -278,8 +284,8 @@ class Query implements QueryInterface
         $query = new self;
         $query->clauses = $this
             ->clauses
-            ->pop()
-            ->push($clause);
+            ->dropEnd(1)
+            ->add($clause);
 
         return $query;
     }
@@ -294,7 +300,7 @@ class Query implements QueryInterface
     public function with(string ...$variables): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\WithClause(...$variables)
         );
 
@@ -311,7 +317,7 @@ class Query implements QueryInterface
     public function where(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\WhereClause($cypher)
         );
 
@@ -328,7 +334,7 @@ class Query implements QueryInterface
     public function set(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\SetClause($cypher)
         );
 
@@ -345,7 +351,7 @@ class Query implements QueryInterface
     public function using(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\UsingClause($cypher)
         );
 
@@ -362,7 +368,7 @@ class Query implements QueryInterface
     public function unwind(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\UnwindClause($cypher)
         );
 
@@ -377,7 +383,7 @@ class Query implements QueryInterface
     public function union(): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\UnionClause
         );
 
@@ -395,7 +401,7 @@ class Query implements QueryInterface
     public function skip(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\SkipClause($cypher)
         );
 
@@ -412,7 +418,7 @@ class Query implements QueryInterface
     public function return(string ...$variables): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\ReturnClause(...$variables)
         );
 
@@ -429,7 +435,7 @@ class Query implements QueryInterface
     public function remove(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\RemoveClause($cypher)
         );
 
@@ -449,7 +455,7 @@ class Query implements QueryInterface
         string $direction = Clause\OrderByClause::ASC
     ): self {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\OrderByClause($cypher, $direction)
         );
 
@@ -477,7 +483,7 @@ class Query implements QueryInterface
         }
 
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\OnMatchClause($cypher)
         );
 
@@ -505,7 +511,7 @@ class Query implements QueryInterface
         }
 
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\OnCreateClause($cypher)
         );
 
@@ -523,7 +529,7 @@ class Query implements QueryInterface
     public function merge(string $variable = null, array $labels = []): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\MergeClause(
                 Clause\Expression\Path::startWithNode($variable, $labels)
             )
@@ -543,7 +549,7 @@ class Query implements QueryInterface
     public function limit(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\LimitClause($cypher)
         );
 
@@ -560,7 +566,7 @@ class Query implements QueryInterface
     public function foreach(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\ForeachClause($cypher)
         );
 
@@ -578,7 +584,7 @@ class Query implements QueryInterface
     public function delete(string $variable, bool $detach = false): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\DeleteClause($variable, $detach)
         );
 
@@ -600,7 +606,7 @@ class Query implements QueryInterface
         bool $unique = false
     ): self {
         $query = new self;
-        $query->clauses = $this->clauses->push(
+        $query->clauses = $this->clauses->add(
             new Clause\CreateClause(
                 Clause\Expression\Path::startWithNode($variable, $labels),
                 $unique

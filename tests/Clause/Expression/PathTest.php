@@ -3,9 +3,11 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 
-use Innmind\Neo4j\DBAL\Clause\Expression\Path;
-use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Clause\Expression\Path,
+    Clause\Expression\Relationship,
+    Query\Parameter
+};
 use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
@@ -70,8 +72,9 @@ class PathTest extends TestCase
 
         $p2 = $p->withParameter('foo', 'bar');
         $this->assertNotSame($p, $p2);
-        $this->assertSame(1, $p2->parameters()->count());
-        $this->assertSame(Parameter::class, $p2->parameters()->getType());
+        $this->assertCount(1, $p2->parameters());
+        $this->assertSame('string', (string) $p2->parameters()->keyType());
+        $this->assertSame(Parameter::class, (string) $p2->parameters()->valueType());
         $this->assertSame($p2->parameters(), $p2->parameters());
     }
 
@@ -95,6 +98,6 @@ class PathTest extends TestCase
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
             (string) $p
         );
-        $this->assertSame(4, $p->parameters()->count());
+        $this->assertCount(4, $p->parameters());
     }
 }

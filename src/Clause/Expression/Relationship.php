@@ -4,9 +4,10 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\Collection;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Map
+};
 
 class Relationship
 {
@@ -28,14 +29,15 @@ class Relationship
         $this->variable = $variable;
         $this->type = $type;
         $this->direction = $direction;
-        $this->parameters = new TypedCollection(Parameter::class, []);
-        $this->properties = new Collection([]);
+        $this->parameters = new Map('string', Parameter::class);
+        $this->properties = new Map('string', 'string');
     }
 
     public function withParameter(string $key, $value): self
     {
         $relationship = new self($this->variable, $this->type, $this->direction);
-        $relationship->parameters = $this->parameters->push(
+        $relationship->parameters = $this->parameters->put(
+            $key,
             new Parameter($key, $value)
         );
         $relationship->properties = $this->properties;
@@ -47,12 +49,15 @@ class Relationship
     {
         $relationship = new self($this->variable, $this->type, $this->direction);
         $relationship->parameters = $this->parameters;
-        $relationship->properties = $this->properties->set($property, $cypher);
+        $relationship->properties = $this->properties->put($property, $cypher);
 
         return $relationship;
     }
 
-    public function parameters(): TypedCollectionInterface
+    /**
+     * @return MapInterface<string, Parameter>
+     */
+    public function parameters(): MapInterface
     {
         return $this->parameters;
     }
@@ -66,11 +71,11 @@ class Relationship
                 ' { %s }',
                 $this
                     ->properties
-                    ->walk(function(&$element, $index) {
-                        $element = sprintf(
+                    ->map(function(string $property, string $value): string {
+                        return sprintf(
                             '%s: %s',
-                            $index,
-                            $element
+                            $property,
+                            $value
                         );
                     })
                     ->join(', ')

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\MapInterface;
 
 interface RelationshipInterface
 {
@@ -38,9 +38,9 @@ interface RelationshipInterface
     /**
      * Return the properties
      *
-     * @return CollectionInterface
+     * @return MapInterface<string, variable>
      */
-    public function properties(): CollectionInterface;
+    public function properties(): MapInterface;
 
     /**
      * Check if the relationship has properties

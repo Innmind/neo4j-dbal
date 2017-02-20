@@ -3,10 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    ClauseInterface,
+    Query\Parameter
+};
+use Innmind\Immutable\{
+    MapInterface,
+    Map
+};
 
 class WhereClause implements ClauseInterface, ParametrableInterface
 {
@@ -18,7 +22,7 @@ class WhereClause implements ClauseInterface, ParametrableInterface
     public function __construct(string $cypher)
     {
         $this->cypher = $cypher;
-        $this->parameters = new TypedCollection(Parameter::class, []);
+        $this->parameters = new Map('string', Parameter::class);
     }
 
     /**
@@ -43,7 +47,8 @@ class WhereClause implements ClauseInterface, ParametrableInterface
     public function withParameter(string $key, $value): ClauseInterface
     {
         $where = new self($this->cypher);
-        $where->parameters = $this->parameters->push(
+        $where->parameters = $this->parameters->put(
+            $key,
             new Parameter($key, $value)
         );
 
@@ -55,13 +60,13 @@ class WhereClause implements ClauseInterface, ParametrableInterface
      */
     public function hasParameters(): bool
     {
-        return $this->parameters->count() > 0;
+        return $this->parameters->size() > 0;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parameters(): TypedCollectionInterface
+    public function parameters(): MapInterface
     {
         return $this->parameters;
     }

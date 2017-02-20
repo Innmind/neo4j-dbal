@@ -3,9 +3,11 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Event;
 
-use Innmind\Neo4j\DBAL\Event\PreQueryEvent;
-use Innmind\Neo4j\DBAL\QueryInterface;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    Event\PreQueryEvent,
+    QueryInterface
+};
+use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
 
 class PreQueryEventTest extends TestCase
@@ -21,7 +23,7 @@ class PreQueryEventTest extends TestCase
             {
             }
 
-            public function parameters(): TypedCollectionInterface
+            public function parameters(): MapInterface
             {
             }
 

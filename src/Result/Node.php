@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+use Innmind\Immutable\{
+    SetInterface,
+    MapInterface
+};
 
 class Node implements NodeInterface
 {
@@ -13,9 +17,17 @@ class Node implements NodeInterface
 
     public function __construct(
         Id $id,
-        CollectionInterface $labels,
-        CollectionInterface $properties
+        SetInterface $labels,
+        MapInterface $properties
     ) {
+        if (
+            (string) $labels->type() !== 'string' ||
+            (string) $properties->keyType() !== 'string' ||
+            (string) $properties->valueType() !== 'variable'
+        ) {
+            throw new InvalidArgumentException;
+        }
+
         $this->id = $id;
         $this->labels = $labels;
         $this->properties = $properties;
@@ -32,7 +44,7 @@ class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function labels(): CollectionInterface
+    public function labels(): SetInterface
     {
         return $this->labels;
     }
@@ -48,7 +60,7 @@ class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function properties(): CollectionInterface
+    public function properties(): MapInterface
     {
         return $this->properties;
     }

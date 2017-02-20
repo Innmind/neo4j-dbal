@@ -49,7 +49,7 @@ class CreateClauseTest extends TestCase
             (string) $c
         );
         $this->assertTrue($c->hasParameters());
-        $this->assertSame(4, $c->parameters()->count());
+        $this->assertCount(4, $c->parameters());
         $this->assertInstanceOf(CreateClause::class, $c);
     }
 }

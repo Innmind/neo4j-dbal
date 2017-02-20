@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\Stream;
 use GuzzleHttp\Client;
 
 class Transactions
@@ -16,10 +16,7 @@ class Transactions
         Authentication $authentication,
         int $timeout = 60
     ) {
-        $this->transactions = new TypedCollection(
-            Transaction::class,
-            []
-        );
+        $this->transactions = new Stream(Transaction::class);
         $this->http = new Client([
             'base_uri' => (string) $server,
             'timeout' => $timeout,
@@ -57,7 +54,7 @@ class Transactions
             $body['commit']
         );
 
-        $this->transactions = $this->transactions->push($transaction);
+        $this->transactions = $this->transactions->add($transaction);
 
         return $transaction;
     }
@@ -69,7 +66,7 @@ class Transactions
      */
     public function has(): bool
     {
-        return $this->transactions->count() > 0;
+        return $this->transactions->size() > 0;
     }
 
     /**
@@ -99,7 +96,7 @@ class Transactions
                 ],
             ]
         );
-        $this->transactions = $this->transactions->pop();
+        $this->transactions = $this->transactions->dropEnd(1);
 
         return $this;
     }
@@ -113,7 +110,7 @@ class Transactions
     {
         $transaction = $this->get();
         $this->http->delete($transaction->endpoint());
-        $this->transactions = $this->transactions->pop();
+        $this->transactions = $this->transactions->dropEnd(1);
 
         return $this;
     }

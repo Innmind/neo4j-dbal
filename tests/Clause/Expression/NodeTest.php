@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\Clause\Expression\Node;
 use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
 
 class NodeTest extends TestCase
@@ -17,9 +17,16 @@ class NodeTest extends TestCase
         $n2 = $n->withParameter('foo', 'bar');
         $this->assertNotSame($n, $n2);
         $this->assertInstanceOf(Node::class, $n2);
-        $this->assertInstanceOf(TypedCollectionInterface::class, $n2->parameters());
-        $this->assertSame(1, $n2->parameters()->count());
-        $this->assertInstanceOf(Parameter::class, $n2->parameters()->first());
+        $this->assertInstanceOf(MapInterface::class, $n2->parameters());
+        $this->assertSame(
+            'string',
+            (string) $n2->parameters()->keyType()
+        );
+        $this->assertSame(
+            Parameter::class,
+            (string) $n2->parameters()->valueType()
+        );
+        $this->assertCount(1, $n2->parameters());
     }
 
     public function testProperties()

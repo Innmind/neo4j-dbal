@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Translator;
 
-use Innmind\Neo4j\DBAL\QueryInterface;
-use Innmind\Neo4j\DBAL\Transactions;
+use Innmind\Neo4j\DBAL\{
+    QueryInterface,
+    Transactions
+};
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 

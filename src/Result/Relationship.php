@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+use Innmind\Immutable\MapInterface;
 
 class Relationship implements RelationshipInterface
 {
@@ -18,8 +19,15 @@ class Relationship implements RelationshipInterface
         Type $type,
         Id $startNode,
         Id $endNode,
-        CollectionInterface $properties
+        MapInterface $properties
     ) {
+        if (
+            (string) $properties->keyType() !== 'string' ||
+            (string) $properties->valueType() !== 'variable'
+        ) {
+            throw new InvalidArgumentException;
+        }
+
         $this->id = $id;
         $this->type = $type;
         $this->startNode = $startNode;
@@ -62,7 +70,7 @@ class Relationship implements RelationshipInterface
     /**
      * {@inheritdoc}
      */
-    public function properties(): CollectionInterface
+    public function properties(): MapInterface
     {
         return $this->properties;
     }

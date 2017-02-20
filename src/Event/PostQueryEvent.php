@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Event;
 
-use Innmind\Neo4j\DBAL\QueryInterface;
-use Innmind\Neo4j\DBAL\ResultInterface;
+use Innmind\Neo4j\DBAL\{
+    QueryInterface,
+    ResultInterface
+};
 
 class PostQueryEvent extends PreQueryEvent
 {
