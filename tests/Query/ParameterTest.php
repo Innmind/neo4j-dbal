@@ -14,4 +14,12 @@ class ParameterTest extends TestCase
         $this->assertSame('foo', $p->key());
         $this->assertSame(['value'], $p->value());
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyKey()
+    {
+        new Parameter('', 'foo');
+    }
 }

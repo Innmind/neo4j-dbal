@@ -19,4 +19,12 @@ class UnwindClauseTest extends TestCase
         $this->assertSame('UNWIND', $c->identifier());
         $this->assertSame('[1,1,2,2] as x', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new UnwindClause('');
+    }
 }

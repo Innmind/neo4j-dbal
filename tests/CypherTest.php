@@ -23,7 +23,7 @@ class CypherTest extends TestCase
 
     public function testParameters()
     {
-        $c = new Cypher('');
+        $c = new Cypher('foo');
 
         $this->assertFalse($c->hasParameters());
         $c2 = $c->withParameters(['foo' => 'bar']);
@@ -36,5 +36,21 @@ class CypherTest extends TestCase
         $this->assertSame(Parameter::class, (string) $c2->parameters()->valueType());
         $this->assertSame('string', (string) $c->parameters()->keyType());
         $this->assertSame(Parameter::class, (string) $c->parameters()->valueType());
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new Cypher('');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyParameterKey()
+    {
+        (new Cypher('foo'))->withParameter('', 'foo');
     }
 }

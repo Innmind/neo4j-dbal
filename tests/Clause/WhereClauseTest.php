@@ -28,4 +28,20 @@ class WhereClauseTest extends TestCase
         $this->assertSame(Parameter::class, (string) $c->parameters()->valueType());
         $this->assertCount(1, $c->withParameter('dumb', 'dumb')->parameters());
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new WhereClause('');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyParameterKey()
+    {
+        (new WhereClause('foo'))->withParameter('', 'foo');
+    }
 }

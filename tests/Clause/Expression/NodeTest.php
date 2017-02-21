@@ -55,4 +55,20 @@ class NodeTest extends TestCase
                 ->withParameter('where', ['value' => 'bar'])
         );
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyParameterKey()
+    {
+        (new Node)->withParameter('', 'foo');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyPropertyName()
+    {
+        (new Node)->withProperty('', 'foo');
+    }
 }

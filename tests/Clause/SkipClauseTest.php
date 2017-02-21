@@ -20,4 +20,12 @@ class SkipClauseTest extends TestCase
         $this->assertSame('SKIP', $c->identifier());
         $this->assertSame('42', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new SkipClause('');
+    }
 }

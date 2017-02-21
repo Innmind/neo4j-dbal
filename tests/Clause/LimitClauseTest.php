@@ -20,4 +20,12 @@ class LimitClauseTest extends TestCase
         $this->assertSame('LIMIT', $c->identifier());
         $this->assertSame('42', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new LimitClause('');
+    }
 }

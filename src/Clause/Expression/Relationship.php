@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Query\Parameter,
+    Exception\InvalidArgumentException
+};
 use Innmind\Immutable\{
     MapInterface,
     Map
@@ -35,6 +38,10 @@ final class Relationship
 
     public function withParameter(string $key, $value): self
     {
+        if (empty($key)) {
+            throw new InvalidArgumentException;
+        }
+
         $relationship = new self($this->variable, $this->type, $this->direction);
         $relationship->parameters = $this->parameters->put(
             $key,
@@ -47,6 +54,10 @@ final class Relationship
 
     public function withProperty(string $property, string $cypher): self
     {
+        if (empty($property)) {
+            throw new InvalidArgumentException;
+        }
+
         $relationship = new self($this->variable, $this->type, $this->direction);
         $relationship->parameters = $this->parameters;
         $relationship->properties = $this->properties->put($property, $cypher);

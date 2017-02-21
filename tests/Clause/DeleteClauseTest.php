@@ -25,4 +25,12 @@ class DeleteClauseTest extends TestCase
             (new DeleteClause('n', true))->identifier()
         );
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new DeleteClause('', false);
+    }
 }

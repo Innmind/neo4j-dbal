@@ -3,12 +3,18 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
+use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+
 final class Id
 {
     private $value;
 
     public function __construct(int $value)
     {
+        if ($value < 0) {
+            throw new InvalidArgumentException;
+        }
+
         $this->value = $value;
     }
 

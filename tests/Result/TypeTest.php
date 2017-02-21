@@ -15,4 +15,12 @@ class TypeTest extends TestCase
         $this->assertSame('foo', $t->value());
         $this->assertSame('foo', (string) $t);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyType()
+    {
+        new Type('');
+    }
 }

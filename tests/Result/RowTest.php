@@ -15,4 +15,12 @@ class RowTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $r->value());
         $this->assertSame('baz', $r->column());
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyColumn()
+    {
+        new Row('', 'foo');
+    }
 }

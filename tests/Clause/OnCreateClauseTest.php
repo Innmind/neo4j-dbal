@@ -19,4 +19,12 @@ class OnCreateClauseTest extends TestCase
         $this->assertSame('ON CREATE', $c->identifier());
         $this->assertSame('SET n:Foo', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new OnCreateClause('');
+    }
 }

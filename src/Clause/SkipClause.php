@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    ClauseInterface,
+    Exception\InvalidArgumentException
+};
 
 final class SkipClause implements ClauseInterface
 {
@@ -13,6 +16,10 @@ final class SkipClause implements ClauseInterface
 
     public function __construct(string $cypher)
     {
+        if (empty($cypher)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->cypher = $cypher;
     }
 

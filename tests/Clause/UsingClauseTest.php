@@ -19,4 +19,12 @@ class UsingClauseTest extends TestCase
         $this->assertSame('USING', $c->identifier());
         $this->assertSame('INDEX n.foo', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new UsingClause('');
+    }
 }

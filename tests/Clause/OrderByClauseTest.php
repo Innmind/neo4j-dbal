@@ -23,4 +23,20 @@ class OrderByClauseTest extends TestCase
             (string) new OrderByClause('n.foo', OrderByClause::DESC)
         );
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new OrderByClause('', OrderByClause::ASC);
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyDirection()
+    {
+        new OrderByClause('foo', '');
+    }
 }

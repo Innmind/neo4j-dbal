@@ -30,4 +30,28 @@ class TransactionTest extends TestCase
             $t->commitEndpoint()
         );
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyEndpoint()
+    {
+        new Transaction('', 'now', 'somewhere');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyExpiration()
+    {
+        new Transaction('somewhere', '', 'somewhere');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCommitEndpoint()
+    {
+        new Transaction('somewhere', 'now', '');
+    }
 }

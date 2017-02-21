@@ -20,4 +20,12 @@ class ForeachClauseTest extends TestCase
         $this->assertSame('FOREACH', $c->identifier());
         $this->assertSame('(n IN nodes(p)| SET n.marked = TRUE )', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new ForeachClause('');
+    }
 }

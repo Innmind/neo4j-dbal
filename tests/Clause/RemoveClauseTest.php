@@ -19,4 +19,12 @@ class RemoveClauseTest extends TestCase
         $this->assertSame('REMOVE', $c->identifier());
         $this->assertSame('n:Foo', (string) $c);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new RemoveClause('');
+    }
 }

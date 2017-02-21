@@ -15,4 +15,20 @@ class AuthenticationTest extends TestCase
         $this->assertSame('neo4j', $a->user());
         $this->assertSame('docker', $a->password());
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyUser()
+    {
+        new Authentication('', 'ci');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyPassword()
+    {
+        new Authentication('foo', '');
+    }
 }

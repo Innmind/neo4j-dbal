@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
+use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+
 final class Transaction
 {
     private $endpoint;
@@ -14,6 +16,10 @@ final class Transaction
         string $expiration,
         string $commitEndpoint
     ) {
+        if (empty($endpoint) || empty($expiration) || empty($commitEndpoint)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->endpoint = $endpoint;
         $this->expiration = new \DateTimeImmutable($expiration);
         $this->commitEndpoint = $commitEndpoint;

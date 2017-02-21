@@ -15,4 +15,12 @@ class IdTest extends TestCase
         $this->assertSame(42, $i->value());
         $this->assertSame('42', (string) $i);
     }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenNegativeId()
+    {
+        new Id(-1);
+    }
 }
