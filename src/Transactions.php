@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Immutable\Stream;
 use GuzzleHttp\Client;
 
@@ -10,10 +11,12 @@ final class Transactions
 {
     private $transactions;
     private $http;
+    private $clock;
 
     public function __construct(
         Server $server,
         Authentication $authentication,
+        TimeContinuumInterface $clock,
         int $timeout = 60
     ) {
         $this->transactions = new Stream(Transaction::class);
@@ -29,6 +32,7 @@ final class Transactions
                 'Accept' => 'application/json',
             ],
         ]);
+        $this->clock = $clock;
     }
 
     /**
@@ -50,7 +54,7 @@ final class Transactions
         $body = json_decode((string) $response->getBody(), true);
         $transaction = new Transaction(
             $response->getHeaderLine('Location'),
-            $body['transaction']['expires'],
+            $this->clock->at($body['transaction']['expires']),
             $body['commit']
         );
 

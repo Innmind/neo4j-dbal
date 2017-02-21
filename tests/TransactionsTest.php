@@ -9,6 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Server,
     Authentication
 };
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use PHPUnit\Framework\TestCase;
 
 class TransactionsTest extends TestCase
@@ -27,7 +28,8 @@ class TransactionsTest extends TestCase
 
         $this->t = new Transactions(
             $this->s,
-            $auth
+            $auth,
+            $this->createMock(TimeContinuumInterface::class)
         );
     }
 

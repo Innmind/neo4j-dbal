@@ -7,11 +7,16 @@ use Innmind\Neo4j\DBAL\{
     Transport\Http,
     Translator\HttpTranslator
 };
+use Innmind\TimeContinuum\{
+    TimeContinuumInterface,
+    TimeContinuum\Earth
+};
 
 final class ConnectionFactory
 {
     private $server;
     private $authentication;
+    private $clock;
 
     private function __construct()
     {
@@ -32,11 +37,19 @@ final class ConnectionFactory
         return $this;
     }
 
+    public function useClock(TimeContinuumInterface $clock): self
+    {
+        $this->clock = $clock;
+
+        return $this;
+    }
+
     public function build(): ConnectionInterface
     {
         $transactions = new Transactions(
             $this->server,
-            $this->authentication
+            $this->authentication,
+            $this->clock ?? new Earth
         );
 
         return new Connection(

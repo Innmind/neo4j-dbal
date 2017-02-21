@@ -15,6 +15,7 @@ use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     Query
 };
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
@@ -29,7 +30,11 @@ class ConnectionTest extends TestCase
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
-        $transactions = new Transactions($server, $auth);
+        $transactions = new Transactions(
+            $server,
+            $auth,
+            $this->createMock(TimeContinuumInterface::class)
+        );
         $this->c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
@@ -75,7 +80,11 @@ class ConnectionTest extends TestCase
             1337
         );
         $auth = new Authentication('neo4j', 'ci');
-        $transactions = new Transactions($server, $auth);
+        $transactions = new Transactions(
+            $server,
+            $auth,
+            $this->createMock(TimeContinuumInterface::class)
+        );
         $c = new Connection(
             new Http(
                 new HttpTranslator($transactions),

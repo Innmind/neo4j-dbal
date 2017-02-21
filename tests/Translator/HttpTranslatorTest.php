@@ -11,6 +11,7 @@ use Innmind\Neo4j\DBAL\{
     QueryInterface,
     Query\Parameter
 };
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Immutable\Map;
 use Psr\Http\Message\RequestInterface;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,8 @@ class HttpTranslatorTest extends TestCase
                 new Authentication(
                     'neo4j',
                     'ci'
-                )
+                ),
+                $this->createMock(TimeContinuumInterface::class)
             )
         );
     }

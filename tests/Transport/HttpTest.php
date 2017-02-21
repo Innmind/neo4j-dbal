@@ -12,6 +12,7 @@ use Innmind\Neo4j\DBAL\{
     QueryInterface,
     ResultInterface
 };
+use Innmind\TimeContinuum\TimeContinuumInterface;
 use PHPUnit\Framework\TestCase;
 
 class HttpTest extends TestCase
@@ -28,7 +29,11 @@ class HttpTest extends TestCase
         $auth = new Authentication('neo4j', 'ci');
         $this->t = new Http(
             new HttpTranslator(
-                new Transactions($server, $auth)
+                new Transactions(
+                    $server,
+                    $auth,
+                    $this->createMock(TimeContinuumInterface::class)
+                )
             ),
             $server,
             $auth
@@ -53,7 +58,11 @@ class HttpTest extends TestCase
         $auth = new Authentication('neo4j', 'ci');
         $t = new Http(
             new HttpTranslator(
-                new Transactions($server, $auth)
+                new Transactions(
+                    $server,
+                    $auth,
+                    $this->createMock(TimeContinuumInterface::class)
+                )
             ),
             $server,
             $auth

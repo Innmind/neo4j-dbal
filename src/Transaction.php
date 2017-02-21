@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+use Innmind\TimeContinuum\PointInTimeInterface;
 
 final class Transaction
 {
@@ -13,15 +14,15 @@ final class Transaction
 
     public function __construct(
         string $endpoint,
-        string $expiration,
+        PointInTimeInterface $expiration,
         string $commitEndpoint
     ) {
-        if (empty($endpoint) || empty($expiration) || empty($commitEndpoint)) {
+        if (empty($endpoint) || empty($commitEndpoint)) {
             throw new InvalidArgumentException;
         }
 
         $this->endpoint = $endpoint;
-        $this->expiration = new \DateTimeImmutable($expiration);
+        $this->expiration = $expiration;
         $this->commitEndpoint = $commitEndpoint;
     }
 
@@ -38,9 +39,9 @@ final class Transaction
     /**
      * Return the date at which the transaction will expire
      *
-     * @return DateTimeInterface
+     * @return PointInTimeInterface
      */
-    public function expiration(): \DateTimeInterface
+    public function expiration(): PointInTimeInterface
     {
         return $this->expiration;
     }
