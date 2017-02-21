@@ -16,7 +16,6 @@
     },
     "require": {
         "php": "~7.0",
-        "symfony/event-dispatcher": "~2.7|~3.0",
         "guzzlehttp/guzzle": "^6.2.1",
         "innmind/immutable": "~2.0",
         "psr/http-message": "^1.0",

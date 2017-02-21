@@ -10,18 +10,13 @@ use Innmind\Neo4j\DBAL\{
     Authentication,
     Transactions,
     QueryInterface,
-    ResultInterface,
-    Events,
-    Event\PreQueryEvent,
-    Event\PostQueryEvent
+    ResultInterface
 };
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use PHPUnit\Framework\TestCase;
 
 class HttpTest extends TestCase
 {
     private $t;
-    private $d;
 
     public function setUp()
     {
@@ -35,7 +30,6 @@ class HttpTest extends TestCase
             new HttpTranslator(
                 new Transactions($server, $auth)
             ),
-            $this->d = new EventDispatcher,
             $server,
             $auth
         );
@@ -61,7 +55,6 @@ class HttpTest extends TestCase
             new HttpTranslator(
                 new Transactions($server, $auth)
             ),
-            new EventDispatcher,
             $server,
             $auth
         );
@@ -71,19 +64,6 @@ class HttpTest extends TestCase
 
     public function testExecute()
     {
-        $preFired = $postFired = false;
-        $this->d->addListener(
-            Events::PRE_QUERY,
-            function (PreQueryEvent $event) use (&$preFired) {
-                $preFired = true;
-            }
-        );
-        $this->d->addListener(
-            Events::POST_QUERY,
-            function (PostQueryEvent $event) use (&$postFired) {
-                $postFired = true;
-            }
-        );
         $q = $this->createMock(QueryInterface::class);
         $q
             ->method('cypher')
@@ -92,8 +72,6 @@ class HttpTest extends TestCase
         $r = $this->t->execute($q);
 
         $this->assertInstanceOf(ResultInterface::class, $r);
-        $this->assertTrue($preFired);
-        $this->assertTrue($postFired);
     }
 
     /**
@@ -109,10 +87,5 @@ class HttpTest extends TestCase
             ->willReturn('foo');
 
         $this->t->execute($q);
-    }
-
-    public function testDispatcher()
-    {
-        $this->assertSame($this->d, $this->t->dispatcher());
     }
 }

@@ -10,32 +10,25 @@ use Innmind\Neo4j\DBAL\{
     Result,
     Server,
     Authentication,
-    Events,
-    Event\PreQueryEvent,
-    Event\PostQueryEvent,
     Translator\HttpTranslator,
     Exception\ServerDownException,
     Exception\QueryException
 };
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Http implements TransportInterface
 {
     private $translator;
-    private $dispatcher;
     private $http;
 
     public function __construct(
         HttpTranslator $translator,
-        EventDispatcherInterface $dispatcher,
         Server $server,
         Authentication $authentication,
         int $timeout = 60
     ) {
         $this->translator = $translator;
-        $this->dispatcher = $dispatcher;
         $this->http = new Client([
             'base_uri' => (string) $server,
             'timeout' => $timeout,
@@ -54,10 +47,6 @@ final class Http implements TransportInterface
      */
     public function execute(QueryInterface $query): ResultInterface
     {
-        $this->dispatcher->dispatch(
-            Events::PRE_QUERY,
-            new PreQueryEvent($query)
-        );
         $response = $this->http->send(
             $this->translator->translate($query)
         );
@@ -68,10 +57,6 @@ final class Http implements TransportInterface
 
         $response = json_decode((string) $response->getBody(), true);
         $result = Result::fromRaw($response['results'][0] ?? []);
-        $this->dispatcher->dispatch(
-            Events::POST_QUERY,
-            new PostQueryEvent($query, $result)
-        );
 
         return $result;
     }
@@ -95,14 +80,6 @@ final class Http implements TransportInterface
         }
 
         throw new ServerDownException;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dispatcher(): EventDispatcherInterface
-    {
-        return $this->dispatcher;
     }
 
     /**

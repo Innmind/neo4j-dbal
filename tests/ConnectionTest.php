@@ -15,13 +15,11 @@ use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     Query
 };
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
 {
     private $c;
-    private $d;
 
     public function setUp()
     {
@@ -35,7 +33,6 @@ class ConnectionTest extends TestCase
         $this->c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $this->d = new EventDispatcher,
                 $server,
                 $auth
             ),
@@ -82,7 +79,6 @@ class ConnectionTest extends TestCase
         $c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                new EventDispatcher,
                 $server,
                 $auth
             ),
@@ -90,11 +86,6 @@ class ConnectionTest extends TestCase
         );
 
         $this->assertFalse($c->isAlive());
-    }
-
-    public function testDispatcher()
-    {
-        $this->assertSame($this->d, $this->c->dispatcher());
     }
 
     public function testConcrete()

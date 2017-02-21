@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
 final class Connection implements ConnectionInterface
 {
     private $transport;
@@ -76,10 +74,5 @@ final class Connection implements ConnectionInterface
         } catch (\Exception $e) {
             return false;
         }
-    }
-
-    public function dispatcher(): EventDispatcherInterface
-    {
-        return $this->transport->dispatcher();
     }
 }

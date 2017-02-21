@@ -7,16 +7,11 @@ use Innmind\Neo4j\DBAL\{
     Transport\Http,
     Translator\HttpTranslator
 };
-use Symfony\Component\EventDispatcher\{
-    EventDispatcher,
-    EventDispatcherInterface
-};
 
 final class ConnectionFactory
 {
     private $server;
     private $authentication;
-    private $dispatcher;
 
     private function __construct()
     {
@@ -37,13 +32,6 @@ final class ConnectionFactory
         return $this;
     }
 
-    public function useDispatcher(EventDispatcherInterface $dispatcher): self
-    {
-        $this->dispatcher = $dispatcher;
-
-        return $this;
-    }
-
     public function build(): ConnectionInterface
     {
         $transactions = new Transactions(
@@ -54,7 +42,6 @@ final class ConnectionFactory
         return new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $this->dispatcher ?? new EventDispatcher,
                 $this->server,
                 $this->authentication
             ),
