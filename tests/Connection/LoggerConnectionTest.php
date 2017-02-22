@@ -9,7 +9,7 @@ use Innmind\Neo4j\DBAL\{
     QueryInterface,
     ResultInterface,
     Query\Parameter,
-    Exception\QueryException
+    Exception\QueryFailedException
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Map;
@@ -70,7 +70,7 @@ class LoggerConnectionTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailedException
      */
     public function testLogWhenQueryFails()
     {
@@ -92,7 +92,7 @@ class LoggerConnectionTest extends TestCase
             ->with($query)
             ->will(
                 $this->throwException(
-                    QueryException::failed(
+                    new QueryFailedException(
                         $query,
                         $response = $this->createMock(ResponseInterface::class)
                     )

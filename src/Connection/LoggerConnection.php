@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\{
     ConnectionInterface,
     QueryInterface,
     ResultInterface,
-    Exception\QueryException,
+    Exception\QueryFailedException,
     Query\Parameter
 };
 use Psr\Log\LoggerInterface;
@@ -49,7 +49,7 @@ final class LoggerConnection implements ConnectionInterface
             );
 
             return $this->connection->execute($query);
-        } catch (QueryException $e) {
+        } catch (QueryFailedException $e) {
             $this->logger->error(
                 'Query failed',
                 [

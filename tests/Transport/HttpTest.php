@@ -116,7 +116,7 @@ class HttpTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailedException
      * @expectedExceptionMessage The query failed to execute properly
      * @expectedExceptionCode 400
      */

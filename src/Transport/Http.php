@@ -13,7 +13,7 @@ use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     HttpTransport\Transport,
     Exception\ServerDownException,
-    Exception\QueryException
+    Exception\QueryFailedException
 };
 use Innmind\Http\{
     Message\ResponseInterface,
@@ -46,7 +46,7 @@ final class Http implements TransportInterface
         );
 
         if (!$this->isSuccessful($response)) {
-            throw QueryException::failed($query, $response);
+            throw new QueryFailedException($query, $response);
         }
 
         $response = json_decode((string) $response->body(), true);
