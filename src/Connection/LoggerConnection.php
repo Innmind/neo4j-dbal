@@ -53,7 +53,7 @@ final class LoggerConnection implements ConnectionInterface
             $this->logger->error(
                 'Query failed',
                 [
-                    'message' => (string) $e->response()->getBody(),
+                    'message' => (string) $e->response()->body(),
                 ]
             );
             throw $e;

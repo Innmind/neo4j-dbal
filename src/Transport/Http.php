@@ -11,35 +11,29 @@ use Innmind\Neo4j\DBAL\{
     Server,
     Authentication,
     Translator\HttpTranslator,
+    HttpTransport\Transport,
     Exception\ServerDownException,
     Exception\QueryException
 };
-use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
+use Innmind\Http\{
+    Message\ResponseInterface,
+    Message\Request,
+    Message\Method,
+    ProtocolVersion
+};
+use Innmind\Url\Url;
 
 final class Http implements TransportInterface
 {
     private $translator;
-    private $http;
+    private $transport;
 
     public function __construct(
         HttpTranslator $translator,
-        Server $server,
-        Authentication $authentication,
-        int $timeout = 60
+        Transport $transport
     ) {
         $this->translator = $translator;
-        $this->http = new Client([
-            'base_uri' => (string) $server,
-            'timeout' => $timeout,
-            'headers' => [
-                'Authorization' => base64_encode(sprintf(
-                    '%s:%s',
-                    $authentication->user(),
-                    $authentication->password()
-                )),
-            ],
-        ]);
+        $this->transport = $transport;
     }
 
     /**
@@ -47,7 +41,7 @@ final class Http implements TransportInterface
      */
     public function execute(QueryInterface $query): ResultInterface
     {
-        $response = $this->http->send(
+        $response = $this->transport->fulfill(
             $this->translator->translate($query)
         );
 
@@ -55,7 +49,7 @@ final class Http implements TransportInterface
             throw QueryException::failed($query, $response);
         }
 
-        $response = json_decode((string) $response->getBody(), true);
+        $response = json_decode((string) $response->body(), true);
         $result = Result::fromRaw($response['results'][0] ?? []);
 
         return $result;
@@ -68,9 +62,16 @@ final class Http implements TransportInterface
     {
         try {
             $code = $this
-                ->http
-                ->options('')
-                ->getStatusCode();
+                ->transport
+                ->fulfill(
+                    new Request(
+                        Url::fromString('/'),
+                        new Method(Method::OPTIONS),
+                        new ProtocolVersion(1, 1)
+                    )
+                )
+                ->statusCode()
+                ->value();
         } catch (\Exception $e) {
             throw new ServerDownException;
         }
@@ -91,11 +92,11 @@ final class Http implements TransportInterface
      */
     private function isSuccessful(ResponseInterface $response): bool
     {
-        if ($response->getStatusCode() !== 200) {
+        if ($response->statusCode()->value() !== 200) {
             return false;
         }
 
-        $json = json_decode((string) $response->getBody(), true);
+        $json = json_decode((string) $response->body(), true);
 
         return count($json['errors']) === 0;
     }

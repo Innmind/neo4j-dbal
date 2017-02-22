@@ -7,58 +7,73 @@ use Innmind\Neo4j\DBAL\{
     Transactions,
     Transaction,
     Server,
-    Authentication
+    Authentication,
+    HttpTransport\Transport
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\Http\{
+    Translator\Response\Psr7Translator,
+    Factory\Header\Factories
+};
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class TransactionsTest extends TestCase
 {
-    private $t;
-    private $s;
+    private $transactions;
+    private $server;
 
     public function setUp()
     {
-        $this->s = new Server(
+        $this->server = new Server(
             'http',
             'localhost',
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
 
-        $this->t = new Transactions(
-            $this->s,
-            $auth,
+        $this->transactions = new Transactions(
+            new Transport(
+                $this->server,
+                $auth,
+                new GuzzleTransport(
+                    new Client,
+                    new Psr7Translator(
+                        Factories::default()
+                    )
+                )
+            ),
             $this->createMock(TimeContinuumInterface::class)
         );
     }
 
     public function testOpen()
     {
-        $this->assertFalse($this->t->has());
-        $t = $this->t->open();
+        $this->assertFalse($this->transactions->has());
+        $transaction = $this->transactions->open();
 
-        $this->assertInstanceOf(Transaction::class, $t);
+        $this->assertInstanceOf(Transaction::class, $transaction);
         $this->assertRegExp(
-            '|' . (string) $this->s . 'db/data/transaction/\d+|',
-            $t->endpoint()
+            '|' . (string) $this->server . 'db/data/transaction/\d+|',
+            (string) $transaction->endpoint()
         );
         $this->assertRegExp(
-            '|' . (string) $this->s . 'db/data/transaction/\d+/commit|',
-            $t->commitEndpoint()
+            '|' . (string) $this->server . 'db/data/transaction/\d+/commit|',
+            (string) $transaction->commitEndpoint()
         );
-        $this->assertTrue($this->t->has());
-        $this->assertSame($t, $this->t->get());
+        $this->assertTrue($this->transactions->has());
+        $this->assertSame($transaction, $this->transactions->get());
     }
 
     public function testCommit()
     {
-        $this->t->open();
+        $this->transactions->open();
         $this->assertSame(
-            $this->t,
-            $this->t->commit()
+            $this->transactions,
+            $this->transactions->commit()
         );
-        $this->assertFalse($this->t->has());
+        $this->assertFalse($this->transactions->has());
     }
 
     /**
@@ -66,7 +81,7 @@ class TransactionsTest extends TestCase
      */
     public function testThrowWhenAskingForTransactionWhenThereIsNone()
     {
-        $this->t->get();
+        $this->transactions->get();
     }
 
     /**
@@ -74,7 +89,7 @@ class TransactionsTest extends TestCase
      */
     public function testThrowWhenAskingForCommitWhenThereIsNoTransaction()
     {
-        $this->t->commit();
+        $this->transactions->commit();
     }
 
     /**
@@ -82,16 +97,16 @@ class TransactionsTest extends TestCase
      */
     public function testThrowWhenAskingForRollbackWhenThereIsNoTransaction()
     {
-        $this->t->rollback();
+        $this->transactions->rollback();
     }
 
     public function testRollback()
     {
-        $this->t->open();
+        $this->transactions->open();
         $this->assertSame(
-            $this->t,
-            $this->t->rollback()
+            $this->transactions,
+            $this->transactions->rollback()
         );
-        $this->assertFalse($this->t->has());
+        $this->assertFalse($this->transactions->has());
     }
 }

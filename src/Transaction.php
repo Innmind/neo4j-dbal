@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
 use Innmind\TimeContinuum\PointInTimeInterface;
+use Innmind\Url\UrlInterface;
 
 final class Transaction
 {
@@ -13,14 +13,10 @@ final class Transaction
     private $commitEndpoint;
 
     public function __construct(
-        string $endpoint,
+        UrlInterface $endpoint,
         PointInTimeInterface $expiration,
-        string $commitEndpoint
+        UrlInterface $commitEndpoint
     ) {
-        if (empty($endpoint) || empty($commitEndpoint)) {
-            throw new InvalidArgumentException;
-        }
-
         $this->endpoint = $endpoint;
         $this->expiration = $expiration;
         $this->commitEndpoint = $commitEndpoint;
@@ -29,9 +25,9 @@ final class Transaction
     /**
      * Return the endpoint where to make new queries
      *
-     * @return string
+     * @return UrlInterface
      */
-    public function endpoint(): string
+    public function endpoint(): UrlInterface
     {
         return $this->endpoint;
     }
@@ -49,9 +45,9 @@ final class Transaction
     /**
      * Return the endpoint to use in order to commit this transaction
      *
-     * @return string
+     * @return UrlInterface
      */
-    public function commitEndpoint(): string
+    public function commitEndpoint(): UrlInterface
     {
         return $this->commitEndpoint;
     }

@@ -5,8 +5,10 @@ namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\{
     Transport\Http,
-    Translator\HttpTranslator
+    Translator\HttpTranslator,
+    HttpTransport\Transport
 };
+use Innmind\HttpTransport\TransportInterface;
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     TimeContinuum\Earth
@@ -17,6 +19,7 @@ final class ConnectionFactory
     private $server;
     private $authentication;
     private $clock;
+    private $transport;
 
     private function __construct()
     {
@@ -44,19 +47,29 @@ final class ConnectionFactory
         return $this;
     }
 
+    public function useTransport(TransportInterface $transport): self
+    {
+        $this->transport = $transport;
+
+        return $this;
+    }
+
     public function build(): ConnectionInterface
     {
-        $transactions = new Transactions(
+        $transport = new Transport(
             $this->server,
             $this->authentication,
+            $this->transport
+        );
+        $transactions = new Transactions(
+            $transport,
             $this->clock ?? new Earth
         );
 
         return new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $this->server,
-                $this->authentication
+                $transport
             ),
             $transactions
         );

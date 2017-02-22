@@ -11,9 +11,10 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     Exception\QueryException
 };
+use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Map;
 use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface;
+use Innmind\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;
 
 class LoggerConnectionTest extends TestCase
@@ -99,8 +100,8 @@ class LoggerConnectionTest extends TestCase
             );
         $response
             ->expects($this->once())
-            ->method('getBody')
-            ->willReturn('bar');
+            ->method('body')
+            ->willReturn(new StringStream('bar'));
 
         $connection->execute($query);
     }

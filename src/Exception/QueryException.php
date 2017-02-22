@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Exception;
 
 use Innmind\Neo4j\DBAL\QueryInterface;
-use Psr\Http\Message\ResponseInterface;
+use Innmind\Http\Message\ResponseInterface;
 
 class QueryException extends \RuntimeException implements ExceptionInterface
 {

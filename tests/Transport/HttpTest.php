@@ -10,14 +10,22 @@ use Innmind\Neo4j\DBAL\{
     Authentication,
     Transactions,
     QueryInterface,
-    ResultInterface
+    ResultInterface,
+    HttpTransport\Transport,
+    TransportInterface
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\Http\{
+    Translator\Response\Psr7Translator,
+    Factory\Header\Factories
+};
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class HttpTest extends TestCase
 {
-    private $t;
+    private $transport;
 
     public function setUp()
     {
@@ -27,22 +35,38 @@ class HttpTest extends TestCase
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
-        $this->t = new Http(
+        $httpTransport = new Transport(
+            $server,
+            $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $this->transport = new Http(
             new HttpTranslator(
                 new Transactions(
-                    $server,
-                    $auth,
+                    $httpTransport,
                     $this->createMock(TimeContinuumInterface::class)
                 )
             ),
-            $server,
-            $auth
+            $httpTransport
+        );
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            TransportInterface::class,
+            $this->transport
         );
     }
 
     public function testPing()
     {
-        $this->assertSame($this->t, $this->t->ping());
+        $this->assertSame($this->transport, $this->transport->ping());
     }
 
     /**
@@ -56,31 +80,39 @@ class HttpTest extends TestCase
             1337
         );
         $auth = new Authentication('neo4j', 'ci');
-        $t = new Http(
+        $httpTransport = new Transport(
+            $server,
+            $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $transport = new Http(
             new HttpTranslator(
                 new Transactions(
-                    $server,
-                    $auth,
+                    $httpTransport,
                     $this->createMock(TimeContinuumInterface::class)
                 )
             ),
-            $server,
-            $auth
+            $httpTransport
         );
 
-        $t->ping();
+        $transport->ping();
     }
 
     public function testExecute()
     {
-        $q = $this->createMock(QueryInterface::class);
-        $q
+        $query = $this->createMock(QueryInterface::class);
+        $query
             ->method('cypher')
             ->willReturn('match (n) return n;');
 
-        $r = $this->t->execute($q);
+        $result = $this->transport->execute($query);
 
-        $this->assertInstanceOf(ResultInterface::class, $r);
+        $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
     /**
@@ -90,11 +122,11 @@ class HttpTest extends TestCase
      */
     public function testThrowWhenQueryFailed()
     {
-        $q = $this->createMock(QueryInterface::class);
-        $q
+        $query = $this->createMock(QueryInterface::class);
+        $query
             ->method('cypher')
             ->willReturn('foo');
 
-        $this->t->execute($q);
+        $this->transport->execute($query);
     }
 }

@@ -13,9 +13,16 @@ use Innmind\Neo4j\DBAL\{
     QueryInterface,
     ResultInterface,
     Translator\HttpTranslator,
-    Query
+    Query,
+    HttpTransport\Transport
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\Http\{
+    Translator\Response\Psr7Translator,
+    Factory\Header\Factories
+};
+use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
@@ -30,16 +37,24 @@ class ConnectionTest extends TestCase
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
-        $transactions = new Transactions(
+        $httpTransport = new Transport(
             $server,
             $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $transactions = new Transactions(
+            $httpTransport,
             $this->createMock(TimeContinuumInterface::class)
         );
         $this->c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $server,
-                $auth
+                $httpTransport
             ),
             $transactions
         );
@@ -80,16 +95,24 @@ class ConnectionTest extends TestCase
             1337
         );
         $auth = new Authentication('neo4j', 'ci');
-        $transactions = new Transactions(
+        $httpTransport = new Transport(
             $server,
             $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $transactions = new Transactions(
+            $httpTransport,
             $this->createMock(TimeContinuumInterface::class)
         );
         $c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $server,
-                $auth
+                $httpTransport
             ),
             $transactions
         );
