@@ -73,7 +73,11 @@ final class Http implements TransportInterface
                 ->statusCode()
                 ->value();
         } catch (\Exception $e) {
-            throw new ServerDownException;
+            throw new ServerDownException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
 
         if ($code >= 200 && $code < 300) {
