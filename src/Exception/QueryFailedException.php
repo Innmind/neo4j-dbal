@@ -6,7 +6,7 @@ namespace Innmind\Neo4j\DBAL\Exception;
 use Innmind\Neo4j\DBAL\QueryInterface;
 use Innmind\Http\Message\ResponseInterface;
 
-class QueryFailedException extends \RuntimeException implements ExceptionInterface
+final class QueryFailedException extends \RuntimeException implements ExceptionInterface
 {
     private $query;
     private $response;
