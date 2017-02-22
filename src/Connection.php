@@ -39,7 +39,7 @@ final class Connection implements ConnectionInterface
      */
     public function isTransactionOpened(): bool
     {
-        return $this->transactions->has();
+        return $this->transactions->isOpened();
     }
 
     /**

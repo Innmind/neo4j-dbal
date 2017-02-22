@@ -50,7 +50,7 @@ class TransactionsTest extends TestCase
 
     public function testOpen()
     {
-        $this->assertFalse($this->transactions->has());
+        $this->assertFalse($this->transactions->isOpened());
         $transaction = $this->transactions->open();
 
         $this->assertInstanceOf(Transaction::class, $transaction);
@@ -62,8 +62,8 @@ class TransactionsTest extends TestCase
             '|' . (string) $this->server . 'db/data/transaction/\d+/commit|',
             (string) $transaction->commitEndpoint()
         );
-        $this->assertTrue($this->transactions->has());
-        $this->assertSame($transaction, $this->transactions->get());
+        $this->assertTrue($this->transactions->isOpened());
+        $this->assertSame($transaction, $this->transactions->current());
     }
 
     public function testCommit()
@@ -73,7 +73,7 @@ class TransactionsTest extends TestCase
             $this->transactions,
             $this->transactions->commit()
         );
-        $this->assertFalse($this->transactions->has());
+        $this->assertFalse($this->transactions->isOpened());
     }
 
     /**
@@ -81,7 +81,7 @@ class TransactionsTest extends TestCase
      */
     public function testThrowWhenAskingForTransactionWhenThereIsNone()
     {
-        $this->transactions->get();
+        $this->transactions->current();
     }
 
     /**
@@ -107,6 +107,6 @@ class TransactionsTest extends TestCase
             $this->transactions,
             $this->transactions->rollback()
         );
-        $this->assertFalse($this->transactions->has());
+        $this->assertFalse($this->transactions->isOpened());
     }
 }

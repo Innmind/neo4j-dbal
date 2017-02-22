@@ -102,7 +102,7 @@ final class HttpTranslator
      */
     private function computeEndpoint(): UrlInterface
     {
-        if (!$this->transactions->has()) {
+        if (!$this->transactions->isOpened()) {
             return Url::fromString('/db/data/transaction/commit');
         }
 

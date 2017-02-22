@@ -97,7 +97,7 @@ final class Transactions
      *
      * @return bool
      */
-    public function has(): bool
+    public function isOpened(): bool
     {
         return $this->transactions->size() > 0;
     }
@@ -107,7 +107,7 @@ final class Transactions
      *
      * @return Transaction
      */
-    public function get(): Transaction
+    public function current(): Transaction
     {
         return $this->transactions->last();
     }
@@ -119,10 +119,9 @@ final class Transactions
      */
     public function commit(): self
     {
-        $transaction = $this->get();
         $this->transport->fulfill(
             new Request(
-                $transaction->commitEndpoint(),
+                $this->current()->commitEndpoint(),
                 new Method(Method::POST),
                 new ProtocolVersion(1, 1),
                 $this->headers,
@@ -141,10 +140,9 @@ final class Transactions
      */
     public function rollback(): self
     {
-        $transaction = $this->get();
         $this->transport->fulfill(
             new Request(
-                $transaction->endpoint(),
+                $this->current()->endpoint(),
                 new Method(Method::DELETE),
                 new ProtocolVersion(1, 1)
             )
