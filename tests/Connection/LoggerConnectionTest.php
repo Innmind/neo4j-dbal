@@ -9,13 +9,15 @@ use Innmind\Neo4j\DBAL\{
     QueryInterface,
     ResultInterface,
     Query\Parameter,
-    Exception\QueryException
+    Exception\QueryFailedException
 };
-use Innmind\Immutable\TypedCollection;
+use Innmind\Filesystem\Stream\StringStream;
+use Innmind\Immutable\Map;
 use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface;
+use Innmind\Http\Message\ResponseInterface;
+use PHPUnit\Framework\TestCase;
 
-class LoggerConnectionTest extends \PHPUnit_Framework_TestCase
+class LoggerConnectionTest extends TestCase
 {
     public function testInterface()
     {
@@ -50,10 +52,8 @@ class LoggerConnectionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('parameters')
             ->willReturn(
-                new TypedCollection(
-                    Parameter::class,
-                    [new Parameter('bar', 'baz')]
-                )
+                (new Map('string', Parameter::class))
+                    ->put('bar', new Parameter('bar', 'baz'))
             );
         $logger
             ->expects($this->once())
@@ -70,7 +70,7 @@ class LoggerConnectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailedException
      */
     public function testLogWhenQueryFails()
     {
@@ -92,7 +92,7 @@ class LoggerConnectionTest extends \PHPUnit_Framework_TestCase
             ->with($query)
             ->will(
                 $this->throwException(
-                    QueryException::failed(
+                    new QueryFailedException(
                         $query,
                         $response = $this->createMock(ResponseInterface::class)
                     )
@@ -100,8 +100,8 @@ class LoggerConnectionTest extends \PHPUnit_Framework_TestCase
             );
         $response
             ->expects($this->once())
-            ->method('getBody')
-            ->willReturn('bar');
+            ->method('body')
+            ->willReturn(new StringStream('bar'));
 
         $connection->execute($query);
     }

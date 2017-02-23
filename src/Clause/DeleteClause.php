@@ -3,9 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    ClauseInterface,
+    Exception\InvalidArgumentException
+};
 
-class DeleteClause implements ClauseInterface
+final class DeleteClause implements ClauseInterface
 {
     const IDENTIFIER = 'DELETE';
 
@@ -14,6 +17,10 @@ class DeleteClause implements ClauseInterface
 
     public function __construct(string $cypher, bool $detachable)
     {
+        if (empty($cypher)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->cypher = $cypher;
         $this->detachable = $detachable;
     }
@@ -24,7 +31,7 @@ class DeleteClause implements ClauseInterface
     public function identifier(): string
     {
         return $this->detachable ?
-            'DETACH ' . self::IDENTIFIER : self::IDENTIFIER;
+            'DETACH '.self::IDENTIFIER : self::IDENTIFIER;
     }
 
     /**

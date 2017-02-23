@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Neo4j\DBAL\Result\Row;
+use PHPUnit\Framework\TestCase;
 
-class RowTest extends \PHPUnit_Framework_TestCase
+class RowTest extends TestCase
 {
     public function testRow()
     {
@@ -13,5 +14,13 @@ class RowTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(['foo' => 'bar'], $r->value());
         $this->assertSame('baz', $r->column());
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyColumn()
+    {
+        new Row('', 'foo');
     }
 }

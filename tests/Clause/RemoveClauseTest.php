@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\RemoveClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    Clause\RemoveClause,
+    ClauseInterface
+};
+use PHPUnit\Framework\TestCase;
 
-class RemoveClauseTest extends \PHPUnit_Framework_TestCase
+class RemoveClauseTest extends TestCase
 {
     public function testInterface()
     {
@@ -15,5 +18,13 @@ class RemoveClauseTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ClauseInterface::class, $c);
         $this->assertSame('REMOVE', $c->identifier());
         $this->assertSame('n:Foo', (string) $c);
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new RemoveClause('');
     }
 }

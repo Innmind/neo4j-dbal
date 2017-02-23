@@ -11,16 +11,21 @@ use Innmind\Neo4j\DBAL\{
     Transactions,
     QueryInterface,
     ResultInterface,
-    Events,
-    Event\PreQueryEvent,
-    Event\PostQueryEvent
+    HttpTransport\Transport,
+    TransportInterface
 };
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\Http\{
+    Translator\Response\Psr7Translator,
+    Factory\Header\Factories
+};
+use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
-class HttpTest extends \PHPUnit_Framework_TestCase
+class HttpTest extends TestCase
 {
-    private $t;
-    private $d;
+    private $transport;
 
     public function setUp()
     {
@@ -30,19 +35,38 @@ class HttpTest extends \PHPUnit_Framework_TestCase
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
-        $this->t = new Http(
-            new HttpTranslator(
-                new Transactions($server, $auth)
-            ),
-            $this->d = new EventDispatcher,
+        $httpTransport = new Transport(
             $server,
-            $auth
+            $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $this->transport = new Http(
+            new HttpTranslator(
+                new Transactions(
+                    $httpTransport,
+                    $this->createMock(TimeContinuumInterface::class)
+                )
+            ),
+            $httpTransport
+        );
+    }
+
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            TransportInterface::class,
+            $this->transport
         );
     }
 
     public function testPing()
     {
-        $this->assertSame($this->t, $this->t->ping());
+        $this->assertSame($this->transport, $this->transport->ping());
     }
 
     /**
@@ -56,62 +80,53 @@ class HttpTest extends \PHPUnit_Framework_TestCase
             1337
         );
         $auth = new Authentication('neo4j', 'ci');
-        $t = new Http(
-            new HttpTranslator(
-                new Transactions($server, $auth)
-            ),
-            new EventDispatcher,
+        $httpTransport = new Transport(
             $server,
-            $auth
+            $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $transport = new Http(
+            new HttpTranslator(
+                new Transactions(
+                    $httpTransport,
+                    $this->createMock(TimeContinuumInterface::class)
+                )
+            ),
+            $httpTransport
         );
 
-        $t->ping();
+        $transport->ping();
     }
 
     public function testExecute()
     {
-        $preFired = $postFired = false;
-        $this->d->addListener(
-            Events::PRE_QUERY,
-            function (PreQueryEvent $event) use (&$preFired) {
-                $preFired = true;
-            }
-        );
-        $this->d->addListener(
-            Events::POST_QUERY,
-            function (PostQueryEvent $event) use (&$postFired) {
-                $postFired = true;
-            }
-        );
-        $q = $this->createMock(QueryInterface::class);
-        $q
+        $query = $this->createMock(QueryInterface::class);
+        $query
             ->method('cypher')
             ->willReturn('match (n) return n;');
 
-        $r = $this->t->execute($q);
+        $result = $this->transport->execute($query);
 
-        $this->assertInstanceOf(ResultInterface::class, $r);
-        $this->assertTrue($preFired);
-        $this->assertTrue($postFired);
+        $this->assertInstanceOf(ResultInterface::class, $result);
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailedException
      * @expectedExceptionMessage The query failed to execute properly
      * @expectedExceptionCode 400
      */
     public function testThrowWhenQueryFailed()
     {
-        $q = $this->createMock(QueryInterface::class);
-        $q
+        $query = $this->createMock(QueryInterface::class);
+        $query
             ->method('cypher')
             ->willReturn('foo');
 
-        $this->t->execute($q);
-    }
-
-    public function testDispatcher()
-    {
-        $this->assertSame($this->d, $this->t->dispatcher());
+        $this->transport->execute($query);
     }
 }

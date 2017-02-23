@@ -3,14 +3,17 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\OptionalMatchClause;
-use Innmind\Neo4j\DBAL\Clause\ParametrableInterface;
-use Innmind\Neo4j\DBAL\Clause\PathAwareInterface;
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Clause\Expression\Path;
-use Innmind\Neo4j\DBAL\Clause\Expression\Relationship;
+use Innmind\Neo4j\DBAL\{
+    Clause\OptionalMatchClause,
+    Clause\ParametrableInterface,
+    Clause\PathAwareInterface,
+    ClauseInterface,
+    Clause\Expression\Path,
+    Clause\Expression\Relationship
+};
+use PHPUnit\Framework\TestCase;
 
-class OptionalMatchClauseTest extends \PHPUnit_Framework_TestCase
+class OptionalMatchClauseTest extends TestCase
 {
     public function testInterface()
     {
@@ -44,7 +47,7 @@ class OptionalMatchClauseTest extends \PHPUnit_Framework_TestCase
             (string) $c
         );
         $this->assertTrue($c->hasParameters());
-        $this->assertSame(4, $c->parameters()->count());
+        $this->assertCount(4, $c->parameters());
         $this->assertInstanceOf(OptionalMatchClause::class, $c);
     }
 }

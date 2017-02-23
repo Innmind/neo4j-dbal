@@ -10,43 +10,30 @@ use Innmind\Neo4j\DBAL\{
     Result,
     Server,
     Authentication,
-    Events,
-    Event\PreQueryEvent,
-    Event\PostQueryEvent,
     Translator\HttpTranslator,
+    HttpTransport\Transport,
     Exception\ServerDownException,
-    Exception\QueryException
+    Exception\QueryFailedException
 };
-use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Innmind\Http\{
+    Message\ResponseInterface,
+    Message\Request,
+    Message\Method,
+    ProtocolVersion
+};
+use Innmind\Url\Url;
 
-class Http implements TransportInterface
+final class Http implements TransportInterface
 {
     private $translator;
-    private $dispatcher;
-    private $http;
+    private $transport;
 
     public function __construct(
         HttpTranslator $translator,
-        EventDispatcherInterface $dispatcher,
-        Server $server,
-        Authentication $authentication,
-        int $timeout = 60
+        Transport $transport
     ) {
         $this->translator = $translator;
-        $this->dispatcher = $dispatcher;
-        $this->http = new Client([
-            'base_uri' => (string) $server,
-            'timeout' => $timeout,
-            'headers' => [
-                'Authorization' => base64_encode(sprintf(
-                    '%s:%s',
-                    $authentication->user(),
-                    $authentication->password()
-                )),
-            ],
-        ]);
+        $this->transport = $transport;
     }
 
     /**
@@ -54,24 +41,16 @@ class Http implements TransportInterface
      */
     public function execute(QueryInterface $query): ResultInterface
     {
-        $this->dispatcher->dispatch(
-            Events::PRE_QUERY,
-            new PreQueryEvent($query)
-        );
-        $response = $this->http->send(
+        $response = $this->transport->fulfill(
             $this->translator->translate($query)
         );
 
         if (!$this->isSuccessful($response)) {
-            throw QueryException::failed($query, $response);
+            throw new QueryFailedException($query, $response);
         }
 
-        $response = json_decode((string) $response->getBody(), true);
+        $response = json_decode((string) $response->body(), true);
         $result = Result::fromRaw($response['results'][0] ?? []);
-        $this->dispatcher->dispatch(
-            Events::POST_QUERY,
-            new PostQueryEvent($query, $result)
-        );
 
         return $result;
     }
@@ -83,11 +62,22 @@ class Http implements TransportInterface
     {
         try {
             $code = $this
-                ->http
-                ->options('')
-                ->getStatusCode();
+                ->transport
+                ->fulfill(
+                    new Request(
+                        Url::fromString('/'),
+                        new Method(Method::OPTIONS),
+                        new ProtocolVersion(1, 1)
+                    )
+                )
+                ->statusCode()
+                ->value();
         } catch (\Exception $e) {
-            throw new ServerDownException;
+            throw new ServerDownException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
 
         if ($code >= 200 && $code < 300) {
@@ -95,14 +85,6 @@ class Http implements TransportInterface
         }
 
         throw new ServerDownException;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dispatcher(): EventDispatcherInterface
-    {
-        return $this->dispatcher;
     }
 
     /**
@@ -114,11 +96,11 @@ class Http implements TransportInterface
      */
     private function isSuccessful(ResponseInterface $response): bool
     {
-        if ($response->getStatusCode() !== 200) {
+        if ($response->statusCode()->value() !== 200) {
             return false;
         }
 
-        $json = json_decode((string) $response->getBody(), true);
+        $json = json_decode((string) $response->body(), true);
 
         return count($json['errors']) === 0;
     }

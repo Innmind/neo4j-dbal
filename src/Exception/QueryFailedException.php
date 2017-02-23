@@ -4,22 +4,20 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Exception;
 
 use Innmind\Neo4j\DBAL\QueryInterface;
-use Psr\Http\Message\ResponseInterface;
+use Innmind\Http\Message\ResponseInterface;
 
-class QueryException extends \RuntimeException implements ExceptionInterface
+final class QueryFailedException extends \RuntimeException implements ExceptionInterface
 {
     private $query;
     private $response;
 
-    public static function failed(
+    public function __construct(
         QueryInterface $query,
         ResponseInterface $response
-    ): self {
-        $exception = new self('The query failed to execute properly', 400);
-        $exception->query = $query;
-        $exception->response = $response;
-
-        return $exception;
+    ) {
+        parent::__construct('The query failed to execute properly', 400);
+        $this->query = $query;
+        $this->response = $response;
     }
 
     public function response(): ResponseInterface

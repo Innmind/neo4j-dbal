@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\OrderByClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    Clause\OrderByClause,
+    ClauseInterface
+};
+use PHPUnit\Framework\TestCase;
 
-class OrderByClauseTest extends \PHPUnit_Framework_TestCase
+class OrderByClauseTest extends TestCase
 {
     public function testInterface()
     {
@@ -19,5 +22,21 @@ class OrderByClauseTest extends \PHPUnit_Framework_TestCase
             'n.foo DESC',
             (string) new OrderByClause('n.foo', OrderByClause::DESC)
         );
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new OrderByClause('', OrderByClause::ASC);
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyDirection()
+    {
+        new OrderByClause('foo', '');
     }
 }

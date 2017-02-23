@@ -27,14 +27,25 @@ use Innmind\Neo4j\DBAL\{
     Query,
     Clause\Expression\Relationship
 };
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Innmind\TimeContinuum\TimeContinuum\Earth;
+use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\Http\{
+    Translator\Response\Psr7Translator,
+    Factory\Header\Factories
+};
 
 $conn = ConnectionFactory::on('localhost')
     ->for('neo4j', 'neo4j') //default neo4j credentials, you must specify them
-    ->useDispatcher(new EventDispatcher) //optional
+    ->useTransport(new GuzzleTransport(
+        new Client,
+        new Psr7Translator(
+            Factories::default()
+        )
+    ))
+    ->useClock(new Earth); //optional
 
 $query = (new Query)
-    ->create('n', ['LabelA', 'LabelB'])
+    ->match('n', ['LabelA', 'LabelB'])
         ->withProperty('foo', '{param}')
         ->withParameter('param', 'value')
     ->linkedTo('n2')
@@ -57,11 +68,3 @@ You have 3 options to execute a query:
 * use [`Query`](Query.php) to build the query via its API
 * use [`Cypher`](Cypher.php) where you put the raw cypher query
 * create your own class that implements [`QueryInterface`](QueryInterface.php)
-
-### Events
-
-On each query executed 2 events are dispatched: [`Events::PRE_QUERY`](Events.php) and [`Events::POST_QUERY`](Events.php).
-
-**Note**: in case you did not used your own dispatcher in the connection factory, you can still access the one used by the onnection via `ConnectionInterface::dispatcher()`.
-
-The first event will give you access that will be sent to the server. The second will give you access to the query and the parsed result.

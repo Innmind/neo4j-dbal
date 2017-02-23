@@ -2,10 +2,13 @@
 
 namespace Tests\Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Query;
-use Innmind\Neo4j\DBAL\QueryInterface;
+use Innmind\Neo4j\DBAL\{
+    Query,
+    QueryInterface
+};
+use PHPUnit\Framework\TestCase;
 
-class QueryTest extends \PHPUnit_Framework_TestCase
+class QueryTest extends TestCase
 {
     public function testInterface()
     {
@@ -23,13 +26,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
                 ->withProperties(['bar' => '{bar}'])
                 ->withParameters(['bar' => 'baz'])
             ->through('TYPE', 'r')
-                ->withProperties(['foo' => '{bar}'])
-                ->withParameters(['bar' => 'foobar'])
+                ->withProperties(['foo' => '{baz}'])
+                ->withParameters(['baz' => 'foobar'])
             ->with('n', 'n2', 'r')
-            ->where('n.foo = {bar}')
-                ->withParameter('bar', 'baz')
-            ->where('n2.bar = {foobar}.whatever')
-                ->withParameter('foobar', ['whatever' => 'value'])
+            ->where('n.foo = {foobar}')
+                ->withParameter('foobar', 'baz')
+            ->where('n2.bar = {foobaz}.whatever')
+                ->withParameter('foobaz', ['whatever' => 'value'])
             ->set('n :ExtraLabel')
             ->create('n2', ['Foo', 'Bar'])
             ->delete('unknown')
@@ -47,11 +50,11 @@ class QueryTest extends \PHPUnit_Framework_TestCase
             ->using('INDEX n.foo');
 
         $this->assertSame(
-            $e = 'MATCH (n:labels { foo: {foo} })-[r:TYPE { foo: {bar} }]-(n2:labels { bar: {bar} }) WITH n, n2, r WHERE n.foo = {bar}, n2.bar = {foobar}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
+            $e = 'MATCH (n:labels { foo: {foo} })-[r:TYPE { foo: {baz} }]-(n2:labels { bar: {bar} }) WITH n, n2, r WHERE n.foo = {foobar}, n2.bar = {foobaz}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
             (string) $q
         );
         $this->assertSame($e, $q->cypher());
-        $this->assertSame(5, $q->parameters()->count());
+        $this->assertCount(5, $q->parameters());
     }
 
     /**

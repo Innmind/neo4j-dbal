@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class ReturnClause implements ClauseInterface
+final class ReturnClause implements ClauseInterface
 {
     const IDENTIFIER = 'RETURN';
 

@@ -3,28 +3,31 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-class Transaction
+use Innmind\TimeContinuum\PointInTimeInterface;
+use Innmind\Url\UrlInterface;
+
+final class Transaction
 {
     private $endpoint;
     private $expiration;
     private $commitEndpoint;
 
     public function __construct(
-        string $endpoint,
-        string $expiration,
-        string $commitEndpoint
+        UrlInterface $endpoint,
+        PointInTimeInterface $expiration,
+        UrlInterface $commitEndpoint
     ) {
         $this->endpoint = $endpoint;
-        $this->expiration = new \DateTimeImmutable($expiration);
+        $this->expiration = $expiration;
         $this->commitEndpoint = $commitEndpoint;
     }
 
     /**
      * Return the endpoint where to make new queries
      *
-     * @return string
+     * @return UrlInterface
      */
-    public function endpoint(): string
+    public function endpoint(): UrlInterface
     {
         return $this->endpoint;
     }
@@ -32,9 +35,9 @@ class Transaction
     /**
      * Return the date at which the transaction will expire
      *
-     * @return DateTimeInterface
+     * @return PointInTimeInterface
      */
-    public function expiration(): \DateTimeInterface
+    public function expiration(): PointInTimeInterface
     {
         return $this->expiration;
     }
@@ -42,9 +45,9 @@ class Transaction
     /**
      * Return the endpoint to use in order to commit this transaction
      *
-     * @return string
+     * @return UrlInterface
      */
-    public function commitEndpoint(): string
+    public function commitEndpoint(): UrlInterface
     {
         return $this->commitEndpoint;
     }

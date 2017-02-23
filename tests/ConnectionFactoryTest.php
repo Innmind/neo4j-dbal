@@ -7,25 +7,30 @@ use Innmind\Neo4j\DBAL\{
     ConnectionFactory,
     ConnectionInterface
 };
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Innmind\HttpTransport\TransportInterface;
+use Innmind\TimeContinuum\TimeContinuumInterface;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionFactoryTest extends \PHPUnit_Framework_TestCase
+class ConnectionFactoryTest extends TestCase
 {
     public function testInterface()
     {
         $connection = ConnectionFactory::on('localhost')
             ->for('neo4j', 'neo4j')
-            ->useDispatcher($d = new EventDispatcher)
+            ->useTransport($this->createMock(TransportInterface::class))
             ->build();
 
         $this->assertInstanceOf(ConnectionInterface::class, $connection);
-        $this->assertSame($d, $connection->dispatcher());
+    }
 
+    public function testUseClock()
+    {
         $connection = ConnectionFactory::on('localhost')
             ->for('neo4j', 'neo4j')
+            ->useTransport($this->createMock(TransportInterface::class))
+            ->useClock($this->createMock(TimeContinuumInterface::class))
             ->build();
 
         $this->assertInstanceOf(ConnectionInterface::class, $connection);
-        $this->assertInstanceOf(EventDispatcher::class, $connection->dispatcher());
     }
 }

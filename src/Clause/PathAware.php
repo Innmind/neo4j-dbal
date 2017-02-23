@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\MapInterface;
 
 trait PathAware
 {
@@ -74,13 +74,13 @@ trait PathAware
      */
     public function hasParameters(): bool
     {
-        return $this->path->parameters()->count() > 0;
+        return $this->path->parameters()->size() > 0;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parameters(): TypedCollectionInterface
+    public function parameters(): MapInterface
     {
         return $this->path->parameters();
     }

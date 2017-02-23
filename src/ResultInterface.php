@@ -3,28 +3,31 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    StreamInterface
+};
 
 interface ResultInterface
 {
     /**
      * Return a list of nodes
      *
-     * @return TypedCollectionInterface
+     * @return MapInterface<int, NodeInterface>
      */
-    public function nodes(): TypedCollectionInterface;
+    public function nodes(): MapInterface;
 
     /**
      * Return a list of relationships
      *
-     * @return TypedCollectionInterface
+     * @return MapInterface<int, RelationshipInterface>
      */
-    public function relationships(): TypedCollectionInterface;
+    public function relationships(): MapInterface;
 
     /**
      * Return the rows
      *
-     * @return TypedCollectionInterface
+     * @return StreamInterface<RowInterface>
      */
-    public function rows(): TypedCollectionInterface;
+    public function rows(): StreamInterface;
 }

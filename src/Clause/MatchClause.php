@@ -4,9 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Immutable\TypedCollectionInterface;
 
-class MatchClause implements ClauseInterface, PathAwareInterface
+final class MatchClause implements ClauseInterface, PathAwareInterface
 {
     use PathAware;
 

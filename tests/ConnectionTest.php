@@ -13,14 +13,21 @@ use Innmind\Neo4j\DBAL\{
     QueryInterface,
     ResultInterface,
     Translator\HttpTranslator,
-    Query
+    Query,
+    HttpTransport\Transport
 };
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\Http\{
+    Translator\Response\Psr7Translator,
+    Factory\Header\Factories
+};
+use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionTest extends \PHPUnit_Framework_TestCase
+class ConnectionTest extends TestCase
 {
     private $c;
-    private $d;
 
     public function setUp()
     {
@@ -30,13 +37,24 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
-        $transactions = new Transactions($server, $auth);
+        $httpTransport = new Transport(
+            $server,
+            $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $transactions = new Transactions(
+            $httpTransport,
+            $this->createMock(TimeContinuumInterface::class)
+        );
         $this->c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $this->d = new EventDispatcher,
-                $server,
-                $auth
+                $httpTransport
             ),
             $transactions
         );
@@ -77,23 +95,29 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             1337
         );
         $auth = new Authentication('neo4j', 'ci');
-        $transactions = new Transactions($server, $auth);
+        $httpTransport = new Transport(
+            $server,
+            $auth,
+            new GuzzleTransport(
+                new Client,
+                new Psr7Translator(
+                    Factories::default()
+                )
+            )
+        );
+        $transactions = new Transactions(
+            $httpTransport,
+            $this->createMock(TimeContinuumInterface::class)
+        );
         $c = new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                new EventDispatcher,
-                $server,
-                $auth
+                $httpTransport
             ),
             $transactions
         );
 
         $this->assertFalse($c->isAlive());
-    }
-
-    public function testDispatcher()
-    {
-        $this->assertSame($this->d, $this->c->dispatcher());
     }
 
     public function testConcrete()
@@ -108,22 +132,23 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(1, $r->nodes()->count());
         $this->assertTrue(
-            in_array('Bar', $r->nodes()->first()->labels()->toPrimitive())
+            in_array('Bar', $r->nodes()->current()->labels()->toPrimitive())
         );
         $this->assertTrue(
-            in_array('Foo', $r->nodes()->first()->labels()->toPrimitive())
+            in_array('Foo', $r->nodes()->current()->labels()->toPrimitive())
         );
+        $this->assertCount(1, $r->nodes()->current()->properties());
         $this->assertSame(
-            ['foo' => 'baz'],
-            $r->nodes()->first()->properties()->toPrimitive()
+            'baz',
+            $r->nodes()->current()->properties()->get('foo')
         );
         $this->assertSame(
             'n',
-            $r->rows()->first()->column()
+            $r->rows()->current()->column()
         );
         $this->assertSame(
             ['foo' => 'baz'],
-            $r->rows()->first()->value()
+            $r->rows()->current()->value()
         );
     }
 }

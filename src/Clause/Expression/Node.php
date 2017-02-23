@@ -3,12 +3,17 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\Collection;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    Query\Parameter,
+    Exception\InvalidArgumentException
+};
+use Innmind\Immutable\{
+    MapInterface,
+    Map,
+    Set
+};
 
-class Node
+final class Node
 {
     private $variable;
     private $labels;
@@ -17,16 +22,27 @@ class Node
 
     public function __construct(string $variable = null, array $labels = [])
     {
+        $set = new Set('string');
+
+        foreach ($labels as $value) {
+            $set = $set->add($value);
+        }
+
         $this->variable = $variable;
-        $this->labels = new Collection($labels);
-        $this->parameters = new TypedCollection(Parameter::class, []);
-        $this->properties = new Collection([]);
+        $this->labels = $set;
+        $this->parameters = new Map('string', Parameter::class);
+        $this->properties = new Map('string', 'string');
     }
 
     public function withParameter(string $key, $value): self
     {
+        if (empty($key)) {
+            throw new InvalidArgumentException;
+        }
+
         $node = new self($this->variable, $this->labels->toPrimitive());
-        $node->parameters = $this->parameters->push(
+        $node->parameters = $this->parameters->put(
+            $key,
             new Parameter($key, $value)
         );
         $node->properties = $this->properties;
@@ -36,14 +52,21 @@ class Node
 
     public function withProperty(string $property, string $cypher): self
     {
+        if (empty($property)) {
+            throw new InvalidArgumentException;
+        }
+
         $node = new self($this->variable, $this->labels->toPrimitive());
         $node->parameters = $this->parameters;
-        $node->properties = $this->properties->set($property, $cypher);
+        $node->properties = $this->properties->put($property, $cypher);
 
         return $node;
     }
 
-    public function parameters(): TypedCollectionInterface
+    /**
+     * @return MapInterface<string, Parameter>
+     */
+    public function parameters(): MapInterface
     {
         return $this->parameters;
     }
@@ -61,11 +84,11 @@ class Node
                 ' { %s }',
                 $this
                     ->properties
-                    ->walk(function(&$element, $index) {
-                        $element = sprintf(
+                    ->map(function(string $property, string $value): string {
+                        return sprintf(
                             '%s: %s',
-                            $index,
-                            $element
+                            $property,
+                            $value
                         );
                     })
                     ->join(', ')

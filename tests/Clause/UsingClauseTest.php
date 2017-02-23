@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\UsingClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    Clause\UsingClause,
+    ClauseInterface
+};
+use PHPUnit\Framework\TestCase;
 
-class UsingClauseTest extends \PHPUnit_Framework_TestCase
+class UsingClauseTest extends TestCase
 {
     public function testInterface()
     {
@@ -15,5 +18,13 @@ class UsingClauseTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ClauseInterface::class, $c);
         $this->assertSame('USING', $c->identifier());
         $this->assertSame('INDEX n.foo', (string) $c);
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new UsingClause('');
     }
 }

@@ -3,12 +3,17 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    ClauseInterface,
+    Query\Parameter,
+    Exception\InvalidArgumentException
+};
+use Innmind\Immutable\{
+    MapInterface,
+    Map
+};
 
-class SetClause implements ClauseInterface, ParametrableInterface
+final class SetClause implements ClauseInterface, ParametrableInterface
 {
     const IDENTIFIER = 'SET';
 
@@ -17,8 +22,12 @@ class SetClause implements ClauseInterface, ParametrableInterface
 
     public function __construct(string $cypher)
     {
+        if (empty($cypher)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->cypher = $cypher;
-        $this->parameters = new TypedCollection(Parameter::class, []);
+        $this->parameters = new Map('string', Parameter::class);
     }
 
     /**
@@ -42,8 +51,13 @@ class SetClause implements ClauseInterface, ParametrableInterface
      */
     public function withParameter(string $key, $value): ClauseInterface
     {
+        if (empty($key)) {
+            throw new InvalidArgumentException;
+        }
+
         $set = new self($this->cypher);
-        $set->parameters = $this->parameters->push(
+        $set->parameters = $this->parameters->put(
+            $key,
             new Parameter($key, $value)
         );
 
@@ -55,13 +69,13 @@ class SetClause implements ClauseInterface, ParametrableInterface
      */
     public function hasParameters(): bool
     {
-        return $this->parameters->count() > 0;
+        return $this->parameters->size() > 0;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parameters(): TypedCollectionInterface
+    public function parameters(): MapInterface
     {
         return $this->parameters;
     }

@@ -3,9 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    ClauseInterface,
+    Exception\InvalidArgumentException
+};
 
-class LimitClause implements ClauseInterface
+final class LimitClause implements ClauseInterface
 {
     const IDENTIFIER = 'LIMIT';
 
@@ -13,6 +16,10 @@ class LimitClause implements ClauseInterface
 
     public function __construct(string $cypher)
     {
+        if (empty($cypher)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->cypher = $cypher;
     }
 

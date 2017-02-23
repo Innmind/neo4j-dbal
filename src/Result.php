@@ -3,28 +3,34 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Result\NodeInterface;
-use Innmind\Neo4j\DBAL\Result\RelationshipInterface;
-use Innmind\Neo4j\DBAL\Result\RowInterface;
-use Innmind\Neo4j\DBAL\Result\Node;
-use Innmind\Neo4j\DBAL\Result\Relationship;
-use Innmind\Neo4j\DBAL\Result\Row;
-use Innmind\Neo4j\DBAL\Result\Id;
-use Innmind\Neo4j\DBAL\Result\Type;
-use Innmind\Immutable\TypedCollectionInterface;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\Collection;
+use Innmind\Neo4j\DBAL\Result\{
+    NodeInterface,
+    RelationshipInterface,
+    RowInterface,
+    Node,
+    Relationship,
+    Row,
+    Id,
+    Type
+};
+use Innmind\Immutable\{
+    MapInterface,
+    StreamInterface,
+    Map,
+    Stream,
+    Set
+};
 
-class Result implements ResultInterface
+final class Result implements ResultInterface
 {
     private $nodes;
     private $relationships;
     private $rows;
 
     public function __construct(
-        TypedCollectionInterface $nodes,
-        TypedCollectionInterface $relationships,
-        TypedCollectionInterface $rows
+        MapInterface $nodes,
+        MapInterface $relationships,
+        StreamInterface $rows
     ) {
         $this->nodes = $nodes;
         $this->relationships = $relationships;
@@ -43,25 +49,16 @@ class Result implements ResultInterface
         $data = $response['data'] ?? [];
 
         return new self(
-            new TypedCollection(
-                NodeInterface::class,
-                self::buildNodes($data)
-            ),
-            new TypedCollection(
-                RelationshipInterface::class,
-                self::buildRelationships($data)
-            ),
-            new TypedCollection(
-                RowInterface::class,
-                self::buildRows($response)
-            )
+            self::buildNodes($data),
+            self::buildRelationships($data),
+            self::buildRows($response)
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function nodes(): TypedCollectionInterface
+    public function nodes(): MapInterface
     {
         return $this->nodes;
     }
@@ -69,7 +66,7 @@ class Result implements ResultInterface
     /**
      * {@inheritdoc}
      */
-    public function relationships(): TypedCollectionInterface
+    public function relationships(): MapInterface
     {
         return $this->relationships;
     }
@@ -77,7 +74,7 @@ class Result implements ResultInterface
     /**
      * {@inheritdoc}
      */
-    public function rows(): TypedCollectionInterface
+    public function rows(): StreamInterface
     {
         return $this->rows;
     }
@@ -85,18 +82,27 @@ class Result implements ResultInterface
     /**
      * @param array $data
      *
-     * @return array
+     * @return MapInterface<int, Node>
      */
-    private static function buildNodes(array $data): array
+    private static function buildNodes(array $data): MapInterface
     {
-        $nodes = [];
+        $nodes = new Map('int', NodeInterface::class);
 
         foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
-                $nodes[(int) $node['id']] = new Node(
-                    new Id((int) $node['id']),
-                    new Collection($node['labels']),
-                    new Collection($node['properties'])
+                $labels = new Set('string');
+
+                foreach ($node['labels'] as $label) {
+                    $labels = $labels->add($label);
+                }
+
+                $nodes = $nodes->put(
+                    (int) $node['id'],
+                    new Node(
+                        new Id((int) $node['id']),
+                        $labels,
+                        self::buildProperties($node['properties'])
+                    )
                 );
             }
         }
@@ -107,20 +113,23 @@ class Result implements ResultInterface
     /**
      * @param array $data
      *
-     * @return array
+     * @return MapInterface<int, Relationship>
      */
-    private static function buildRelationships(array $data): array
+    private static function buildRelationships(array $data): MapInterface
     {
-        $relationships = [];
+        $relationships = new Map('int', RelationshipInterface::class);
 
         foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
-                $relationships[(int) $rel['id']] = new Relationship(
-                    new Id((int) $rel['id']),
-                    new Type($rel['type']),
-                    new Id((int) $rel['startNode']),
-                    new Id((int) $rel['endNode']),
-                    new Collection($rel['properties'])
+                $relationships = $relationships->put(
+                    (int) $rel['id'],
+                    new Relationship(
+                        new Id((int) $rel['id']),
+                        new Type($rel['type']),
+                        new Id((int) $rel['startNode']),
+                        new Id((int) $rel['endNode']),
+                        self::buildProperties($rel['properties'])
+                    )
                 );
             }
         }
@@ -131,22 +140,36 @@ class Result implements ResultInterface
     /**
      * @param array $data
      *
-     * @return array
+     * @return StreamInterface<RowInterface>
      */
-    public static function buildRows(array $data): array
+    public static function buildRows(array $data): StreamInterface
     {
-        $rows = [];
+        $rows = new Stream(RowInterface::class);
         $responses = $data['data'] ?? [];
 
         foreach ($responses as $response) {
             foreach ($response['row'] as $idx => $row) {
-                $rows[] = new Row(
+                $rows = $rows->add(new Row(
                     $data['columns'][$idx],
                     $row
-                );
+                ));
             }
         }
 
         return $rows;
+    }
+
+    /**
+     * @return MapInterface<string, variable>
+     */
+    private static function buildProperties(array $data): MapInterface
+    {
+        $properties = new Map('string', 'variable');
+
+        foreach ($data as $key => $value) {
+            $properties = $properties->put($key, $value);
+        }
+
+        return $properties;
     }
 }

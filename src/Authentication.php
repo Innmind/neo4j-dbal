@@ -3,13 +3,19 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-class Authentication
+use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+
+final class Authentication
 {
     private $user;
     private $password;
 
     public function __construct(string $user, string $password)
     {
+        if (empty($user) || empty($password)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->user = $user;
         $this->password = $password;
     }

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\MapInterface;
 
 interface ParametrableInterface
 {
@@ -28,7 +28,7 @@ interface ParametrableInterface
     /**
      * Return the list of parameters
      *
-     * @return TypedCollectionInterface
+     * @return MapInterface<string, Parameter>
      */
-    public function parameters(): TypedCollectionInterface;
+    public function parameters(): MapInterface;
 }

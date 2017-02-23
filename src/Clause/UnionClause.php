@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class UnionClause implements ClauseInterface
+final class UnionClause implements ClauseInterface
 {
     const IDENTIFIER = 'UNION';
 

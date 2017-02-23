@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Neo4j\DBAL\Result\Id;
+use PHPUnit\Framework\TestCase;
 
-class IdTest extends \PHPUnit_Framework_TestCase
+class IdTest extends TestCase
 {
     public function testId()
     {
@@ -13,5 +14,13 @@ class IdTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(42, $i->value());
         $this->assertSame('42', (string) $i);
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenNegativeId()
+    {
+        new Id(-1);
     }
 }

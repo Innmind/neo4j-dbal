@@ -5,18 +5,21 @@ namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\{
     Transport\Http,
-    Translator\HttpTranslator
+    Translator\HttpTranslator,
+    HttpTransport\Transport
 };
-use Symfony\Component\EventDispatcher\{
-    EventDispatcher,
-    EventDispatcherInterface
+use Innmind\HttpTransport\TransportInterface;
+use Innmind\TimeContinuum\{
+    TimeContinuumInterface,
+    TimeContinuum\Earth
 };
 
-class ConnectionFactory
+final class ConnectionFactory
 {
     private $server;
     private $authentication;
-    private $dispatcher;
+    private $clock;
+    private $transport;
 
     private function __construct()
     {
@@ -37,26 +40,36 @@ class ConnectionFactory
         return $this;
     }
 
-    public function useDispatcher(EventDispatcherInterface $dispatcher): self
+    public function useClock(TimeContinuumInterface $clock): self
     {
-        $this->dispatcher = $dispatcher;
+        $this->clock = $clock;
+
+        return $this;
+    }
+
+    public function useTransport(TransportInterface $transport): self
+    {
+        $this->transport = $transport;
 
         return $this;
     }
 
     public function build(): ConnectionInterface
     {
-        $transactions = new Transactions(
+        $transport = new Transport(
             $this->server,
-            $this->authentication
+            $this->authentication,
+            $this->transport
+        );
+        $transactions = new Transactions(
+            $transport,
+            $this->clock ?? new Earth
         );
 
         return new Connection(
             new Http(
                 new HttpTranslator($transactions),
-                $this->dispatcher ?? new EventDispatcher,
-                $this->server,
-                $this->authentication
+                $transport
             ),
             $transactions
         );

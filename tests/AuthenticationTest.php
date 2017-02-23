@@ -4,8 +4,9 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Authentication;
+use PHPUnit\Framework\TestCase;
 
-class AuthenticationTest extends \PHPUnit_Framework_TestCase
+class AuthenticationTest extends TestCase
 {
     public function testGetters()
     {
@@ -13,5 +14,21 @@ class AuthenticationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('neo4j', $a->user());
         $this->assertSame('docker', $a->password());
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyUser()
+    {
+        new Authentication('', 'ci');
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyPassword()
+    {
+        new Authentication('foo', '');
     }
 }

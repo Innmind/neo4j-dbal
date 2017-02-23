@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\MapInterface;
 
 interface QueryInterface
 {
@@ -24,9 +24,9 @@ interface QueryInterface
     /**
      * Return the list of parameters
      *
-     * @return TypedCollectionInterface
+     * @return MapInterface<string, Parameter>
      */
-    public function parameters(): TypedCollectionInterface;
+    public function parameters(): MapInterface;
 
     /**
      * Check if parameters have been set

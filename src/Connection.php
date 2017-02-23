@@ -3,9 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
-class Connection implements ConnectionInterface
+final class Connection implements ConnectionInterface
 {
     private $transport;
     private $transactions;
@@ -41,7 +39,7 @@ class Connection implements ConnectionInterface
      */
     public function isTransactionOpened(): bool
     {
-        return $this->transactions->has();
+        return $this->transactions->isOpened();
     }
 
     /**
@@ -76,10 +74,5 @@ class Connection implements ConnectionInterface
         } catch (\Exception $e) {
             return false;
         }
-    }
-
-    public function dispatcher(): EventDispatcherInterface
-    {
-        return $this->transport->dispatcher();
     }
 }

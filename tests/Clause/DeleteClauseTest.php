@@ -3,11 +3,14 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\DeleteClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Clause\DeleteClause,
+    ClauseInterface,
+    Query\Parameter
+};
+use PHPUnit\Framework\TestCase;
 
-class DeleteClauseTest extends \PHPUnit_Framework_TestCase
+class DeleteClauseTest extends TestCase
 {
     public function testInterface()
     {
@@ -21,5 +24,13 @@ class DeleteClauseTest extends \PHPUnit_Framework_TestCase
             'DETACH DELETE',
             (new DeleteClause('n', true))->identifier()
         );
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new DeleteClause('', false);
     }
 }

@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-class Server
+use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+
+final class Server
 {
     private $scheme;
     private $host;
@@ -11,6 +13,14 @@ class Server
 
     public function __construct(string $scheme, string $host, int $port)
     {
+        if (
+            empty($scheme) ||
+            empty($host) ||
+            $port < 1
+        ) {
+            throw new InvalidArgumentException;
+        }
+
         $this->scheme = $scheme;
         $this->host = $host;
         $this->port = $port;

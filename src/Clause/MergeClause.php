@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class MergeClause implements ClauseInterface, PathAwareInterface
+final class MergeClause implements ClauseInterface, PathAwareInterface
 {
     use PathAware;
 

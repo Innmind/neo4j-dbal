@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause\OnCreateClause;
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    Clause\OnCreateClause,
+    ClauseInterface
+};
+use PHPUnit\Framework\TestCase;
 
-class OnCreateClauseTest extends \PHPUnit_Framework_TestCase
+class OnCreateClauseTest extends TestCase
 {
     public function testInterface()
     {
@@ -15,5 +18,13 @@ class OnCreateClauseTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ClauseInterface::class, $c);
         $this->assertSame('ON CREATE', $c->identifier());
         $this->assertSame('SET n:Foo', (string) $c);
+    }
+
+    /**
+     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenEmptyCypher()
+    {
+        new OnCreateClause('');
     }
 }

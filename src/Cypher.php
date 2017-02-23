@@ -3,19 +3,28 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Neo4j\DBAL\{
+    Query\Parameter,
+    Exception\InvalidArgumentException
+};
+use Innmind\Immutable\{
+    MapInterface,
+    Map
+};
 
-class Cypher implements QueryInterface
+final class Cypher implements QueryInterface
 {
     private $cypher;
     private $parameters;
 
     public function __construct(string $cypher)
     {
+        if (empty($cypher)) {
+            throw new InvalidArgumentException;
+        }
+
         $this->cypher = $cypher;
-        $this->parameters = new TypedCollection(Parameter::class, []);
+        $this->parameters = new Map('string', Parameter::class);
     }
 
     /**
@@ -37,7 +46,7 @@ class Cypher implements QueryInterface
     /**
      * {@inheritdoc}
      */
-    public function parameters(): TypedCollectionInterface
+    public function parameters(): MapInterface
     {
         return $this->parameters;
     }
@@ -47,7 +56,7 @@ class Cypher implements QueryInterface
      */
     public function hasParameters(): bool
     {
-        return $this->parameters->count() > 0;
+        return $this->parameters->size() > 0;
     }
 
     /**
@@ -82,8 +91,13 @@ class Cypher implements QueryInterface
      */
     public function withParameter(string $key, $parameter): self
     {
+        if (empty($key)) {
+            throw new InvalidArgumentException;
+        }
+
         $query = new self($this->cypher);
-        $query->parameters = $this->parameters->push(
+        $query->parameters = $this->parameters->put(
+            $key,
             new Parameter($key, $parameter)
         );
 

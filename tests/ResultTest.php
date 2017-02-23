@@ -9,23 +9,29 @@ use Innmind\Neo4j\DBAL\{
     Result\RelationshipInterface,
     Result\RowInterface
 };
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    StreamInterface
+};
+use PHPUnit\Framework\TestCase;
 
-class ResultTest extends \PHPUnit_Framework_TestCase
+class ResultTest extends TestCase
 {
     public function testFromRaw()
     {
         $r = Result::fromRaw([]);
 
-        $this->assertInstanceOf(TypedCollectionInterface::class, $r->nodes());
-        $this->assertInstanceOf(TypedCollectionInterface::class, $r->relationships());
-        $this->assertInstanceOf(TypedCollectionInterface::class, $r->rows());
-        $this->assertSame(NodeInterface::class, $r->nodes()->getType());
-        $this->assertSame(RelationshipInterface::class, $r->relationships()->getType());
-        $this->assertSame(RowInterface::class, $r->rows()->getType());
-        $this->assertSame(0, $r->nodes()->count());
-        $this->assertSame(0, $r->relationships()->count());
-        $this->assertSame(0, $r->rows()->count());
+        $this->assertInstanceOf(MapInterface::class, $r->nodes());
+        $this->assertInstanceOf(MapInterface::class, $r->relationships());
+        $this->assertInstanceOf(StreamInterface::class, $r->rows());
+        $this->assertSame('int', (string) $r->nodes()->keyType());
+        $this->assertSame(NodeInterface::class, (string) $r->nodes()->valueType());
+        $this->assertSame('int', (string) $r->relationships()->keyType());
+        $this->assertSame(RelationshipInterface::class, (string) $r->relationships()->valueType());
+        $this->assertSame(RowInterface::class, (string) $r->rows()->type());
+        $this->assertCount(0, $r->nodes());
+        $this->assertCount(0, $r->relationships());
+        $this->assertCount(0, $r->rows());
 
         $r = Result::fromRaw([
             'columns' => ['baz'],
@@ -74,47 +80,48 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             ]],
         ]);
 
-        $this->assertSame(2, $r->nodes()->count());
+        $this->assertCount(2, $r->nodes());
         $this->assertSame(
             ['name' => 'value'],
             $r->rows()->first()->value()
         );
         $this->assertSame('baz', $r->rows()->first()->column());
-        $this->assertSame([0], $r->rows()->keys()->toPrimitive());
         $this->assertSame(
             19,
-            $r->nodes()->first()->id()->value()
+            $r->nodes()->current()->id()->value()
         );
         $this->assertSame([19, 21], $r->nodes()->keys()->toPrimitive());
         $this->assertSame(
             ['Bike'],
-            $r->nodes()->first()->labels()->toPrimitive()
+            $r->nodes()->current()->labels()->toPrimitive()
         );
+        $this->assertCount(1, $r->relationships()->current()->properties());
         $this->assertSame(
-            ['weight' => 10],
-            $r->nodes()->first()->properties()->toPrimitive()
+            10,
+            $r->nodes()->current()->properties()->get('weight')
         );
-        $this->assertSame(2, $r->relationships()->count());
+        $this->assertCount(2, $r->relationships());
         $this->assertSame(
             9,
-            $r->relationships()->first()->id()->value()
+            $r->relationships()->current()->id()->value()
         );
         $this->assertSame([9, 10], $r->relationships()->keys()->toPrimitive());
         $this->assertSame(
             'HAS',
-            $r->relationships()->first()->type()->value()
+            $r->relationships()->current()->type()->value()
         );
         $this->assertSame(
             19,
-            $r->relationships()->first()->startNode()->value()
+            $r->relationships()->current()->startNode()->value()
         );
         $this->assertSame(
             20,
-            $r->relationships()->first()->endNode()->value()
+            $r->relationships()->current()->endNode()->value()
         );
+        $this->assertCount(1, $r->relationships()->current()->properties());
         $this->assertSame(
-            ['position' => 1],
-            $r->relationships()->first()->properties()->toPrimitive()
+            1,
+            $r->relationships()->current()->properties()->get('position')
         );
     }
 
@@ -280,9 +287,8 @@ class ResultTest extends \PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $this->assertSame(10, $r->rows()->count());
-        $this->assertSame(6, $r->nodes()->count());
-        $this->assertSame(0, $r->relationships()->count());
-        $this->assertSame(range(0, 9), $r->rows()->keys()->toPrimitive());
+        $this->assertCount(10, $r->rows());
+        $this->assertCount(6, $r->nodes());
+        $this->assertCount(0, $r->relationships());
     }
 }

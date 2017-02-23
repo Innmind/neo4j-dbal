@@ -3,9 +3,12 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\{
+    ClauseInterface,
+    Exception\InvalidArgumentException
+};
 
-class OrderByClause implements ClauseInterface
+final class OrderByClause implements ClauseInterface
 {
     const IDENTIFIER = 'ORDER BY';
     const ASC = 'ASC';
@@ -16,6 +19,13 @@ class OrderByClause implements ClauseInterface
 
     public function __construct(string $cypher, string $direction)
     {
+        if (
+            empty($cypher) ||
+            !in_array($direction, [self::ASC, self::DESC], true)
+        ) {
+            throw new InvalidArgumentException;
+        }
+
         $this->cypher = $cypher;
         $this->direction = $direction;
     }

@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\{
     ConnectionInterface,
     QueryInterface,
     ResultInterface,
-    Exception\QueryException,
+    Exception\QueryFailedException,
     Query\Parameter
 };
 use Psr\Log\LoggerInterface;
@@ -38,22 +38,22 @@ final class LoggerConnection implements ConnectionInterface
                     'parameters' => $query
                         ->parameters()
                         ->reduce(
-                            function(array $carry, Parameter $parameter): array {
+                            [],
+                            function(array $carry, string $key, Parameter $parameter): array {
                                 $carry[$parameter->key()] = $parameter->value();
 
                                 return $carry;
-                            },
-                            []
+                            }
                         ),
                 ]
             );
 
             return $this->connection->execute($query);
-        } catch (QueryException $e) {
+        } catch (QueryFailedException $e) {
             $this->logger->error(
                 'Query failed',
                 [
-                    'message' => (string) $e->response()->getBody(),
+                    'message' => (string) $e->response()->body(),
                 ]
             );
             throw $e;

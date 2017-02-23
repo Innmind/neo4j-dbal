@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\{
+    SetInterface,
+    MapInterface
+};
 
 interface NodeInterface
 {
@@ -17,9 +20,9 @@ interface NodeInterface
     /**
      * Return the labels
      *
-     * @return CollectionInterface
+     * @return SetInterface<string>
      */
-    public function labels(): CollectionInterface;
+    public function labels(): SetInterface;
 
     /**
      * Check if the node has labels
@@ -31,9 +34,9 @@ interface NodeInterface
     /**
      * Return the properties
      *
-     * @return CollectionInterface
+     * @return MapInterface<string, variable>
      */
-    public function properties(): CollectionInterface;
+    public function properties(): MapInterface;
 
     /**
      * Check if the node has properties

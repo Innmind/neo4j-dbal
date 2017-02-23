@@ -3,57 +3,67 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Translator;
 
-use Innmind\Neo4j\DBAL\Translator\HttpTranslator;
-use Innmind\Neo4j\DBAL\Transactions;
-use Innmind\Neo4j\DBAL\Server;
-use Innmind\Neo4j\DBAL\Authentication;
-use Innmind\Neo4j\DBAL\QueryInterface;
-use Innmind\Neo4j\DBAL\Query\Parameter;
-use Innmind\Immutable\TypedCollection;
-use Psr\Http\Message\RequestInterface;
+use Innmind\Neo4j\DBAL\{
+    Translator\HttpTranslator,
+    Transactions,
+    Server,
+    Authentication,
+    QueryInterface,
+    Query\Parameter,
+    HttpTransport\Transport
+};
+use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\HttpTransport\TransportInterface;
+use Innmind\Http\Message\RequestInterface;
+use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class HttpTranslatorTest extends \PHPUnit_Framework_TestCase
+class HttpTranslatorTest extends TestCase
 {
-    private $t;
+    private $translator;
 
     public function setUp()
     {
-        $this->t = new HttpTranslator(
+        $this->translator = new HttpTranslator(
             new Transactions(
-                new Server(
-                    'http',
-                    getenv('CI') ? 'localhost' : 'docker',
-                    7474
+                new Transport(
+                    new Server(
+                        'http',
+                        getenv('CI') ? 'localhost' : 'docker',
+                        7474
+                    ),
+                    new Authentication(
+                        'neo4j',
+                        'ci'
+                    ),
+                    $this->createMock(TransportInterface::class)
                 ),
-                new Authentication(
-                    'neo4j',
-                    'ci'
-                )
+                $this->createMock(TimeContinuumInterface::class)
             )
         );
     }
 
     public function testTranslate()
     {
-        $q = $this->createMock(QueryInterface::class);
-        $q
+        $query = $this->createMock(QueryInterface::class);
+        $query
             ->method('cypher')
             ->willReturn('match n return n;');
-        $q
+        $query
             ->method('hasParameters')
             ->willReturn(true);
-        $q
+        $query
             ->method('parameters')
-            ->willReturn(new TypedCollection(
-                Parameter::class,
-                [new Parameter('foo', 'bar')]
-            ));
+            ->willReturn(
+                (new Map('string', Parameter::class))
+                    ->put('foo', new Parameter('foo', 'bar'))
+            );
 
-        $r = $this->t->translate($q);
+        $request = $this->translator->translate($query);
 
-        $this->assertInstanceOf(RequestInterface::class, $r);
-        $this->assertSame('POST', $r->getMethod());
-        $this->assertSame('/db/data/transaction/commit', $r->getRequestTarget());
+        $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->assertSame('POST', (string) $request->method());
+        $this->assertSame('/db/data/transaction/commit', (string) $request->url());
         $this->assertSame(
             json_encode([
                 'statements' => [[
@@ -62,7 +72,7 @@ class HttpTranslatorTest extends \PHPUnit_Framework_TestCase
                     'parameters' => ['foo' => 'bar'],
                 ]],
             ]),
-            (string) $r->getBody()
+            (string) $request->body()
         );
     }
 }

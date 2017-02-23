@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\ClauseInterface;
 
-class OptionalMatchClause implements ClauseInterface, PathAwareInterface
+final class OptionalMatchClause implements ClauseInterface, PathAwareInterface
 {
     use PathAware;
 
