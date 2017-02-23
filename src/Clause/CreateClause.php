@@ -27,6 +27,6 @@ final class CreateClause implements ClauseInterface, PathAwareInterface
      */
     public function identifier(): string
     {
-        return self::IDENTIFIER . ($this->unique ? ' UNIQUE' : '');
+        return self::IDENTIFIER.($this->unique ? ' UNIQUE' : '');
     }
 }

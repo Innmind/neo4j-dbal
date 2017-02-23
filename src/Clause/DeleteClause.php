@@ -31,7 +31,7 @@ final class DeleteClause implements ClauseInterface
     public function identifier(): string
     {
         return $this->detachable ?
-            'DETACH ' . self::IDENTIFIER : self::IDENTIFIER;
+            'DETACH '.self::IDENTIFIER : self::IDENTIFIER;
     }
 
     /**

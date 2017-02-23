@@ -293,7 +293,7 @@ final class Query implements QueryInterface
     /**
      * Add a WITH clause
      *
-     * @param string $variables
+     * @param string[] $variables
      *
      * @return self
      */
@@ -411,7 +411,7 @@ final class Query implements QueryInterface
     /**
      * Add a RETURN clause
      *
-     * @param string $variables
+     * @param string[] $variables
      *
      * @return self
      */
