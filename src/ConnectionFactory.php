@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     HttpTransport\Transport
 };
-use Innmind\HttpTransport\TransportInterface;
+use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\TimeContinuum\{
     TimeContinuumInterface,
     TimeContinuum\Earth

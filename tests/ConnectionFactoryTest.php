@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\{
     ConnectionFactory,
     ConnectionInterface
 };
-use Innmind\HttpTransport\TransportInterface;
+use Innmind\HttpTransport\Transport;
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class ConnectionFactoryTest extends TestCase
     {
         $connection = ConnectionFactory::on('localhost')
             ->for('neo4j', 'neo4j')
-            ->useTransport($this->createMock(TransportInterface::class))
+            ->useTransport($this->createMock(Transport::class))
             ->build();
 
         $this->assertInstanceOf(ConnectionInterface::class, $connection);
@@ -27,7 +27,7 @@ class ConnectionFactoryTest extends TestCase
     {
         $connection = ConnectionFactory::on('localhost')
             ->for('neo4j', 'neo4j')
-            ->useTransport($this->createMock(TransportInterface::class))
+            ->useTransport($this->createMock(Transport::class))
             ->useClock($this->createMock(TimeContinuumInterface::class))
             ->build();
 

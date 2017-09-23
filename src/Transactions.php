@@ -6,15 +6,14 @@ namespace Innmind\Neo4j\DBAL;
 use Innmind\Neo4j\DBAL\HttpTransport\Transport;
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Http\{
-    Headers,
-    Header\HeaderInterface,
+    Headers\Headers,
+    Header,
     Header\ContentType,
     Header\ContentTypeValue,
-    Header\ParameterInterface,
     Header\Parameter,
-    Message\Request,
-    Message\Method,
-    ProtocolVersion
+    Message\Request\Request,
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\Url;
@@ -39,17 +38,17 @@ final class Transactions
         $this->transport = $transport;
         $this->clock = $clock;
         $this->headers = new Headers(
-            (new Map('string', HeaderInterface::class))
+            (new Map('string', Header::class))
                 ->put(
                     'content-type',
                     new ContentType(
                         new ContentTypeValue(
                             'application',
                             'json',
-                            (new Map('string', ParameterInterface::class))
+                            (new Map('string', Parameter::class))
                                 ->put(
                                     'charset',
-                                    new Parameter('charset', 'UTF-8')
+                                    new Parameter\Parameter('charset', 'UTF-8')
                                 )
                         )
                     )

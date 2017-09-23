@@ -14,7 +14,7 @@ use Innmind\Neo4j\DBAL\{
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Map;
 use Psr\Log\LoggerInterface;
-use Innmind\Http\Message\ResponseInterface;
+use Innmind\Http\Message\Response;
 use PHPUnit\Framework\TestCase;
 
 class LoggerConnectionTest extends TestCase
@@ -94,7 +94,7 @@ class LoggerConnectionTest extends TestCase
                 $this->throwException(
                     new QueryFailedException(
                         $query,
-                        $response = $this->createMock(ResponseInterface::class)
+                        $response = $this->createMock(Response::class)
                     )
                 )
             );

@@ -16,10 +16,10 @@ use Innmind\Neo4j\DBAL\{
     Exception\QueryFailedException
 };
 use Innmind\Http\{
-    Message\ResponseInterface,
-    Message\Request,
-    Message\Method,
-    ProtocolVersion
+    Message\Response,
+    Message\Request\Request,
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion
 };
 use Innmind\Url\Url;
 
@@ -90,11 +90,11 @@ final class Http implements TransportInterface
     /**
      * Check if the response is successful
      *
-     * @param ResponseInterface $response
+     * @param Response $response
      *
      * @return bool
      */
-    private function isSuccessful(ResponseInterface $response): bool
+    private function isSuccessful(Response $response): bool
     {
         if ($response->statusCode()->value() !== 200) {
             return false;

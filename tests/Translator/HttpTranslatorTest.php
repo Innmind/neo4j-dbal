@@ -13,8 +13,8 @@ use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\HttpTransport\TransportInterface;
-use Innmind\Http\Message\RequestInterface;
+use Innmind\HttpTransport\Transport as TransportInterface;
+use Innmind\Http\Message\Request;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -61,7 +61,7 @@ class HttpTranslatorTest extends TestCase
 
         $request = $this->translator->translate($query);
 
-        $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->assertInstanceOf(Request::class, $request);
         $this->assertSame('POST', (string) $request->method());
         $this->assertSame('/db/data/transaction/commit', (string) $request->url());
         $this->assertSame(
