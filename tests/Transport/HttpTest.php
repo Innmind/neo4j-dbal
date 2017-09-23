@@ -70,7 +70,7 @@ class HttpTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\ServerDownException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\ServerDown
      */
     public function testThrowWhenPingUnavailableServer()
     {
@@ -116,7 +116,7 @@ class HttpTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailedException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailed
      * @expectedExceptionMessage The query failed to execute properly
      * @expectedExceptionCode 400
      */

@@ -10,7 +10,7 @@ interface Transport
     /**
      * Check if the server is up and running
      *
-     * @throws ServerDownException if it doesn't respond
+     * @throws ServerDown if it doesn't respond
      */
     public function ping(): self;
 }

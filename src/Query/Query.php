@@ -6,9 +6,9 @@ namespace Innmind\Neo4j\DBAL\Query;
 use Innmind\Neo4j\DBAL\{
     Query as QueryInterface,
     Clause,
-    Exception\NonParametrableClauseException,
-    Exception\NonPathAwareClauseException,
-    Exception\NonMergeClauseException
+    Exception\NonParametrableClause,
+    Exception\NonPathAwareClause,
+    Exception\NonMergeClause
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -139,7 +139,7 @@ final class Query implements QueryInterface
      *
      * @param array $parameters
      *
-     * @throws NonParametrableClauseException
+     * @throws NonParametrableClause
      *
      * @return self
      */
@@ -160,7 +160,7 @@ final class Query implements QueryInterface
      * @param string $key
      * @param mixed $parameter
      *
-     * @throws NonParametrableClauseException
+     * @throws NonParametrableClause
      *
      * @return self
      */
@@ -169,7 +169,7 @@ final class Query implements QueryInterface
         $clause = $this->clauses->last();
 
         if (!$clause instanceof Clause\Parametrable) {
-            throw new NonParametrableClauseException;
+            throw new NonParametrableClause;
         }
 
         $clause = $clause->withParameter($key, $parameter);
@@ -187,7 +187,7 @@ final class Query implements QueryInterface
      *
      * @param array $properties
      *
-     * @throws NonPathAwareClauseException
+     * @throws NonPathAwareClause
      *
      * @return self
      */
@@ -208,7 +208,7 @@ final class Query implements QueryInterface
      * @param string $property
      * @param string $cypher
      *
-     * @throws NonPathAwareClauseException
+     * @throws NonPathAwareClause
      *
      * @return self
      */
@@ -217,7 +217,7 @@ final class Query implements QueryInterface
         $clause = $this->clauses->last();
 
         if (!$clause instanceof Clause\PathAware) {
-            throw new NonPathAwareClauseException;
+            throw new NonPathAwareClause;
         }
 
         $clause = $clause->withProperty($property, $cypher);
@@ -236,7 +236,7 @@ final class Query implements QueryInterface
      * @param string $variable
      * @param array $labels
      *
-     * @throws NonPathAwareClauseException
+     * @throws NonPathAwareClause
      *
      * @return self
      */
@@ -245,7 +245,7 @@ final class Query implements QueryInterface
         $clause = $this->clauses->last();
 
         if (!$clause instanceof Clause\PathAware) {
-            throw new NonPathAwareClauseException;
+            throw new NonPathAwareClause;
         }
 
         $clause = $clause->linkedTo($variable, $labels);
@@ -265,7 +265,7 @@ final class Query implements QueryInterface
      * @param string $variable
      * @param string $direction
      *
-     * @throws NonPathAwareClauseException
+     * @throws NonPathAwareClause
      *
      * @return self
      */
@@ -277,7 +277,7 @@ final class Query implements QueryInterface
         $clause = $this->clauses->last();
 
         if (!$clause instanceof Clause\PathAware) {
-            throw new NonPathAwareClauseException;
+            throw new NonPathAwareClause;
         }
 
         $clause = $clause->through($variable, $type, $direction);
@@ -467,7 +467,7 @@ final class Query implements QueryInterface
      *
      * @param string $cypher
      *
-     * @throws NonMergeClauseException
+     * @throws NonMergeClause
      *
      * @return self
      */
@@ -479,7 +479,7 @@ final class Query implements QueryInterface
             !$clause instanceof Clause\MergeClause &&
             !$clause instanceof Clause\OnCreateClause
         ) {
-            throw new NonMergeClauseException;
+            throw new NonMergeClause;
         }
 
         $query = new self;
@@ -495,7 +495,7 @@ final class Query implements QueryInterface
      *
      * @param string $cypher
      *
-     * @throws NonMergeClauseException
+     * @throws NonMergeClause
      *
      * @return self
      */
@@ -507,7 +507,7 @@ final class Query implements QueryInterface
             !$clause instanceof Clause\MergeClause &&
             !$clause instanceof Clause\OnMatchClause
         ) {
-            throw new NonMergeClauseException;
+            throw new NonMergeClause;
         }
 
         $query = new self;

@@ -11,8 +11,8 @@ use Innmind\Neo4j\DBAL\{
     Authentication,
     Translator\HttpTranslator,
     HttpTransport\Transport as HttpTransport,
-    Exception\ServerDownException,
-    Exception\QueryFailedException
+    Exception\ServerDown,
+    Exception\QueryFailed
 };
 use Innmind\Http\{
     Message\Response,
@@ -45,7 +45,7 @@ final class Http implements Transport
         );
 
         if (!$this->isSuccessful($response)) {
-            throw new QueryFailedException($query, $response);
+            throw new QueryFailed($query, $response);
         }
 
         $response = json_decode((string) $response->body(), true);
@@ -72,7 +72,7 @@ final class Http implements Transport
                 ->statusCode()
                 ->value();
         } catch (\Exception $e) {
-            throw new ServerDownException(
+            throw new ServerDown(
                 $e->getMessage(),
                 $e->getCode(),
                 $e
@@ -83,7 +83,7 @@ final class Http implements Transport
             return $this;
         }
 
-        throw new ServerDownException;
+        throw new ServerDown;
     }
 
     /**

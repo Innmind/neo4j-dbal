@@ -64,7 +64,7 @@ final class Cypher implements QueryInterface
      *
      * @param array $parameters
      *
-     * @throws NonParametrableClauseException
+     * @throws NonParametrableClause
      *
      * @return self
      */
@@ -85,7 +85,7 @@ final class Cypher implements QueryInterface
      * @param string $key
      * @param mixed $parameter
      *
-     * @throws NonParametrableClauseException
+     * @throws NonParametrableClause
      *
      * @return self
      */
