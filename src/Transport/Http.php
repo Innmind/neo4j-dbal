@@ -4,14 +4,13 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Transport;
 
 use Innmind\Neo4j\DBAL\{
-    TransportInterface,
-    QueryInterface,
-    ResultInterface,
+    Transport,
+    Query,
     Result,
     Server,
     Authentication,
     Translator\HttpTranslator,
-    HttpTransport\Transport,
+    HttpTransport\Transport as HttpTransport,
     Exception\ServerDownException,
     Exception\QueryFailedException
 };
@@ -23,14 +22,14 @@ use Innmind\Http\{
 };
 use Innmind\Url\Url;
 
-final class Http implements TransportInterface
+final class Http implements Transport
 {
     private $translator;
     private $transport;
 
     public function __construct(
         HttpTranslator $translator,
-        Transport $transport
+        HttpTransport $transport
     ) {
         $this->translator = $translator;
         $this->transport = $transport;
@@ -39,7 +38,7 @@ final class Http implements TransportInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(QueryInterface $query): ResultInterface
+    public function execute(Query $query): Result
     {
         $response = $this->transport->fulfill(
             $this->translator->translate($query)
@@ -50,7 +49,7 @@ final class Http implements TransportInterface
         }
 
         $response = json_decode((string) $response->body(), true);
-        $result = Result::fromRaw($response['results'][0] ?? []);
+        $result = Result\Result::fromRaw($response['results'][0] ?? []);
 
         return $result;
     }
@@ -58,7 +57,7 @@ final class Http implements TransportInterface
     /**
      * {@inheritdoc}
      */
-    public function ping(): TransportInterface
+    public function ping(): Transport
     {
         try {
             $code = $this

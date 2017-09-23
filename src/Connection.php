@@ -3,76 +3,16 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-final class Connection implements ConnectionInterface
+interface Connection
 {
-    private $transport;
-    private $transactions;
-
-    public function __construct(
-        TransportInterface $transport,
-        Transactions $transactions
-    ) {
-        $this->transport = $transport;
-        $this->transactions = $transactions;
-    }
+    public function execute(Query $query): Result;
+    public function openTransaction(): self;
+    public function isTransactionOpened(): bool;
+    public function commit(): self;
+    public function rollback(): self;
 
     /**
-     * {@inheritdoc}
+     * Check if the server is up and running
      */
-    public function execute(QueryInterface $query): ResultInterface
-    {
-        return $this->transport->execute($query);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function openTransaction(): ConnectionInterface
-    {
-        $this->transactions->open();
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isTransactionOpened(): bool
-    {
-        return $this->transactions->isOpened();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function commit(): ConnectionInterface
-    {
-        $this->transactions->commit();
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rollback(): ConnectionInterface
-    {
-        $this->transactions->rollback();
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isAlive(): bool
-    {
-        try {
-            $this->transport->ping();
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
+    public function isAlive(): bool;
 }

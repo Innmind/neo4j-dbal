@@ -1,9 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4j\DBAL\Result;
+namespace Tests\Innmind\Neo4j\DBAL\Result\Row;
 
-use Innmind\Neo4j\DBAL\Result\Row;
+use Innmind\Neo4j\DBAL\Result\{
+    Row\Row,
+    Row as RowInterface
+};
 use PHPUnit\Framework\TestCase;
 
 class RowTest extends TestCase
@@ -12,6 +15,7 @@ class RowTest extends TestCase
     {
         $r = new Row('baz', ['foo' => 'bar']);
 
+        $this->assertInstanceOf(RowInterface::class, $r);
         $this->assertSame(['foo' => 'bar'], $r->value());
         $this->assertSame('baz', $r->column());
     }

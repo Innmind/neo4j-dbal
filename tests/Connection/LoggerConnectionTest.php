@@ -4,10 +4,10 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Neo4j\DBAL\Connection;
 
 use Innmind\Neo4j\DBAL\{
-    ConnectionInterface,
+    Connection,
     Connection\LoggerConnection,
-    QueryInterface,
-    ResultInterface,
+    Query,
+    Result,
     Query\Parameter,
     Exception\QueryFailedException
 };
@@ -22,9 +22,9 @@ class LoggerConnectionTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ConnectionInterface::class,
+            Connection::class,
             new LoggerConnection(
-                $this->createMock(ConnectionInterface::class),
+                $this->createMock(Connection::class),
                 $this->createMock(LoggerInterface::class)
             )
         );
@@ -33,16 +33,16 @@ class LoggerConnectionTest extends TestCase
     public function testExecute()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $logger = $this->createMock(LoggerInterface::class)
         );
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createMock(Query::class);
         $inner
             ->expects($this->once())
             ->method('execute')
             ->with($query)
             ->willReturn(
-                $result = $this->createMock(ResultInterface::class)
+                $result = $this->createMock(Result::class)
             );
         $query
             ->expects($this->once())
@@ -75,10 +75,10 @@ class LoggerConnectionTest extends TestCase
     public function testLogWhenQueryFails()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $logger = $this->createMock(LoggerInterface::class)
         );
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createMock(Query::class);
         $logger
             ->expects($this->once())
             ->method('error')
@@ -109,7 +109,7 @@ class LoggerConnectionTest extends TestCase
     public function testOpenTransaction()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $logger = $this->createMock(LoggerInterface::class)
         );
         $inner
@@ -126,7 +126,7 @@ class LoggerConnectionTest extends TestCase
     public function testIsTransactionOpened()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $this->createMock(LoggerInterface::class)
         );
         $inner
@@ -140,7 +140,7 @@ class LoggerConnectionTest extends TestCase
     public function testCommit()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $logger = $this->createMock(LoggerInterface::class)
         );
         $inner
@@ -157,7 +157,7 @@ class LoggerConnectionTest extends TestCase
     public function testRollback()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $logger = $this->createMock(LoggerInterface::class)
         );
         $inner
@@ -174,7 +174,7 @@ class LoggerConnectionTest extends TestCase
     public function testIsAlive()
     {
         $connection = new LoggerConnection(
-            $inner = $this->createMock(ConnectionInterface::class),
+            $inner = $this->createMock(Connection::class),
             $this->createMock(LoggerInterface::class)
         );
         $inner

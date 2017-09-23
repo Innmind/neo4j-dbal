@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4j\DBAL\Result;
+namespace Tests\Innmind\Neo4j\DBAL\Result\Relationship;
 
 use Innmind\Neo4j\DBAL\Result\{
-    Relationship,
-    RelationshipInterface,
+    Relationship\Relationship,
+    Relationship as RelationshipInterface,
     Id,
     Type
 };

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4j\DBAL;
+namespace Tests\Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
-    Cypher,
-    QueryInterface,
+    Query\Cypher,
+    Query,
     Query\Parameter
 };
 use PHPUnit\Framework\TestCase;
@@ -16,7 +16,7 @@ class CypherTest extends TestCase
     {
         $c = new Cypher($e = 'MATCH n RETURN n');
 
-        $this->assertInstanceOf(QueryInterface::class, $c);
+        $this->assertInstanceOf(Query::class, $c);
         $this->assertSame($e, $c->cypher());
         $this->assertSame($e, (string) $c);
     }
@@ -28,7 +28,7 @@ class CypherTest extends TestCase
         $this->assertFalse($c->hasParameters());
         $c2 = $c->withParameters(['foo' => 'bar']);
         $this->assertNotSame($c, $c2);
-        $this->assertInstanceOf(QueryInterface::class, $c2);
+        $this->assertInstanceOf(Query::class, $c2);
         $this->assertFalse($c->hasParameters());
         $this->assertTrue($c2->hasParameters());
         $this->assertCount(1, $c2->parameters());

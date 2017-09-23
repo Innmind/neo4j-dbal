@@ -3,85 +3,48 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
-use Innmind\Immutable\MapInterface;
+use Innmind\Neo4j\DBAL\Clause;
 
-trait PathAware
+interface PathAware extends Parametrable
 {
-    private $path;
-
     /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
-    {
-        return (string) $this->path;
-    }
-
-    /**
-     * {@inheritdoc}
+     * Link the currently matched node to another node
+     *
+     * @param string $variable
+     * @param array $labels
+     *
+     * @return CauseInterface
      */
     public function linkedTo(
         string $variable = null,
         array $labels = []
-    ): ClauseInterface {
-        $clause = clone $this;
-        $clause->path = $this->path->linkedTo($variable, $labels);
-
-        return $clause;
-    }
+    ): Clause;
 
     /**
-     * {@inheritdoc}
+     * Type the last connection
+     *
+     * @param string $variable
+     * @param string $type
+     * @param string $direction
+     *
+     * @return Clause
      */
     public function through(
         string $variable = null,
         string $type = null,
         string $direction = Expression\Relationship::BOTH
-    ): ClauseInterface {
-        $clause = clone $this;
-        $clause->path = $this->path->through($variable, $type, $direction);
-
-        return $clause;
-    }
+    ): Clause;
 
     /**
-     * {@inheritdoc}
+     * Specify a property to be matched
+     *
+     * @param string $property
+     * @param string $cypher
+     *
+     * @return Clause
      */
     public function withProperty(
         string $property,
         string $cypher
-    ): ClauseInterface {
-        $clause = clone $this;
-        $clause->path = $this->path->withProperty($property, $cypher);
-
-        return $clause;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withParameter(string $key, $value): ClauseInterface
-    {
-        $clause = clone $this;
-        $clause->path = $this->path->withParameter($key, $value);
-
-        return $clause;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasParameters(): bool
-    {
-        return $this->path->parameters()->size() > 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function parameters(): MapInterface
-    {
-        return $this->path->parameters();
-    }
+    ): Clause;
 }

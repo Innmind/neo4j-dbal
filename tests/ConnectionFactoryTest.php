@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\{
     ConnectionFactory,
-    ConnectionInterface
+    Connection
 };
 use Innmind\HttpTransport\Transport;
 use Innmind\TimeContinuum\TimeContinuumInterface;
@@ -20,7 +20,7 @@ class ConnectionFactoryTest extends TestCase
             ->useTransport($this->createMock(Transport::class))
             ->build();
 
-        $this->assertInstanceOf(ConnectionInterface::class, $connection);
+        $this->assertInstanceOf(Connection::class, $connection);
     }
 
     public function testUseClock()
@@ -31,6 +31,6 @@ class ConnectionFactoryTest extends TestCase
             ->useClock($this->createMock(TimeContinuumInterface::class))
             ->build();
 
-        $this->assertInstanceOf(ConnectionInterface::class, $connection);
+        $this->assertInstanceOf(Connection::class, $connection);
     }
 }

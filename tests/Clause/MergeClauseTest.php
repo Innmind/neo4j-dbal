@@ -5,9 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\MergeClause,
-    Clause\PathAwareInterface,
-    Clause\ParametrableInterface,
-    ClauseInterface,
+    Clause\PathAware,
+    Clause\Parametrable,
+    Clause,
     Clause\Expression\Path,
     Clause\Expression\Relationship
 };
@@ -19,9 +19,9 @@ class MergeClauseTest extends TestCase
     {
         $c = new MergeClause(Path::startWithNode());
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
-        $this->assertInstanceOf(PathAwareInterface::class, $c);
-        $this->assertInstanceOf(ParametrableInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
+        $this->assertInstanceOf(PathAware::class, $c);
+        $this->assertInstanceOf(Parametrable::class, $c);
         $this->assertSame('()', (string) $c);
         $this->assertSame('MERGE', $c->identifier());
     }

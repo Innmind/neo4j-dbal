@@ -6,7 +6,7 @@ namespace Innmind\Neo4j\DBAL;
 use Innmind\Neo4j\DBAL\{
     Transport\Http,
     Translator\HttpTranslator,
-    HttpTransport\Transport
+    HttpTransport\Transport as HttpTransport
 };
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\TimeContinuum\{
@@ -54,9 +54,9 @@ final class ConnectionFactory
         return $this;
     }
 
-    public function build(): ConnectionInterface
+    public function build(): Connection
     {
-        $transport = new Transport(
+        $transport = new HttpTransport(
             $this->server,
             $this->authentication,
             $this->transport
@@ -66,7 +66,7 @@ final class ConnectionFactory
             $this->clock ?? new Earth
         );
 
-        return new Connection(
+        return new Connection\Connection(
             new Http(
                 new HttpTranslator($transactions),
                 $transport

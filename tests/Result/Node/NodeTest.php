@@ -1,11 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4j\DBAL\Result;
+namespace Tests\Innmind\Neo4j\DBAL\Result\Node;
 
 use Innmind\Neo4j\DBAL\Result\{
-    Node,
-    NodeInterface,
+    Node\Node,
+    Node as NodeInterface,
     Id
 };
 use Innmind\Immutable\{

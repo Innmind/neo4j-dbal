@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Transactions,
     Server,
     Authentication,
-    QueryInterface,
+    Query,
     Query\Parameter,
     HttpTransport\Transport
 };
@@ -45,7 +45,7 @@ class HttpTranslatorTest extends TestCase
 
     public function testTranslate()
     {
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createMock(Query::class);
         $query
             ->method('cypher')
             ->willReturn('match n return n;');

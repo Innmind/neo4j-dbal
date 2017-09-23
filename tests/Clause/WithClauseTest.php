@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\WithClause,
-    ClauseInterface
+    Clause
 };
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class WithClauseTest extends TestCase
     {
         $c = new WithClause('a', 'b', 'c', 'd');
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('WITH', $c->identifier());
         $this->assertSame('a, b, c, d', (string) $c);
     }

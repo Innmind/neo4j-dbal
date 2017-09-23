@@ -3,73 +3,45 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
 use Innmind\Immutable\{
     SetInterface,
     MapInterface
 };
 
-final class Node implements NodeInterface
+interface Node
 {
-    private $id;
-    private $labels;
-    private $properties;
-
-    public function __construct(
-        Id $id,
-        SetInterface $labels,
-        MapInterface $properties
-    ) {
-        if (
-            (string) $labels->type() !== 'string' ||
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'variable'
-        ) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->id = $id;
-        $this->labels = $labels;
-        $this->properties = $properties;
-    }
+    /**
+     * Return the node id
+     *
+     * @return Id
+     */
+    public function id(): Id;
 
     /**
-     * {@inheritdoc}
+     * Return the labels
+     *
+     * @return SetInterface<string>
      */
-    public function id(): Id
-    {
-        return $this->id;
-    }
+    public function labels(): SetInterface;
 
     /**
-     * {@inheritdoc}
+     * Check if the node has labels
+     *
+     * @return bool
      */
-    public function labels(): SetInterface
-    {
-        return $this->labels;
-    }
+    public function hasLabels(): bool;
 
     /**
-     * {@inheritdoc}
+     * Return the properties
+     *
+     * @return MapInterface<string, variable>
      */
-    public function hasLabels(): bool
-    {
-        return $this->labels->count() > 0;
-    }
+    public function properties(): MapInterface;
 
     /**
-     * {@inheritdoc}
+     * Check if the node has properties
+     *
+     * @return bool
      */
-    public function properties(): MapInterface
-    {
-        return $this->properties;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasProperties(): bool
-    {
-        return $this->properties->count() > 0;
-    }
+    public function hasProperties(): bool;
 }

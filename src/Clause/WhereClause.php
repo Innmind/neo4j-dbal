@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
-    ClauseInterface,
+    Clause,
     Query\Parameter,
     Exception\InvalidArgumentException
 };
@@ -13,7 +13,7 @@ use Innmind\Immutable\{
     Map
 };
 
-final class WhereClause implements ClauseInterface, ParametrableInterface
+final class WhereClause implements Clause, Parametrable
 {
     const IDENTIFIER = 'WHERE';
 
@@ -49,7 +49,7 @@ final class WhereClause implements ClauseInterface, ParametrableInterface
     /**
      * {@inheritdoc}
      */
-    public function withParameter(string $key, $value): ClauseInterface
+    public function withParameter(string $key, $value): Clause
     {
         if (empty($key)) {
             throw new InvalidArgumentException;

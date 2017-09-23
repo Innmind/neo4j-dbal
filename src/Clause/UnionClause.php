@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\Clause;
 
-final class UnionClause implements ClauseInterface
+final class UnionClause implements Clause
 {
     const IDENTIFIER = 'UNION';
 

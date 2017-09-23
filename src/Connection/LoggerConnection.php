@@ -4,9 +4,9 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Connection;
 
 use Innmind\Neo4j\DBAL\{
-    ConnectionInterface,
-    QueryInterface,
-    ResultInterface,
+    Connection as ConnectionInterface,
+    Query,
+    Result,
     Exception\QueryFailedException,
     Query\Parameter
 };
@@ -25,10 +25,7 @@ final class LoggerConnection implements ConnectionInterface
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(QueryInterface $query): ResultInterface
+    public function execute(Query $query): Result
     {
         try {
             $this->logger->debug(
@@ -60,9 +57,6 @@ final class LoggerConnection implements ConnectionInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function openTransaction(): ConnectionInterface
     {
         $this->connection->openTransaction();
@@ -71,17 +65,11 @@ final class LoggerConnection implements ConnectionInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isTransactionOpened(): bool
     {
         return $this->connection->isTransactionOpened();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function commit(): ConnectionInterface
     {
         $this->connection->commit();
@@ -90,9 +78,6 @@ final class LoggerConnection implements ConnectionInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rollback(): ConnectionInterface
     {
         $this->connection->rollback();

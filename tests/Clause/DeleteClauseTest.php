@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\DeleteClause,
-    ClauseInterface,
+    Clause,
     Query\Parameter
 };
 use PHPUnit\Framework\TestCase;
@@ -16,7 +16,7 @@ class DeleteClauseTest extends TestCase
     {
         $c = new DeleteClause('n', false);
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('DELETE', $c->identifier());
         $this->assertSame('n', (string) $c);
 

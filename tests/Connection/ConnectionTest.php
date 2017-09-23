@@ -1,17 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4j\DBAL;
+namespace Tests\Innmind\Neo4j\DBAL\Connection;
 
 use Innmind\Neo4j\DBAL\{
-    Connection,
-    ConnectionInterface,
+    Connection\Connection,
+    Connection as ConnectionInterface,
     Server,
     Authentication,
     Transactions,
     Transport\Http,
-    QueryInterface,
-    ResultInterface,
+    Result,
     Translator\HttpTranslator,
     Query,
     HttpTransport\Transport
@@ -60,16 +59,21 @@ class ConnectionTest extends TestCase
         );
     }
 
+    public function testInterface()
+    {
+        $this->assertInstanceOf(ConnectionInterface::class, $this->c);
+    }
+
     public function testExecute()
     {
-        $q = $this->createMock(QueryInterface::class);
+        $q = $this->createMock(Query::class);
         $q
             ->method('cypher')
             ->willReturn('match (n) return n');
 
         $r = $this->c->execute($q);
 
-        $this->assertInstanceOf(ResultInterface::class, $r);
+        $this->assertInstanceOf(Result::class, $r);
     }
 
     public function testTransactions()
@@ -122,7 +126,7 @@ class ConnectionTest extends TestCase
 
     public function testConcrete()
     {
-        $q = (new Query)
+        $q = (new Query\Query)
             ->create('n', ['Foo', 'Bar'])
             ->withProperty('foo', '{bar}')
             ->withParameter('bar', 'baz')

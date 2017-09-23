@@ -5,9 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\OptionalMatchClause,
-    Clause\ParametrableInterface,
-    Clause\PathAwareInterface,
-    ClauseInterface,
+    Clause\Parametrable,
+    Clause\PathAware,
+    Clause,
     Clause\Expression\Path,
     Clause\Expression\Relationship
 };
@@ -19,9 +19,9 @@ class OptionalMatchClauseTest extends TestCase
     {
         $c = new OptionalMatchClause(Path::startWithNode());
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
-        $this->assertInstanceOf(ParametrableInterface::class, $c);
-        $this->assertInstanceOf(PathAwareInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
+        $this->assertInstanceOf(Parametrable::class, $c);
+        $this->assertInstanceOf(PathAware::class, $c);
         $this->assertSame('()', (string) $c);
         $this->assertSame('OPTIONAL MATCH', $c->identifier());
     }

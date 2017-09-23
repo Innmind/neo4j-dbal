@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4j\DBAL;
+namespace Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
-    Query\Parameter,
+    Query as QueryInterface,
     Exception\InvalidArgumentException
 };
 use Innmind\Immutable\{

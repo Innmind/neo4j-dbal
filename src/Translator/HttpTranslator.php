@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Translator;
 
 use Innmind\Neo4j\DBAL\{
-    QueryInterface,
+    Query,
     Transactions
 };
 use Innmind\Http\{
@@ -68,12 +68,8 @@ final class HttpTranslator
 
     /**
      * Transalate a dbal query into a http request
-     *
-     * @param QueryInterface $query
-     *
-     * @return RequestInterface
      */
-    public function translate(QueryInterface $query): Request
+    public function translate(Query $query): Request
     {
         return new Request\Request(
             $this->computeEndpoint(),
@@ -86,8 +82,6 @@ final class HttpTranslator
 
     /**
      * Determine the appropriate endpoint based on the transactions
-     *
-     * @return UrlInterface
      */
     private function computeEndpoint(): UrlInterface
     {
@@ -101,7 +95,7 @@ final class HttpTranslator
     /**
      * Build the json payload to be sent to the server
      */
-    private function computeBody(QueryInterface $query): StringStream
+    private function computeBody(Query $query): StringStream
     {
         $statement = [
             'statement' => $query->cypher(),

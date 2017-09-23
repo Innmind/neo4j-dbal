@@ -3,36 +3,19 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
-
-final class Row implements RowInterface
+interface Row
 {
-    private $column;
-    private $value;
-
-    public function __construct(string $column, $value)
-    {
-        if (empty($column)) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->column = $column;
-        $this->value = $value;
-    }
+    /**
+     * Return the row value
+     *
+     * @return mixed
+     */
+    public function value();
 
     /**
-     * {@inheritdoc}
+     * Return the column referencing this row
+     *
+     * @return string
      */
-    public function value()
-    {
-        return $this->value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function column(): string
-    {
-        return $this->column;
-    }
+    public function column(): string;
 }

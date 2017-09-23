@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\OnMatchClause,
-    ClauseInterface
+    Clause
 };
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class OnMatchClauseTest extends TestCase
     {
         $c = new OnMatchClause('SET n:Foo');
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('ON MATCH', $c->identifier());
         $this->assertSame('SET n:Foo', (string) $c);
     }

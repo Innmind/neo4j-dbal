@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
-    ClauseInterface,
+    Clause,
     Exception\InvalidArgumentException
 };
 
-final class DeleteClause implements ClauseInterface
+final class DeleteClause implements Clause
 {
     const IDENTIFIER = 'DELETE';
 
