@@ -9,10 +9,10 @@ use Innmind\Neo4j\DBAL\{
     Server,
     Authentication,
     Transactions,
-    QueryInterface,
-    ResultInterface,
-    HttpTransport\Transport,
-    TransportInterface
+    Query,
+    Result,
+    HttpTransport\Transport as HttpTransport,
+    Transport
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\HttpTransport\GuzzleTransport;
@@ -35,7 +35,7 @@ class HttpTest extends TestCase
             7474
         );
         $auth = new Authentication('neo4j', 'ci');
-        $httpTransport = new Transport(
+        $httpTransport = new HttpTransport(
             $server,
             $auth,
             new GuzzleTransport(
@@ -59,7 +59,7 @@ class HttpTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            TransportInterface::class,
+            Transport::class,
             $this->transport
         );
     }
@@ -70,7 +70,7 @@ class HttpTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\ServerDownException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\ServerDown
      */
     public function testThrowWhenPingUnavailableServer()
     {
@@ -80,7 +80,7 @@ class HttpTest extends TestCase
             1337
         );
         $auth = new Authentication('neo4j', 'ci');
-        $httpTransport = new Transport(
+        $httpTransport = new HttpTransport(
             $server,
             $auth,
             new GuzzleTransport(
@@ -105,24 +105,24 @@ class HttpTest extends TestCase
 
     public function testExecute()
     {
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createMock(Query::class);
         $query
             ->method('cypher')
             ->willReturn('match (n) return n;');
 
         $result = $this->transport->execute($query);
 
-        $this->assertInstanceOf(ResultInterface::class, $result);
+        $this->assertInstanceOf(Result::class, $result);
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailedException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailed
      * @expectedExceptionMessage The query failed to execute properly
      * @expectedExceptionCode 400
      */
     public function testThrowWhenQueryFailed()
     {
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createMock(Query::class);
         $query
             ->method('cypher')
             ->willReturn('foo');

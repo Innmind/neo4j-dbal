@@ -4,16 +4,16 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
-    ClauseInterface,
+    Clause,
     Query\Parameter,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 use Innmind\Immutable\{
     MapInterface,
     Map
 };
 
-final class SetClause implements ClauseInterface, ParametrableInterface
+final class SetClause implements Clause, Parametrable
 {
     const IDENTIFIER = 'SET';
 
@@ -23,7 +23,7 @@ final class SetClause implements ClauseInterface, ParametrableInterface
     public function __construct(string $cypher)
     {
         if (empty($cypher)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;
@@ -49,10 +49,10 @@ final class SetClause implements ClauseInterface, ParametrableInterface
     /**
      * {@inheritdoc}
      */
-    public function withParameter(string $key, $value): ClauseInterface
+    public function withParameter(string $key, $value): Clause
     {
         if (empty($key)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $set = new self($this->cypher);

@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
-    ClauseInterface,
-    Exception\InvalidArgumentException
+    Clause,
+    Exception\DomainException
 };
 
-final class DeleteClause implements ClauseInterface
+final class DeleteClause implements Clause
 {
     const IDENTIFIER = 'DELETE';
 
@@ -18,7 +18,7 @@ final class DeleteClause implements ClauseInterface
     public function __construct(string $cypher, bool $detachable)
     {
         if (empty($cypher)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;

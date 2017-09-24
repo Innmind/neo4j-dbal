@@ -19,7 +19,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyScheme()
     {
@@ -27,7 +27,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyHost()
     {
@@ -35,7 +35,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenInvalidPort()
     {

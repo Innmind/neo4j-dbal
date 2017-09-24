@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\Clause;
 
-final class CreateClause implements ClauseInterface, PathAwareInterface
+final class CreateClause implements Clause, PathAware
 {
-    use PathAware;
+    use PathAware\PathAware;
 
     const IDENTIFIER = 'CREATE';
 

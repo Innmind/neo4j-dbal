@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\Clause;
 
-final class ReturnClause implements ClauseInterface
+final class ReturnClause implements Clause
 {
     const IDENTIFIER = 'RETURN';
 

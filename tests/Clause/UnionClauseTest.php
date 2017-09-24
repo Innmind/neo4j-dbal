@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\UnionClause,
-    ClauseInterface
+    Clause
 };
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class UnionClauseTest extends TestCase
     {
         $c = new UnionClause;
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('UNION', $c->identifier());
         $this->assertSame('', (string) $c);
     }

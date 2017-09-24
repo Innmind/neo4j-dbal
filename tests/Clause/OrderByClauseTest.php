@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\OrderByClause,
-    ClauseInterface
+    Clause
 };
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ class OrderByClauseTest extends TestCase
     {
         $c = new OrderByClause('n.foo', OrderByClause::ASC);
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('ORDER BY', $c->identifier());
         $this->assertSame('n.foo ASC', (string) $c);
         $this->assertSame(
@@ -25,7 +25,7 @@ class OrderByClauseTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyCypher()
     {
@@ -33,7 +33,7 @@ class OrderByClauseTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyDirection()
     {

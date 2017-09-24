@@ -4,33 +4,32 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Transport;
 
 use Innmind\Neo4j\DBAL\{
-    TransportInterface,
-    QueryInterface,
-    ResultInterface,
+    Transport,
+    Query,
     Result,
     Server,
     Authentication,
     Translator\HttpTranslator,
-    HttpTransport\Transport,
-    Exception\ServerDownException,
-    Exception\QueryFailedException
+    HttpTransport\Transport as HttpTransport,
+    Exception\ServerDown,
+    Exception\QueryFailed
 };
 use Innmind\Http\{
-    Message\ResponseInterface,
-    Message\Request,
-    Message\Method,
-    ProtocolVersion
+    Message\Response,
+    Message\Request\Request,
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion
 };
 use Innmind\Url\Url;
 
-final class Http implements TransportInterface
+final class Http implements Transport
 {
     private $translator;
     private $transport;
 
     public function __construct(
         HttpTranslator $translator,
-        Transport $transport
+        HttpTransport $transport
     ) {
         $this->translator = $translator;
         $this->transport = $transport;
@@ -39,18 +38,18 @@ final class Http implements TransportInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(QueryInterface $query): ResultInterface
+    public function execute(Query $query): Result
     {
         $response = $this->transport->fulfill(
             $this->translator->translate($query)
         );
 
         if (!$this->isSuccessful($response)) {
-            throw new QueryFailedException($query, $response);
+            throw new QueryFailed($query, $response);
         }
 
         $response = json_decode((string) $response->body(), true);
-        $result = Result::fromRaw($response['results'][0] ?? []);
+        $result = Result\Result::fromRaw($response['results'][0] ?? []);
 
         return $result;
     }
@@ -58,7 +57,7 @@ final class Http implements TransportInterface
     /**
      * {@inheritdoc}
      */
-    public function ping(): TransportInterface
+    public function ping(): Transport
     {
         try {
             $code = $this
@@ -73,7 +72,7 @@ final class Http implements TransportInterface
                 ->statusCode()
                 ->value();
         } catch (\Exception $e) {
-            throw new ServerDownException(
+            throw new ServerDown(
                 $e->getMessage(),
                 $e->getCode(),
                 $e
@@ -84,17 +83,17 @@ final class Http implements TransportInterface
             return $this;
         }
 
-        throw new ServerDownException;
+        throw new ServerDown;
     }
 
     /**
      * Check if the response is successful
      *
-     * @param ResponseInterface $response
+     * @param Response $response
      *
      * @return bool
      */
-    private function isSuccessful(ResponseInterface $response): bool
+    private function isSuccessful(Response $response): bool
     {
         if ($response->statusCode()->value() !== 200) {
             return false;

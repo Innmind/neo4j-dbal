@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\UnwindClause,
-    ClauseInterface
+    Clause
 };
 use PHPUnit\Framework\TestCase;
 
@@ -15,13 +15,13 @@ class UnwindClauseTest extends TestCase
     {
         $c = new UnwindClause('[1,1,2,2] as x');
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('UNWIND', $c->identifier());
         $this->assertSame('[1,1,2,2] as x', (string) $c);
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyCypher()
     {

@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Server,
     Authentication
 };
-use Innmind\HttpTransport\TransportInterface;
+use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Url\{
     Url,
     Scheme,
@@ -20,13 +20,11 @@ use Innmind\Url\{
     NullFragment
 };
 use Innmind\Http\{
-    Header\HeaderInterface,
+    Header,
     Header\Authorization,
     Header\AuthorizationValue,
-    Message\RequestInterface,
     Message\Request,
-    Message\ResponseInterface,
-    HeadersInterface,
+    Message\Response,
     Headers
 };
 use Innmind\Immutable\Map;
@@ -71,9 +69,9 @@ final class Transport implements TransportInterface
     /**
      * {@inheritdoc}
      */
-    public function fulfill(RequestInterface $request): ResponseInterface
+    public function fulfill(Request $request): Response
     {
-        $request = new Request(
+        $request = new Request\Request(
             $this->server->withPath($request->url()->path()),
             $request->method(),
             $request->protocolVersion(),
@@ -84,9 +82,9 @@ final class Transport implements TransportInterface
         return $this->transport->fulfill($request);
     }
 
-    private function addAuthorizationHeader(HeadersInterface $headers): Headers
+    private function addAuthorizationHeader(Headers $headers): Headers
     {
-        $map = new Map('string', HeaderInterface::class);
+        $map = new Map('string', Header::class);
 
         foreach ($headers as $header) {
             $map = $map->put($header->name(), $header);
@@ -94,6 +92,6 @@ final class Transport implements TransportInterface
 
         $map = $map->put($this->authorization->name(), $this->authorization);
 
-        return new Headers($map);
+        return new Headers\Headers($map);
     }
 }

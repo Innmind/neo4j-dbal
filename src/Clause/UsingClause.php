@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
-    ClauseInterface,
-    Exception\InvalidArgumentException
+    Clause,
+    Exception\DomainException
 };
 
-final class UsingClause implements ClauseInterface
+final class UsingClause implements Clause
 {
     const IDENTIFIER = 'USING';
 
@@ -17,7 +17,7 @@ final class UsingClause implements ClauseInterface
     public function __construct(string $cypher)
     {
         if (empty($cypher)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;

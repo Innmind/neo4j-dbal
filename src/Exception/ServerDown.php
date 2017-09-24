@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Exception;
 
-interface ExceptionInterface
+final class ServerDown extends \RuntimeException implements Exception
 {
 }

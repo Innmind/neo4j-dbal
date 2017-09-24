@@ -8,13 +8,13 @@ use Innmind\Neo4j\DBAL\{
     Transactions,
     Server,
     Authentication,
-    QueryInterface,
+    Query,
     Query\Parameter,
     HttpTransport\Transport
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\HttpTransport\TransportInterface;
-use Innmind\Http\Message\RequestInterface;
+use Innmind\HttpTransport\Transport as TransportInterface;
+use Innmind\Http\Message\Request;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
@@ -45,7 +45,7 @@ class HttpTranslatorTest extends TestCase
 
     public function testTranslate()
     {
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createMock(Query::class);
         $query
             ->method('cypher')
             ->willReturn('match n return n;');
@@ -61,7 +61,7 @@ class HttpTranslatorTest extends TestCase
 
         $request = $this->translator->translate($query);
 
-        $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->assertInstanceOf(Request::class, $request);
         $this->assertSame('POST', (string) $request->method());
         $this->assertSame('/db/data/transaction/commit', (string) $request->url());
         $this->assertSame(

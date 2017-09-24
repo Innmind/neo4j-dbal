@@ -3,83 +3,49 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
 use Innmind\Immutable\MapInterface;
 
-final class Relationship implements RelationshipInterface
+interface Relationship
 {
-    private $id;
-    private $type;
-    private $startNode;
-    private $endNode;
-    private $properties;
-
-    public function __construct(
-        Id $id,
-        Type $type,
-        Id $startNode,
-        Id $endNode,
-        MapInterface $properties
-    ) {
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'variable'
-        ) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->id = $id;
-        $this->type = $type;
-        $this->startNode = $startNode;
-        $this->endNode = $endNode;
-        $this->properties = $properties;
-    }
+    /**
+     * Return the relationship id
+     *
+     * @return Id
+     */
+    public function id(): Id;
 
     /**
-     * {@inheritdoc}
+     * Return the relationship type
+     *
+     * @return Type
      */
-    public function id(): Id
-    {
-        return $this->id;
-    }
+    public function type(): Type;
 
     /**
-     * {@inheritdoc}
+     * Return the start node id
+     *
+     * @return Id
      */
-    public function type(): Type
-    {
-        return $this->type;
-    }
+    public function startNode(): Id;
 
     /**
-     * {@inheritdoc}
+     * Return the end node id
+     *
+     * @return Id
      */
-    public function startNode(): Id
-    {
-        return $this->startNode;
-    }
+    public function endNode(): Id;
 
     /**
-     * {@inheritdoc}
+     * Return the properties
+     *
+     * @return MapInterface<string, variable>
      */
-    public function endNode(): Id
-    {
-        return $this->endNode;
-    }
+    public function properties(): MapInterface;
 
     /**
-     * {@inheritdoc}
+     * Check if the relationship has properties
+     *
+     * @return bool
      */
-    public function properties(): MapInterface
-    {
-        return $this->properties;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasProperties(): bool
-    {
-        return $this->properties->count() > 0;
-    }
+    public function hasProperties(): bool;
 }

@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\{
     Query\Parameter,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -39,7 +39,7 @@ final class Relationship
     public function withParameter(string $key, $value): self
     {
         if (empty($key)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $relationship = new self($this->variable, $this->type, $this->direction);
@@ -55,7 +55,7 @@ final class Relationship
     public function withProperty(string $property, string $cypher): self
     {
         if (empty($property)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $relationship = new self($this->variable, $this->type, $this->direction);

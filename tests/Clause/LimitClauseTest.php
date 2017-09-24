@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\LimitClause,
-    ClauseInterface,
+    Clause,
     Query\Parameter
 };
 use PHPUnit\Framework\TestCase;
@@ -16,13 +16,13 @@ class LimitClauseTest extends TestCase
     {
         $c = new LimitClause('42');
 
-        $this->assertInstanceOf(ClauseInterface::class, $c);
+        $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('LIMIT', $c->identifier());
         $this->assertSame('42', (string) $c);
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyCypher()
     {

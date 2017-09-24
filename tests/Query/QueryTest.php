@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Innmind\Neo4j\DBAL;
+namespace Tests\Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
-    Query,
-    QueryInterface
+    Query\Query,
+    Query as QueryInterface
 };
 use PHPUnit\Framework\TestCase;
 
@@ -58,7 +58,7 @@ class QueryTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\NonParametrableClauseException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\NonParametrableClause
      */
     public function testThrowWhenApplyingParameterOnNonParametrableClause()
     {
@@ -68,7 +68,7 @@ class QueryTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClauseException
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
      */
     public function testThrowWhenApplyingPropertyOnNonPathAwareClause()
     {
@@ -78,7 +78,7 @@ class QueryTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClauseException
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
      */
     public function testThrowWhenApplyingLinkedToOnNonPathAwareClause()
     {
@@ -88,7 +88,7 @@ class QueryTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClauseException
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
      */
     public function testThrowWhenApplyingTypedRelationshipOnNonPathAwareClause()
     {
@@ -98,7 +98,7 @@ class QueryTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonMergeClauseException
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonMergeClause
      */
     public function testThrowWhenApplyingOnMatchOnNonMergeClause()
     {
@@ -108,7 +108,7 @@ class QueryTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonMergeClauseException
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonMergeClause
      */
     public function testThrowWhenApplyingOnCreateOnNonMergeClause()
     {

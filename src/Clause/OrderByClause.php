@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
-    ClauseInterface,
-    Exception\InvalidArgumentException
+    Clause,
+    Exception\DomainException
 };
 
-final class OrderByClause implements ClauseInterface
+final class OrderByClause implements Clause
 {
     const IDENTIFIER = 'ORDER BY';
     const ASC = 'ASC';
@@ -23,7 +23,7 @@ final class OrderByClause implements ClauseInterface
             empty($cypher) ||
             !in_array($direction, [self::ASC, self::DESC], true)
         ) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;

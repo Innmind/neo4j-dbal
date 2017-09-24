@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\Clause;
 use Innmind\Immutable\MapInterface;
 
-interface ParametrableInterface
+interface Parametrable
 {
     /**
      * Add a parameter to the element
@@ -14,9 +14,9 @@ interface ParametrableInterface
      * @param string $key
      * @param mixed $value
      *
-     * @return ClauseInterface
+     * @return Clause
      */
-    public function withParameter(string $key, $value): ClauseInterface;
+    public function withParameter(string $key, $value): Clause;
 
     /**
      * Check if the element has parameters

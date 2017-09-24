@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4j\DBAL;
+namespace Tests\Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Neo4j\DBAL\{
-    Result,
-    Result\NodeInterface,
-    Result\RelationshipInterface,
-    Result\RowInterface
+    Result\Result,
+    Result as ResultInterface,
+    Result\Node,
+    Result\Relationship,
+    Result\Row
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -21,14 +22,15 @@ class ResultTest extends TestCase
     {
         $r = Result::fromRaw([]);
 
+        $this->assertInstanceOf(ResultInterface::class, $r);
         $this->assertInstanceOf(MapInterface::class, $r->nodes());
         $this->assertInstanceOf(MapInterface::class, $r->relationships());
         $this->assertInstanceOf(StreamInterface::class, $r->rows());
         $this->assertSame('int', (string) $r->nodes()->keyType());
-        $this->assertSame(NodeInterface::class, (string) $r->nodes()->valueType());
+        $this->assertSame(Node::class, (string) $r->nodes()->valueType());
         $this->assertSame('int', (string) $r->relationships()->keyType());
-        $this->assertSame(RelationshipInterface::class, (string) $r->relationships()->valueType());
-        $this->assertSame(RowInterface::class, (string) $r->rows()->type());
+        $this->assertSame(Relationship::class, (string) $r->relationships()->valueType());
+        $this->assertSame(Row::class, (string) $r->rows()->type());
         $this->assertCount(0, $r->nodes());
         $this->assertCount(0, $r->relationships());
         $this->assertCount(0, $r->rows());

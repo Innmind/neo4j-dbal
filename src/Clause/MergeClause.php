@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\ClauseInterface;
+use Innmind\Neo4j\DBAL\Clause;
 
-final class MergeClause implements ClauseInterface, PathAwareInterface
+final class MergeClause implements Clause, PathAware
 {
-    use PathAware;
+    use PathAware\PathAware;
 
     const IDENTIFIER = 'MERGE';
 

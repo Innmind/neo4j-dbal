@@ -8,15 +8,14 @@ use Innmind\Neo4j\DBAL\{
     Server,
     Authentication
 };
-use Innmind\HttpTransport\TransportInterface;
+use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Http\{
-    Message\RequestInterface,
     Message\Request,
-    Message\ResponseInterface,
-    Message\Method,
-    ProtocolVersion,
+    Message\Response,
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion,
     Headers,
-    Header\HeaderInterface,
+    Header,
     Header\ContentType,
     Header\ContentTypeValue
 };
@@ -40,12 +39,12 @@ class TransportTest extends TestCase
 
     public function testFulfill()
     {
-        $baseRequest = new Request(
+        $baseRequest = new Request\Request(
             Url::fromString('http://localhost:7474/path'),
             new Method('POST'),
             new ProtocolVersion(1, 1),
-            new Headers(
-                (new Map('string', HeaderInterface::class))
+            new Headers\Headers(
+                (new Map('string', Header::class))
                     ->put(
                         'content-type',
                         new ContentType(
@@ -58,7 +57,7 @@ class TransportTest extends TestCase
         $mock
             ->expects($this->once())
             ->method('fulfill')
-            ->with($this->callback(function(RequestInterface $request) use ($baseRequest): bool {
+            ->with($this->callback(function(Request $request) use ($baseRequest): bool {
                 return (string) $request->url() === 'https://somewhere:7473/path' &&
                     $request->method() === $baseRequest->method() &&
                     $request->protocolVersion() === $baseRequest->protocolVersion() &&
@@ -70,7 +69,7 @@ class TransportTest extends TestCase
                     $request->headers()->get('content-type') === $baseRequest->headers()->get('content-type');
             }))
             ->willReturn(
-                $expected = $this->createMock(ResponseInterface::class)
+                $expected = $this->createMock(Response::class)
             );
         $transport = new Transport(
             new Server('https', 'somewhere', 7473),

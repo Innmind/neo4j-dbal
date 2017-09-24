@@ -4,36 +4,28 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Translator;
 
 use Innmind\Neo4j\DBAL\{
-    QueryInterface,
+    Query,
     Transactions
 };
 use Innmind\Http\{
-    Headers,
-    Header\HeaderInterface,
+    Headers\Headers,
+    Header,
     Header\ContentType,
     Header\ContentTypeValue,
     Header\Accept,
     Header\AcceptValue,
-    Header\HeaderValueInterface,
-    Header\ParameterInterface,
+    Header\Value,
     Header\Parameter,
     Message\Request,
-    Message\RequestInterface,
-    Message\Method,
-    ProtocolVersion
+    Message\Method\Method,
+    ProtocolVersion\ProtocolVersion
 };
-use Innmind\Filesystem\{
-    StreamInterface,
-    Stream\StringStream
-};
+use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\{
     UrlInterface,
     Url
 };
-use Innmind\Immutable\{
-    Map,
-    Set
-};
+use Innmind\Immutable\Map;
 
 /**
  * Translate a dbal query into a http request
@@ -47,7 +39,7 @@ final class HttpTranslator
     {
         $this->transactions = $transactions;
         $this->headers = new Headers(
-            (new Map('string', HeaderInterface::class))
+            (new Map('string', Header::class))
                 ->put(
                     'content-type',
                     new ContentType(
@@ -60,18 +52,15 @@ final class HttpTranslator
                 ->put(
                     'accept',
                     new Accept(
-                        (new Set(HeaderValueInterface::class))
-                            ->add(
-                                new AcceptValue(
-                                    'application',
-                                    'json',
-                                    (new Map('string', ParameterInterface::class))
-                                        ->put(
-                                            'charset',
-                                            new Parameter('charset', 'UTF-8')
-                                        )
+                        new AcceptValue(
+                            'application',
+                            'json',
+                            (new Map('string', Parameter::class))
+                                ->put(
+                                    'charset',
+                                    new Parameter\Parameter('charset', 'UTF-8')
                                 )
-                            )
+                        )
                     )
                 )
         );
@@ -79,14 +68,10 @@ final class HttpTranslator
 
     /**
      * Transalate a dbal query into a http request
-     *
-     * @param QueryInterface $query
-     *
-     * @return RequestInterface
      */
-    public function translate(QueryInterface $query): RequestInterface
+    public function translate(Query $query): Request
     {
-        return new Request(
+        return new Request\Request(
             $this->computeEndpoint(),
             new Method(Method::POST),
             new ProtocolVersion(1, 1),
@@ -97,8 +82,6 @@ final class HttpTranslator
 
     /**
      * Determine the appropriate endpoint based on the transactions
-     *
-     * @return UrlInterface
      */
     private function computeEndpoint(): UrlInterface
     {
@@ -111,12 +94,8 @@ final class HttpTranslator
 
     /**
      * Build the json payload to be sent to the server
-     *
-     * @param QueryInterface $query
-     *
-     * @return StreamInterface
      */
-    private function computeBody(QueryInterface $query): StreamInterface
+    private function computeBody(Query $query): StringStream
     {
         $statement = [
             'statement' => $query->cypher(),

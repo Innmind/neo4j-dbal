@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Server
 {
@@ -18,7 +18,7 @@ final class Server
             empty($host) ||
             $port < 1
         ) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->scheme = $scheme;
