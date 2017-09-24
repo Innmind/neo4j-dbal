@@ -45,7 +45,8 @@ class RelationshipTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 5 must be of type MapInterface<string, variable>
      */
     public function testThrowWhenInvalidPropertyMap()
     {

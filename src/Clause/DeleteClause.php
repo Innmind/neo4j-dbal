@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 
 final class DeleteClause implements Clause
@@ -18,7 +18,7 @@ final class DeleteClause implements Clause
     public function __construct(string $cypher, bool $detachable)
     {
         if (empty($cypher)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;

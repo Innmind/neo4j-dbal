@@ -17,7 +17,7 @@ class AuthenticationTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyUser()
     {
@@ -25,7 +25,7 @@ class AuthenticationTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */
     public function testThrowWhenEmptyPassword()
     {

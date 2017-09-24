@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Authentication
 {
@@ -13,7 +13,7 @@ final class Authentication
     public function __construct(string $user, string $password)
     {
         if (empty($user) || empty($password)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->user = $user;

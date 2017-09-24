@@ -5,8 +5,7 @@ namespace Innmind\Neo4j\DBAL\Result\Node;
 
 use Innmind\Neo4j\DBAL\{
     Result\Node as NodeInterface,
-    Result\Id,
-    Exception\InvalidArgumentException
+    Result\Id
 };
 use Innmind\Immutable\{
     SetInterface,
@@ -24,12 +23,15 @@ final class Node implements NodeInterface
         SetInterface $labels,
         MapInterface $properties
     ) {
+        if ((string) $labels->type() !== 'string') {
+            throw new \TypeError('Argument 2 must be of type SetInterface<string>');
+        }
+
         if (
-            (string) $labels->type() !== 'string' ||
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'variable'
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError('Argument 3 must be of type MapInterface<string, variable>');
         }
 
         $this->id = $id;

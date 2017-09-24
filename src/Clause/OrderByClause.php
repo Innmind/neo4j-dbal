@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 
 final class OrderByClause implements Clause
@@ -23,7 +23,7 @@ final class OrderByClause implements Clause
             empty($cypher) ||
             !in_array($direction, [self::ASC, self::DESC], true)
         ) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;

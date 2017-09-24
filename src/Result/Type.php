@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Neo4j\DBAL\Exception\InvalidArgumentException;
+use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Type
 {
@@ -12,7 +12,7 @@ final class Type
     public function __construct(string $value)
     {
         if (empty($value)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->value = $value;

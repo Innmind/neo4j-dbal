@@ -6,7 +6,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause,
     Query\Parameter,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -23,7 +23,7 @@ final class WhereClause implements Clause, Parametrable
     public function __construct(string $cypher)
     {
         if (empty($cypher)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;
@@ -52,7 +52,7 @@ final class WhereClause implements Clause, Parametrable
     public function withParameter(string $key, $value): Clause
     {
         if (empty($key)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $where = new self($this->cypher);

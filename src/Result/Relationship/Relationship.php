@@ -6,8 +6,7 @@ namespace Innmind\Neo4j\DBAL\Result\Relationship;
 use Innmind\Neo4j\DBAL\{
     Result\Relationship as RelationshipInterface,
     Result\Id,
-    Result\Type,
-    Exception\InvalidArgumentException
+    Result\Type
 };
 use Innmind\Immutable\MapInterface;
 
@@ -30,7 +29,7 @@ final class Relationship implements RelationshipInterface
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'variable'
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError('Argument 5 must be of type MapInterface<string, variable>');
         }
 
         $this->id = $id;

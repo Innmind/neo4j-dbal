@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
     Query as QueryInterface,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -20,7 +20,7 @@ final class Cypher implements QueryInterface
     public function __construct(string $cypher)
     {
         if (empty($cypher)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->cypher = $cypher;
@@ -92,7 +92,7 @@ final class Cypher implements QueryInterface
     public function withParameter(string $key, $parameter): self
     {
         if (empty($key)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $query = new self($this->cypher);

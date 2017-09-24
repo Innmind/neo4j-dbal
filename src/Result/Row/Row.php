@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Result\Row;
 
 use Innmind\Neo4j\DBAL\{
     Result\Row as RowInterface,
-    Exception\InvalidArgumentException
+    Exception\DomainException
 };
 
 final class Row implements RowInterface
@@ -16,7 +16,7 @@ final class Row implements RowInterface
     public function __construct(string $column, $value)
     {
         if (empty($column)) {
-            throw new InvalidArgumentException;
+            throw new DomainException;
         }
 
         $this->column = $column;

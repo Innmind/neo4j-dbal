@@ -43,7 +43,8 @@ class NodeTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 2 must be of type SetInterface<string>
      */
     public function testThrowWhenInvalidLabelSet()
     {
@@ -55,7 +56,8 @@ class NodeTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\InvalidArgumentException
+     * @expectedException TypeError
+     * @expectedExceptionMessage Argument 3 must be of type MapInterface<string, variable>
      */
     public function testThrowWhenInvalidPropertyMap()
     {
