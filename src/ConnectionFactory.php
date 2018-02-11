@@ -23,6 +23,7 @@ final class ConnectionFactory
 
     private function __construct()
     {
+        @trigger_error('use the container instead', E_USER_DEPRECATED);
     }
 
     public static function on(string $host, string $scheme = 'https', int $port = 7474): self
