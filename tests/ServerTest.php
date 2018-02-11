@@ -10,12 +10,17 @@ class ServerTest extends TestCase
 {
     public function testGetters()
     {
-        $server = new Server('http', 'localhost', 7474);
+        $server = new Server('http', 'some-server', 7475);
 
         $this->assertSame('http', $server->scheme());
-        $this->assertSame('localhost', $server->host());
-        $this->assertSame(7474, $server->port());
-        $this->assertSame('http://localhost:7474/', (string) $server);
+        $this->assertSame('some-server', $server->host());
+        $this->assertSame(7475, $server->port());
+        $this->assertSame('http://some-server:7475/', (string) $server);
+    }
+
+    public function testDefaults()
+    {
+        $this->assertSame('https://localhost:7474/', (string) new Server);
     }
 
     /**

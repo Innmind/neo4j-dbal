@@ -16,6 +16,14 @@ class AuthenticationTest extends TestCase
         $this->assertSame('docker', $a->password());
     }
 
+    public function testDefaults()
+    {
+        $auth = new Authentication;
+
+        $this->assertSame('neo4j', $auth->user());
+        $this->assertSame('neo4j', $auth->password());
+    }
+
     /**
      * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
      */

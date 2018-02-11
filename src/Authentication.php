@@ -10,8 +10,11 @@ final class Authentication
     private $user;
     private $password;
 
-    public function __construct(string $user, string $password)
+    public function __construct(string $user = null, string $password = null)
     {
+        $user = $user ?? 'neo4j';
+        $password = $password ?? 'neo4j';
+
         if (empty($user) || empty($password)) {
             throw new DomainException;
         }

@@ -11,8 +11,15 @@ final class Server
     private $host;
     private $port;
 
-    public function __construct(string $scheme, string $host, int $port)
-    {
+    public function __construct(
+        string $scheme = null,
+        string $host = null,
+        int $port = null
+    ) {
+        $scheme = $scheme ?? 'https';
+        $host = $host ?? 'localhost';
+        $port = $port ?? 7474;
+
         if (
             empty($scheme) ||
             empty($host) ||
