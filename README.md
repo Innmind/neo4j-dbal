@@ -23,26 +23,25 @@ Basic example to run a query:
 
 ```php
 use Innmind\Neo4j\DBAL\{
-    ConnectionFactory,
     Query,
     Clause\Expression\Relationship
 };
+use Innmind\Compose\{
+    ContainerBuilder\ContainerBuilder,
+    Loader\Yaml
+};
+use Innmind\Url\Path;
+use Innmind\Immutable\Map;
 use Innmind\TimeContinuum\TimeContinuum\Earth;
 use Innmind\HttpTransport\GuzzleTransport;
-use Innmind\Http\{
-    Translator\Response\Psr7Translator,
-    Factory\Header\Factories
-};
 
-$conn = ConnectionFactory::on('localhost')
-    ->for('neo4j', 'neo4j') //default neo4j credentials, you must specify them
-    ->useTransport(new GuzzleTransport(
-        new Client,
-        new Psr7Translator(
-            Factories::default()
-        )
-    ))
-    ->useClock(new Earth); //optional
+$container = (new ContainerBuilder(new Yaml))(
+    new Path('container.yml'),
+    (new Map('string', 'mixed'))
+        ->put('transport', new GuzzleTransport(/* arguments */))
+        ->put('clock', new Earth)
+);
+$conn = $container->get('connection');
 
 $query = (new Query)
     ->match('n', ['LabelA', 'LabelB'])
