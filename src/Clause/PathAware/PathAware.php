@@ -48,6 +48,61 @@ trait PathAware
     /**
      * {@inheritdoc}
      */
+    public function withADistanceOf(int $distance): Clause
+    {
+        $clause = clone $this;
+        $clause->path = $this->path->withADistanceOf($distance);
+
+        return $clause;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withADistanceBetween(int $min, int $max): Clause
+    {
+        $clause = clone $this;
+        $clause->path = $this->path->withADistanceBetween($min, $max);
+
+        return $clause;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withADistanceOfAtLeast(int $distance): Clause
+    {
+        $clause = clone $this;
+        $clause->path = $this->path->withADistanceOfAtLeast($distance);
+
+        return $clause;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withADistanceOfAtMost(int $distance): Clause
+    {
+        $clause = clone $this;
+        $clause->path = $this->path->withADistanceOfAtMost($distance);
+
+        return $clause;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withAnyDistance(): Clause
+    {
+        $clause = clone $this;
+        $clause->path = $this->path->withAnyDistance();
+
+        return $clause;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function withProperty(
         string $property,
         string $cypher

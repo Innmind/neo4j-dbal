@@ -97,6 +97,142 @@ final class Path
     }
 
     /**
+     * Define the deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceOf(int $distance): self
+    {
+        if ($this->elements->size() < 3) {
+            throw new LogicException;
+        }
+
+        $path = clone $this;
+        $path->elements = $this
+            ->elements
+            ->dropEnd(2)
+            ->add(
+                $this->elements->dropEnd(1)->last()->withADistanceOf($distance)
+            )
+            ->add($this->elements->last());
+
+        return $path;
+    }
+
+    /**
+     * Define the deepness range of the relationship
+     *
+     * @param int $min
+     * @param int $max
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceBetween(int $min, int $max): self
+    {
+        if ($this->elements->size() < 3) {
+            throw new LogicException;
+        }
+
+        $path = clone $this;
+        $path->elements = $this
+            ->elements
+            ->dropEnd(2)
+            ->add(
+                $this->elements->dropEnd(1)->last()->withADistanceBetween($min, $max)
+            )
+            ->add($this->elements->last());
+
+        return $path;
+    }
+
+    /**
+     * Define the minimum deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceOfAtLeast(int $distance): self
+    {
+        if ($this->elements->size() < 3) {
+            throw new LogicException;
+        }
+
+        $path = clone $this;
+        $path->elements = $this
+            ->elements
+            ->dropEnd(2)
+            ->add(
+                $this->elements->dropEnd(1)->last()->withADistanceOfAtLeast($distance)
+            )
+            ->add($this->elements->last());
+
+        return $path;
+    }
+
+    /**
+     * Define the maximum deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceOfAtMost(int $distance): self
+    {
+        if ($this->elements->size() < 3) {
+            throw new LogicException;
+        }
+
+        $path = clone $this;
+        $path->elements = $this
+            ->elements
+            ->dropEnd(2)
+            ->add(
+                $this->elements->dropEnd(1)->last()->withADistanceOfAtMost($distance)
+            )
+            ->add($this->elements->last());
+
+        return $path;
+    }
+
+    /**
+     * Define any deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withAnyDistance(): self
+    {
+        if ($this->elements->size() < 3) {
+            throw new LogicException;
+        }
+
+        $path = clone $this;
+        $path->elements = $this
+            ->elements
+            ->dropEnd(2)
+            ->add(
+                $this->elements->dropEnd(1)->last()->withAnyDistance()
+            )
+            ->add($this->elements->last());
+
+        return $path;
+    }
+
+    /**
      * Add the given parameter to the last operation
      *
      * @param string $key

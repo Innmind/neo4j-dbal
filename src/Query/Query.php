@@ -291,6 +291,142 @@ final class Query implements QueryInterface
     }
 
     /**
+     * Define the deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceOf(int $distance): self
+    {
+        $clause = $this->clauses->last();
+
+        if (!$clause instanceof Clause\PathAware) {
+            throw new NonPathAwareClause;
+        }
+
+        $clause = $clause->withADistanceOf($distance);
+        $query = new self;
+        $query->clauses = $this
+            ->clauses
+            ->dropEnd(1)
+            ->add($clause);
+
+        return $query;
+    }
+
+    /**
+     * Define the deepness range of the relationship
+     *
+     * @param int $min
+     * @param int $max
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceBetween(int $min, int $max): self
+    {
+        $clause = $this->clauses->last();
+
+        if (!$clause instanceof Clause\PathAware) {
+            throw new NonPathAwareClause;
+        }
+
+        $clause = $clause->withADistanceBetween($min, $max);
+        $query = new self;
+        $query->clauses = $this
+            ->clauses
+            ->dropEnd(1)
+            ->add($clause);
+
+        return $query;
+    }
+
+    /**
+     * Define the minimum deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceOfAtLeast(int $distance): self
+    {
+        $clause = $this->clauses->last();
+
+        if (!$clause instanceof Clause\PathAware) {
+            throw new NonPathAwareClause;
+        }
+
+        $clause = $clause->withADistanceOfAtLeast($distance);
+        $query = new self;
+        $query->clauses = $this
+            ->clauses
+            ->dropEnd(1)
+            ->add($clause);
+
+        return $query;
+    }
+
+    /**
+     * Define the maximum deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withADistanceOfAtMost(int $distance): self
+    {
+        $clause = $this->clauses->last();
+
+        if (!$clause instanceof Clause\PathAware) {
+            throw new NonPathAwareClause;
+        }
+
+        $clause = $clause->withADistanceOfAtMost($distance);
+        $query = new self;
+        $query->clauses = $this
+            ->clauses
+            ->dropEnd(1)
+            ->add($clause);
+
+        return $query;
+    }
+
+    /**
+     * Define any deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return self
+     */
+    public function withAnyDistance(): self
+    {
+        $clause = $this->clauses->last();
+
+        if (!$clause instanceof Clause\PathAware) {
+            throw new NonPathAwareClause;
+        }
+
+        $clause = $clause->withAnyDistance();
+        $query = new self;
+        $query->clauses = $this
+            ->clauses
+            ->dropEnd(1)
+            ->add($clause);
+
+        return $query;
+    }
+
+    /**
      * Add a WITH clause
      *
      * @param string[] $variables

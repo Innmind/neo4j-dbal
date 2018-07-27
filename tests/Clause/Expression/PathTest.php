@@ -6,7 +6,8 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 use Innmind\Neo4j\DBAL\{
     Clause\Expression\Path,
     Clause\Expression\Relationship,
-    Query\Parameter
+    Query\Parameter,
+    Exception\LogicException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -64,6 +65,81 @@ class PathTest extends TestCase
                 ->through('a', 'BAR', Relationship::RIGHT)
                 ->withProperty('foo', '{value}')
         );
+    }
+
+    public function testWithADistanceOf()
+    {
+        $this->assertSame(
+            '()-[*2]-()',
+            (string) Path::startWithNode()->linkedTo()->withADistanceOf(2)
+        );
+    }
+
+    public function testThrowWhenADistanceOfWithoutRelationship()
+    {
+        $this->expectException(LogicException::class);
+
+        Path::startWithNode()->withADistanceOf(2);
+    }
+
+    public function testWithADistanceBetween()
+    {
+        $this->assertSame(
+            '()-[*2..3]-()',
+            (string) Path::startWithNode()->linkedTo()->withADistanceBetween(2, 3)
+        );
+    }
+
+    public function testThrowWhenADistanceBetweenWithoutRelationship()
+    {
+        $this->expectException(LogicException::class);
+
+        Path::startWithNode()->withADistanceBetween(2, 3);
+    }
+
+    public function testWithADistanceOfAtLeast()
+    {
+        $this->assertSame(
+            '()-[*2..]-()',
+            (string) Path::startWithNode()->linkedTo()->withADistanceOfAtLeast(2)
+        );
+    }
+
+    public function testThrowWhenADistanceOfAtLeastWithoutRelationship()
+    {
+        $this->expectException(LogicException::class);
+
+        Path::startWithNode()->withADistanceOfAtLeast(2);
+    }
+
+    public function testWithADistanceOfMost()
+    {
+        $this->assertSame(
+            '()-[*..2]-()',
+            (string) Path::startWithNode()->linkedTo()->withADistanceOfAtMost(2)
+        );
+    }
+
+    public function testThrowWhenADistanceOfAtMostWithoutRelationship()
+    {
+        $this->expectException(LogicException::class);
+
+        Path::startWithNode()->withADistanceOfAtMost(2);
+    }
+
+    public function testWithAnyDistance()
+    {
+        $this->assertSame(
+            '()-[*]-()',
+            (string) Path::startWithNode()->linkedTo()->withAnyDistance()
+        );
+    }
+
+    public function testThrowWhenAnyDistanceWithoutRelationship()
+    {
+        $this->expectException(LogicException::class);
+
+        Path::startWithNode()->withAnyDistance();
     }
 
     public function testParameters()
