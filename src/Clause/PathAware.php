@@ -47,4 +47,60 @@ interface PathAware extends Parametrable
         string $property,
         string $cypher
     ): Clause;
+
+    /**
+     * Define the deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return Clause
+     */
+    public function withADistanceOf(int $distance): Clause;
+
+    /**
+     * Define the deepness range of the relationship
+     *
+     * @param int $min
+     * @param int $max
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return Clause
+     */
+    public function withADistanceBetween(int $min, int $max): Clause;
+
+    /**
+     * Define the minimum deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return Clause
+     */
+    public function withADistanceOfAtLeast(int $distance): Clause;
+
+    /**
+     * Define the maximum deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return Clause
+     */
+    public function withADistanceOfAtMost(int $distance): Clause;
+
+    /**
+     * Define any deepness of the relationship
+     *
+     * @param int $distance
+     *
+     * @throws LogicException If no relationship in the path
+     *
+     * @return Clause
+     */
+    public function withAnyDistance(): Clause;
 }

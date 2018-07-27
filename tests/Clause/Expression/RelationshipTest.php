@@ -42,9 +42,16 @@ class RelationshipTest extends TestCase
         $this->assertSame('-[a:FOO]-', (string) new Relationship('a', 'FOO'));
         $this->assertSame('<-[a:FOO]-', (string) new Relationship('a', 'FOO', Relationship::LEFT));
         $this->assertSame('-[a:FOO]->', (string) new Relationship('a', 'FOO', Relationship::RIGHT));
+        $this->assertSame('-[]-', (string) (new Relationship)->withADistanceOf(1));
+        $this->assertSame('-[*2]-', (string) (new Relationship)->withADistanceOf(2));
+        $this->assertSame('-[*2..3]-', (string) (new Relationship)->withADistanceBetween(2, 3));
+        $this->assertSame('-[*3..]-', (string) (new Relationship)->withADistanceOfAtLeast(3));
+        $this->assertSame('-[*..3]-', (string) (new Relationship)->withADistanceOfAtMost(3));
+        $this->assertSame('-[*]-', (string) (new Relationship)->withAnyDistance(3));
         $this->assertSame(
-            '-[a:FOO { key: {value}, another: {where}.value }]->',
+            '-[a:FOO*24..42 { key: {value}, another: {where}.value }]->',
             (string) (new Relationship('a', 'FOO', Relationship::RIGHT))
+                ->withADistanceBetween(24, 42)
                 ->withProperty('key', '{value}')
                 ->withProperty('another', '{where}.value')
                 ->withParameter('value', 'foo')

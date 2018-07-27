@@ -28,6 +28,7 @@ class QueryTest extends TestCase
             ->through('TYPE', 'r')
                 ->withProperties(['foo' => '{baz}'])
                 ->withParameters(['baz' => 'foobar'])
+                ->withADistanceOfAtMost(42)
             ->with('n', 'n2', 'r')
             ->where('n.foo = {foobar}')
                 ->withParameter('foobar', 'baz')
@@ -50,7 +51,7 @@ class QueryTest extends TestCase
             ->using('INDEX n.foo');
 
         $this->assertSame(
-            $e = 'MATCH (n:labels { foo: {foo} })-[r:TYPE { foo: {baz} }]-(n2:labels { bar: {bar} }) WITH n, n2, r WHERE n.foo = {foobar}, n2.bar = {foobaz}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
+            $e = 'MATCH (n:labels { foo: {foo} })-[r:TYPE*..42 { foo: {baz} }]-(n2:labels { bar: {bar} }) WITH n, n2, r WHERE n.foo = {foobar}, n2.bar = {foobaz}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
             (string) $q
         );
         $this->assertSame($e, $q->cypher());
@@ -95,6 +96,56 @@ class QueryTest extends TestCase
         (new Query)
             ->delete('n')
             ->through('r');
+    }
+
+    /**
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
+     */
+    public function testThrowWhenApplyingADistanceOfOnNonPathAwareClause()
+    {
+        (new Query)
+            ->delete('n')
+            ->withADistanceOf(2);
+    }
+
+    /**
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
+     */
+    public function testThrowWhenApplyingADistanceBetweenOnNonPathAwareClause()
+    {
+        (new Query)
+            ->delete('n')
+            ->withADistanceBetween(2, 3);
+    }
+
+    /**
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
+     */
+    public function testThrowWhenApplyingADistanceOfAtLeastOnNonPathAwareClause()
+    {
+        (new Query)
+            ->delete('n')
+            ->withADistanceOfAtLeast(2);
+    }
+
+    /**
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
+     */
+    public function testThrowWhenApplyingADistanceOfAtMostOnNonPathAwareClause()
+    {
+        (new Query)
+            ->delete('n')
+            ->withADistanceOfAtMost(2);
+    }
+
+    /**
+     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
+     */
+    public function testThrowWhenApplyingAnyDistanceOnNonPathAwareClause()
+    {
+        (new Query)
+            ->delete('n')
+            ->withAnyDistance();
     }
 
     /**
