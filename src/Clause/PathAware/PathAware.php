@@ -95,7 +95,7 @@ trait PathAware
     public function withAnyDistance(): Clause
     {
         $clause = clone $this;
-        $clause->path = $this->path->withAnyDistance($distance);
+        $clause->path = $this->path->withAnyDistance();
 
         return $clause;
     }
