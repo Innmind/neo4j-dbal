@@ -89,7 +89,7 @@ final class HttpTranslator
             return Url::fromString('/db/data/transaction/commit');
         }
 
-        return $this->transactions->get()->endpoint();
+        return $this->transactions->current()->endpoint();
     }
 
     /**
