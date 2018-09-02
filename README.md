@@ -22,23 +22,18 @@ composer require innmind/neo4j-dbal
 Basic example to run a query:
 
 ```php
+use function Innmind\Neo4j\DBAL\bootstrap;
 use Innmind\Neo4j\DBAL\{
     Query,
     Clause\Expression\Relationship
 };
-use Innmind\Compose\{
-    ContainerBuilder\ContainerBuilder,
-    Loader\Yaml
-};
-use Innmind\Url\Path;
-use Innmind\Immutable\Map;
 use Innmind\TimeContinuum\TimeContinuum\Earth;
-use Innmind\HttpTransport\GuzzleTransport;
+use function Innmind\HttpTransport\bootstrap as transports;
 
 $container = (new ContainerBuilder(new Yaml))(
     new Path('container.yml'),
     (new Map('string', 'mixed'))
-        ->put('transport', new GuzzleTransport(/* arguments */))
+        ->put('transport', transports()['guzzle']())
         ->put('clock', new Earth)
 );
 $conn = $container->get('connection');
