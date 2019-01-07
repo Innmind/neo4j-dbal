@@ -5,19 +5,18 @@ namespace Innmind\Neo4j\DBAL;
 
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\Url\{
+    UrlInterface,
+    Url,
+};
 
 function bootstrap(
     TransportInterface $transport,
     TimeContinuumInterface $clock,
-    string $scheme = null,
-    string $host = null,
-    int $port = null,
-    string $user = null,
-    string $password = null
+    UrlInterface $server = null
 ): Connection {
     $httpTransport = new HttpTransport\Transport(
-        new Server($scheme, $host, $port),
-        new Authentication($user, $password),
+        $server ?? Url::fromString('https://neo4j:neo4j@localhost:7474/'),
         $transport
     );
     $transactions = new Transactions($httpTransport, $clock);

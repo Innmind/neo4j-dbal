@@ -6,8 +6,6 @@ namespace Tests\Innmind\Neo4j\DBAL\Translator;
 use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     Transactions,
-    Server,
-    Authentication,
     Query,
     Query\Parameter,
     HttpTransport\Transport,
@@ -21,6 +19,7 @@ use Innmind\Http\{
     Header\Header,
     Header\Value\Value,
 };
+use Innmind\Url\Url;
 use Innmind\Stream\Readable;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -36,15 +35,7 @@ class HttpTranslatorTest extends TestCase
         $this->translate = new HttpTranslator(
             $this->transactions = new Transactions(
                 new Transport(
-                    new Server(
-                        'http',
-                        'localhost',
-                        7474
-                    ),
-                    new Authentication(
-                        'neo4j',
-                        'ci'
-                    ),
+                    Url::fromString('http://neo4j:ci@localhost:7474/'),
                     $this->transport = $this->createMock(TransportInterface::class)
                 ),
                 $this->createMock(TimeContinuumInterface::class)

@@ -6,14 +6,13 @@ namespace Tests\Innmind\Neo4j\DBAL\Transport;
 use Innmind\Neo4j\DBAL\{
     Transport\Http,
     Translator\HttpTranslator,
-    Server,
-    Authentication,
     Transactions,
     Query,
     Result,
     HttpTransport\Transport as HttpTransport,
     Transport,
 };
+use Innmind\Url\Url;
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
@@ -24,15 +23,8 @@ class HttpTest extends TestCase
 
     public function setUp()
     {
-        $server = new Server(
-            'http',
-            'localhost',
-            7474
-        );
-        $auth = new Authentication('neo4j', 'ci');
         $httpTransport = new HttpTransport(
-            $server,
-            $auth,
+            Url::fromString('http://neo4j:ci@localhost:7474/'),
             http()['default']()
         );
         $this->transport = new Http(
@@ -64,15 +56,8 @@ class HttpTest extends TestCase
      */
     public function testThrowWhenPingUnavailableServer()
     {
-        $server = new Server(
-            'http',
-            'localhost',
-            1337
-        );
-        $auth = new Authentication('neo4j', 'ci');
         $httpTransport = new HttpTransport(
-            $server,
-            $auth,
+            Url::fromString('http://neo4j:ci@localhost:1337/'),
             http()['default']()
         );
         $transport = new Http(

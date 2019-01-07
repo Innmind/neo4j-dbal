@@ -6,8 +6,6 @@ namespace Tests\Innmind\Neo4j\DBAL\Connection;
 use Innmind\Neo4j\DBAL\{
     Connection\Connection,
     Connection as ConnectionInterface,
-    Server,
-    Authentication,
     Transactions,
     Transport\Http,
     Result,
@@ -16,6 +14,7 @@ use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\Url\Url;
 use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
@@ -25,15 +24,8 @@ class ConnectionTest extends TestCase
 
     public function setUp()
     {
-        $server = new Server(
-            'http',
-            'localhost',
-            7474
-        );
-        $auth = new Authentication('neo4j', 'ci');
         $httpTransport = new Transport(
-            $server,
-            $auth,
+            Url::fromString('http://neo4j:ci@localhost:7474/'),
             http()['default']()
         );
         $transactions = new Transactions(
@@ -83,15 +75,8 @@ class ConnectionTest extends TestCase
     {
         $this->assertTrue($this->connection->isAlive());
 
-        $server = new Server(
-            'http',
-            'localhost',
-            1337
-        );
-        $auth = new Authentication('neo4j', 'ci');
         $httpTransport = new Transport(
-            $server,
-            $auth,
+            Url::fromString('http://neo4j:ci@localhost:1337/'),
             http()['default']()
         );
         $transactions = new Transactions(

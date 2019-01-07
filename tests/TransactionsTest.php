@@ -6,11 +6,10 @@ namespace Tests\Innmind\Neo4j\DBAL;
 use Innmind\Neo4j\DBAL\{
     Transactions,
     Transaction,
-    Server,
-    Authentication,
     HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\Url\Url;
 use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
@@ -21,17 +20,11 @@ class TransactionsTest extends TestCase
 
     public function setUp()
     {
-        $this->server = new Server(
-            'http',
-            'localhost',
-            7474
-        );
-        $auth = new Authentication('neo4j', 'ci');
+        $this->server = 'http://localhost:7474/';
 
         $this->transactions = new Transactions(
             new Transport(
-                $this->server,
-                $auth,
+                Url::fromString('http://neo4j:ci@localhost:7474/'),
                 http()['default']()
             ),
             $this->createMock(TimeContinuumInterface::class)

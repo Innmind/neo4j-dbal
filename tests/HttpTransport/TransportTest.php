@@ -5,8 +5,6 @@ namespace Tests\Innmind\Neo4j\DBAL\HttpTransport;
 
 use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport,
-    Server,
-    Authentication,
 };
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Http\{
@@ -30,8 +28,7 @@ class TransportTest extends TestCase
         $this->assertInstanceOf(
             TransportInterface::class,
             new Transport(
-                new Server('foo', 'bar', 7474),
-                new Authentication('user', 'pwd'),
+                Url::fromString('http://neo4j:ci@localhost:7474/'),
                 $this->createMock(TransportInterface::class)
             )
         );
@@ -68,8 +65,7 @@ class TransportTest extends TestCase
                 $expected = $this->createMock(Response::class)
             );
         $fulfill = new Transport(
-            new Server('https', 'somewhere', 7473),
-            new Authentication('user', 'pwd'),
+            Url::fromString('https://user:pwd@somewhere:7473/'),
             $mock
         );
 
