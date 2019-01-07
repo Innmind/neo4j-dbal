@@ -13,29 +13,30 @@ use Innmind\Http\{
     Header\Parameter,
     Message\Request\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion
+    ProtocolVersion\ProtocolVersion,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\Url;
+use Innmind\Json\Json;
 use Innmind\Immutable\{
     Stream,
-    Map
+    Map,
 };
 
 final class Transactions
 {
     private $transactions;
-    private $transport;
+    private $fulfill;
     private $clock;
     private $headers;
     private $body;
 
     public function __construct(
-        Transport $transport,
+        Transport $fulfill,
         TimeContinuumInterface $clock
     ) {
         $this->transactions = new Stream(Transaction::class);
-        $this->transport = $transport;
+        $this->fulfill = $fulfill;
         $this->clock = $clock;
         $this->headers = new Headers(
             (new Map('string', Header::class))
@@ -54,7 +55,7 @@ final class Transactions
                     )
                 )
         );
-        $this->body = new StringStream(json_encode(['statements' => []]));
+        $this->body = new StringStream(Json::encode(['statements' => []]));
     }
 
     /**
@@ -64,17 +65,17 @@ final class Transactions
      */
     public function open(): Transaction
     {
-        $response = $this->transport->fulfill(
+        $response = ($this->fulfill)(
             new Request(
                 Url::fromString('/db/data/transaction'),
-                new Method(Method::POST),
+                Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
                 $this->body
             )
         );
 
-        $body = json_decode((string) $response->body(), true);
+        $body = Json::decode((string) $response->body());
         $location = (string) $response
             ->headers()
             ->get('Location')
@@ -118,10 +119,10 @@ final class Transactions
      */
     public function commit(): self
     {
-        $this->transport->fulfill(
+        ($this->fulfill)(
             new Request(
                 $this->current()->commitEndpoint(),
-                new Method(Method::POST),
+                Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
                 $this->body
@@ -139,10 +140,10 @@ final class Transactions
      */
     public function rollback(): self
     {
-        $this->transport->fulfill(
+        ($this->fulfill)(
             new Request(
                 $this->current()->endpoint(),
-                new Method(Method::DELETE),
+                Method::delete(),
                 new ProtocolVersion(1, 1)
             )
         );

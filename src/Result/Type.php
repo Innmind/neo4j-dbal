@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Neo4j\DBAL\Exception\DomainException;
+use Innmind\Immutable\Str;
 
 final class Type
 {
@@ -11,7 +12,7 @@ final class Type
 
     public function __construct(string $value)
     {
-        if (empty($value)) {
+        if (Str::of($value)->empty()) {
             throw new DomainException;
         }
 

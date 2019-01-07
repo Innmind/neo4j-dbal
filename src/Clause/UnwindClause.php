@@ -5,18 +5,19 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause,
-    Exception\DomainException
+    Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class UnwindClause implements Clause
 {
-    const IDENTIFIER = 'UNWIND';
+    private const IDENTIFIER = 'UNWIND';
 
     private $cypher;
 
     public function __construct(string $cypher)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 

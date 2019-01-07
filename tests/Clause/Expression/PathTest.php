@@ -15,53 +15,52 @@ class PathTest extends TestCase
 {
     public function testStartWithNode()
     {
-        $p = Path::startWithNode('foo', ['Bar']);
+        $path = Path::startWithNode('foo', ['Bar']);
 
-        $this->assertInstanceOf(Path::class, $p);
-        $this->assertSame('(foo:Bar)', (string) $p);
-        $this->assertNotSame($p, $p->withProperty('foo', ''));
-        $this->assertInstanceOf(Path::class, $p->withProperty('foo', ''));
+        $this->assertInstanceOf(Path::class, $path);
+        $this->assertSame('(foo:Bar)', (string) $path);
+        $this->assertNotSame($path, $path->withProperty('foo', ''));
+        $this->assertInstanceOf(Path::class, $path->withProperty('foo', ''));
         $this->assertSame(
             '(foo:Bar { prop: {value} })',
-            (string) $p->withProperty('prop', '{value}')
+            (string) $path->withProperty('prop', '{value}')
         );
     }
 
     public function testLinkedTo()
     {
-        $p = Path::startWithNode();
+        $path = Path::startWithNode();
 
-        $p2 = $p->linkedTo('bar', ['Baz']);
-        $this->assertNotSame($p, $p2);
-        $this->assertInstanceOf(Path::class, $p2);
-        $this->assertSame('()', (string) $p);
-        $this->assertSame('()-[]-(bar:Baz)', (string) $p2);
+        $path2 = $path->linkedTo('bar', ['Baz']);
+        $this->assertNotSame($path, $path2);
+        $this->assertInstanceOf(Path::class, $path2);
+        $this->assertSame('()', (string) $path);
+        $this->assertSame('()-[]-(bar:Baz)', (string) $path2);
         $this->assertSame(
             '()-[]-(bar:Baz { prop: {value} })',
-            (string) $p2->withProperty('prop', '{value}')
+            (string) $path2->withProperty('prop', '{value}')
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\LogicException
-     */
     public function testThrowWhenNoRelationshipToType()
     {
+        $this->expectException(LogicException::class);
+
         Path::startWithNode()->through();
     }
 
     public function testThrough()
     {
-        $p = Path::startWithNode()->linkedTo();
+        $path = Path::startWithNode()->linkedTo();
 
-        $p2 = $p->through(null, 'BAR');
-        $this->assertNotSame($p, $p2);
-        $this->assertInstanceOf(Path::class, $p2);
-        $this->assertSame('()-[]-()', (string) $p);
-        $this->assertSame('()-[:BAR]-()', (string) $p2);
+        $path2 = $path->through(null, 'BAR');
+        $this->assertNotSame($path, $path2);
+        $this->assertInstanceOf(Path::class, $path2);
+        $this->assertSame('()-[]-()', (string) $path);
+        $this->assertSame('()-[:BAR]-()', (string) $path2);
         $this->assertSame(
             '()-[a:BAR { foo: {value} }]->()',
-            (string) $p
+            (string) $path
                 ->through('a', 'BAR', Relationship::RIGHT)
                 ->withProperty('foo', '{value}')
         );
@@ -144,19 +143,19 @@ class PathTest extends TestCase
 
     public function testParameters()
     {
-        $p = Path::startWithNode();
+        $path = Path::startWithNode();
 
-        $p2 = $p->withParameter('foo', 'bar');
-        $this->assertNotSame($p, $p2);
-        $this->assertCount(1, $p2->parameters());
-        $this->assertSame('string', (string) $p2->parameters()->keyType());
-        $this->assertSame(Parameter::class, (string) $p2->parameters()->valueType());
-        $this->assertSame($p2->parameters(), $p2->parameters());
+        $path2 = $path->withParameter('foo', 'bar');
+        $this->assertNotSame($path, $path2);
+        $this->assertCount(1, $path2->parameters());
+        $this->assertSame('string', (string) $path2->parameters()->keyType());
+        $this->assertSame(Parameter::class, (string) $path2->parameters()->valueType());
+        $this->assertSame($path2->parameters(), $path2->parameters());
     }
 
     public function testComplexPath()
     {
-        $p = Path::startWithNode('a', ['A'])
+        $path = Path::startWithNode('a', ['A'])
                 ->withProperty('a', '{a}')
                 ->withParameter('a', 'foo')
             ->linkedTo('b', ['B'])
@@ -172,8 +171,8 @@ class PathTest extends TestCase
 
         $this->assertSame(
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
-            (string) $p
+            (string) $path
         );
-        $this->assertCount(4, $p->parameters());
+        $this->assertCount(4, $path->parameters());
     }
 }

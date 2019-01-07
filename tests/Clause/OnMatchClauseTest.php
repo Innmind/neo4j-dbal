@@ -5,7 +5,8 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\OnMatchClause,
-    Clause
+    Clause,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -13,18 +14,17 @@ class OnMatchClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new OnMatchClause('SET n:Foo');
+        $clause = new OnMatchClause('SET n:Foo');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('ON MATCH', $c->identifier());
-        $this->assertSame('SET n:Foo', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('ON MATCH', $clause->identifier());
+        $this->assertSame('SET n:Foo', (string) $clause);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new OnMatchClause('');
     }
 }

@@ -5,7 +5,8 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\RemoveClause,
-    Clause
+    Clause,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -13,18 +14,17 @@ class RemoveClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new RemoveClause('n:Foo');
+        $clause = new RemoveClause('n:Foo');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('REMOVE', $c->identifier());
-        $this->assertSame('n:Foo', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('REMOVE', $clause->identifier());
+        $this->assertSame('n:Foo', (string) $clause);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new RemoveClause('');
     }
 }

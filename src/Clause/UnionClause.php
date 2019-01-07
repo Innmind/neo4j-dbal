@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Clause;
 
 final class UnionClause implements Clause
 {
-    const IDENTIFIER = 'UNION';
+    private const IDENTIFIER = 'UNION';
 
     /**
      * {@inheritdoc}

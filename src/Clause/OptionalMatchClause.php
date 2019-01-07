@@ -9,7 +9,7 @@ final class OptionalMatchClause implements Clause, PathAware
 {
     use PathAware\PathAware;
 
-    const IDENTIFIER = 'OPTIONAL MATCH';
+    private const IDENTIFIER = 'OPTIONAL MATCH';
 
     public function __construct(Expression\Path $path)
     {

@@ -9,7 +9,7 @@ final class MatchClause implements Clause, PathAware
 {
     use PathAware\PathAware;
 
-    const IDENTIFIER = 'MATCH';
+    private const IDENTIFIER = 'MATCH';
 
     public function __construct(Expression\Path $path)
     {

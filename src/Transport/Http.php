@@ -7,32 +7,31 @@ use Innmind\Neo4j\DBAL\{
     Transport,
     Query,
     Result,
-    Server,
-    Authentication,
     Translator\HttpTranslator,
     HttpTransport\Transport as HttpTransport,
     Exception\ServerDown,
-    Exception\QueryFailed
+    Exception\QueryFailed,
 };
 use Innmind\Http\{
     Message\Response,
     Message\Request\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion
+    ProtocolVersion\ProtocolVersion,
 };
 use Innmind\Url\Url;
+use Innmind\Json\Json;
 
 final class Http implements Transport
 {
-    private $translator;
-    private $transport;
+    private $translate;
+    private $fulfill;
 
     public function __construct(
-        HttpTranslator $translator,
-        HttpTransport $transport
+        HttpTranslator $translate,
+        HttpTransport $fulfill
     ) {
-        $this->translator = $translator;
-        $this->transport = $transport;
+        $this->translate = $translate;
+        $this->fulfill = $fulfill;
     }
 
     /**
@@ -40,15 +39,15 @@ final class Http implements Transport
      */
     public function execute(Query $query): Result
     {
-        $response = $this->transport->fulfill(
-            $this->translator->translate($query)
+        $response = ($this->fulfill)(
+            ($this->translate)($query)
         );
 
         if (!$this->isSuccessful($response)) {
             throw new QueryFailed($query, $response);
         }
 
-        $response = json_decode((string) $response->body(), true);
+        $response = Json::decode((string) $response->body());
         $result = Result\Result::fromRaw($response['results'][0] ?? []);
 
         return $result;
@@ -60,12 +59,11 @@ final class Http implements Transport
     public function ping(): Transport
     {
         try {
-            $code = $this
-                ->transport
-                ->fulfill(
+            $code = ($this->fulfill)
+                (
                     new Request(
                         Url::fromString('/'),
-                        new Method(Method::OPTIONS),
+                        Method::options(),
                         new ProtocolVersion(1, 1)
                     )
                 )
@@ -99,7 +97,7 @@ final class Http implements Transport
             return false;
         }
 
-        $json = json_decode((string) $response->body(), true);
+        $json = Json::decode((string) $response->body());
 
         return count($json['errors']) === 0;
     }

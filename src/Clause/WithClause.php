@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Clause;
 
 final class WithClause implements Clause
 {
-    const IDENTIFIER = 'WITH';
+    private const IDENTIFIER = 'WITH';
 
     private $variables;
 
@@ -29,6 +29,6 @@ final class WithClause implements Clause
      */
     public function __toString(): string
     {
-        return implode(', ', $this->variables);
+        return \implode(', ', $this->variables);
     }
 }

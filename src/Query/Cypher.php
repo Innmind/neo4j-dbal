@@ -5,11 +5,12 @@ namespace Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
     Query as QueryInterface,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
+    Str,
 };
 
 final class Cypher implements QueryInterface
@@ -19,7 +20,7 @@ final class Cypher implements QueryInterface
 
     public function __construct(string $cypher)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 
@@ -91,7 +92,7 @@ final class Cypher implements QueryInterface
      */
     public function withParameter(string $key, $parameter): self
     {
-        if (empty($key)) {
+        if (Str::of($key)->empty()) {
             throw new DomainException;
         }
 

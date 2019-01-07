@@ -6,11 +6,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Translator;
 use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     Transactions,
-    Server,
-    Authentication,
     Query,
     Query\Parameter,
-    HttpTransport\Transport
+    HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\HttpTransport\Transport as TransportInterface;
@@ -19,32 +17,25 @@ use Innmind\Http\{
     Message\Response,
     Headers\Headers,
     Header\Header,
-    Header\Value\Value
+    Header\Value\Value,
 };
+use Innmind\Url\Url;
 use Innmind\Stream\Readable;
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class HttpTranslatorTest extends TestCase
 {
-    private $translator;
+    private $translate;
     private $transactions;
     private $transport;
 
     public function setUp()
     {
-        $this->translator = new HttpTranslator(
+        $this->translate = new HttpTranslator(
             $this->transactions = new Transactions(
                 new Transport(
-                    new Server(
-                        'http',
-                        getenv('CI') ? 'localhost' : 'docker',
-                        7474
-                    ),
-                    new Authentication(
-                        'neo4j',
-                        'ci'
-                    ),
+                    Url::fromString('http://neo4j:ci@localhost:7474/'),
                     $this->transport = $this->createMock(TransportInterface::class)
                 ),
                 $this->createMock(TimeContinuumInterface::class)
@@ -64,11 +55,11 @@ class HttpTranslatorTest extends TestCase
         $query
             ->method('parameters')
             ->willReturn(
-                (new Map('string', Parameter::class))
-                    ->put('foo', new Parameter('foo', 'bar'))
+                Map::of('string', Parameter::class)
+                    ('foo', new Parameter('foo', 'bar'))
             );
 
-        $request = $this->translator->translate($query);
+        $request = ($this->translate)($query);
 
         $this->assertInstanceOf(Request::class, $request);
         $this->assertSame('POST', (string) $request->method());
@@ -97,13 +88,13 @@ class HttpTranslatorTest extends TestCase
         $query
             ->method('parameters')
             ->willReturn(
-                (new Map('string', Parameter::class))
-                    ->put('foo', new Parameter('foo', 'bar'))
+                Map::of('string', Parameter::class)
+                    ('foo', new Parameter('foo', 'bar'))
             );
         $this
             ->transport
             ->expects($this->at(0))
-            ->method('fulfill')
+            ->method('__invoke')
             ->willReturn($response = $this->createMock(Response::class));
         $response
             ->expects($this->once())
@@ -121,7 +112,7 @@ class HttpTranslatorTest extends TestCase
             ));
 
         $this->transactions->open();
-        $request = $this->translator->translate($query);
+        $request = ($this->translate)($query);
 
         $this->assertInstanceOf(Request::class, $request);
         $this->assertSame('POST', (string) $request->method());

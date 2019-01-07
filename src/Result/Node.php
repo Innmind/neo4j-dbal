@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Immutable\{
     SetInterface,
-    MapInterface
+    MapInterface,
 };
 
 interface Node

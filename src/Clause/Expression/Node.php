@@ -5,12 +5,13 @@ namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\{
     Query\Parameter,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    Set
+    Set,
+    Str,
 };
 
 final class Node
@@ -22,21 +23,15 @@ final class Node
 
     public function __construct(string $variable = null, array $labels = [])
     {
-        $set = new Set('string');
-
-        foreach ($labels as $value) {
-            $set = $set->add($value);
-        }
-
         $this->variable = $variable;
-        $this->labels = $set;
+        $this->labels = Set::of('string', ...$labels);;
         $this->parameters = new Map('string', Parameter::class);
         $this->properties = new Map('string', 'string');
     }
 
     public function withParameter(string $key, $value): self
     {
-        if (empty($key)) {
+        if (Str::of($key)->empty()) {
             throw new DomainException;
         }
 
@@ -52,7 +47,7 @@ final class Node
 
     public function withProperty(string $property, string $cypher): self
     {
-        if (empty($property)) {
+        if (Str::of($property)->empty()) {
             throw new DomainException;
         }
 

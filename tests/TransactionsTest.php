@@ -6,17 +6,12 @@ namespace Tests\Innmind\Neo4j\DBAL;
 use Innmind\Neo4j\DBAL\{
     Transactions,
     Transaction,
-    Server,
-    Authentication,
-    HttpTransport\Transport
+    HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\HttpTransport\GuzzleTransport;
-use Innmind\Http\{
-    Translator\Response\Psr7Translator,
-    Factory\Header\Factories
-};
-use GuzzleHttp\Client;
+use Innmind\Url\Url;
+use Innmind\Immutable\Exception\OutOfBoundException;
+use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
 class TransactionsTest extends TestCase
@@ -26,23 +21,12 @@ class TransactionsTest extends TestCase
 
     public function setUp()
     {
-        $this->server = new Server(
-            'http',
-            'localhost',
-            7474
-        );
-        $auth = new Authentication('neo4j', 'ci');
+        $this->server = 'http://localhost:7474/';
 
         $this->transactions = new Transactions(
             new Transport(
-                $this->server,
-                $auth,
-                new GuzzleTransport(
-                    new Client,
-                    new Psr7Translator(
-                        Factories::default()
-                    )
-                )
+                Url::fromString('http://neo4j:ci@localhost:7474/'),
+                http()['default']()
             ),
             $this->createMock(TimeContinuumInterface::class)
         );
@@ -76,27 +60,24 @@ class TransactionsTest extends TestCase
         $this->assertFalse($this->transactions->isOpened());
     }
 
-    /**
-     * @expectedException Innmind\Immutable\Exception\OutOfBoundException
-     */
     public function testThrowWhenAskingForTransactionWhenThereIsNone()
     {
+        $this->expectException(OutOfBoundException::class);
+
         $this->transactions->current();
     }
 
-    /**
-     * @expectedException Innmind\Immutable\Exception\OutOfBoundException
-     */
     public function testThrowWhenAskingForCommitWhenThereIsNoTransaction()
     {
+        $this->expectException(OutOfBoundException::class);
+
         $this->transactions->commit();
     }
 
-    /**
-     * @expectedException Innmind\Immutable\Exception\OutOfBoundException
-     */
     public function testThrowWhenAskingForRollbackWhenThereIsNoTransaction()
     {
+        $this->expectException(OutOfBoundException::class);
+
         $this->transactions->rollback();
     }
 

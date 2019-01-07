@@ -6,11 +6,11 @@ namespace Tests\Innmind\Neo4j\DBAL\Result\Node;
 use Innmind\Neo4j\DBAL\Result\{
     Node\Node,
     Node as NodeInterface,
-    Id
+    Id,
 };
 use Innmind\Immutable\{
     Set,
-    Map
+    Map,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -19,35 +19,34 @@ class NodeTest extends TestCase
     public function testNode()
     {
         $node = new Node(
-            $i = new Id(42),
-            $l = new Set('string'),
-            $p = new Map('string', 'variable')
+            $id = new Id(42),
+            $labels = new Set('string'),
+            $properties = new Map('string', 'variable')
         );
 
         $this->assertInstanceOf(NodeInterface::class, $node);
-        $this->assertSame($i, $node->id());
-        $this->assertSame($l, $node->labels());
-        $this->assertSame($p, $node->properties());
+        $this->assertSame($id, $node->id());
+        $this->assertSame($labels, $node->labels());
+        $this->assertSame($properties, $node->properties());
         $this->assertFalse($node->hasLabels());
         $this->assertFalse($node->hasProperties());
 
         $node = new Node(
             new Id(42),
-            (new Set('string'))->add('foo'),
-            (new Map('string', 'variable'))
-                ->put('foo', 'bar')
+            Set::of('string', 'foo'),
+            Map::of('string', 'variable')
+                ('foo', 'bar')
         );
 
         $this->assertTrue($node->hasLabels());
         $this->assertTrue($node->hasProperties());
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 2 must be of type SetInterface<string>
-     */
     public function testThrowWhenInvalidLabelSet()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type SetInterface<string>');
+
         new Node(
             new Id(42),
             new Set('str'),
@@ -55,12 +54,11 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 3 must be of type MapInterface<string, variable>
-     */
     public function testThrowWhenInvalidPropertyMap()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 3 must be of type MapInterface<string, variable>');
+
         new Node(
             new Id(42),
             new Set('string'),

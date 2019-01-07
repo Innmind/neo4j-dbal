@@ -5,8 +5,9 @@ namespace Innmind\Neo4j\DBAL\Result\Row;
 
 use Innmind\Neo4j\DBAL\{
     Result\Row as RowInterface,
-    Exception\DomainException
+    Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class Row implements RowInterface
 {
@@ -15,7 +16,7 @@ final class Row implements RowInterface
 
     public function __construct(string $column, $value)
     {
-        if (empty($column)) {
+        if (Str::of($column)->empty()) {
             throw new DomainException;
         }
 

@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Translator;
 
 use Innmind\Neo4j\DBAL\{
     Query,
-    Transactions
+    Transactions,
 };
 use Innmind\Http\{
     Headers\Headers,
@@ -18,13 +18,14 @@ use Innmind\Http\{
     Header\Parameter,
     Message\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion
+    ProtocolVersion\ProtocolVersion,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
+use Innmind\Json\Json;
 use Innmind\Immutable\Map;
 
 /**
@@ -38,42 +39,32 @@ final class HttpTranslator
     public function __construct(Transactions $transactions)
     {
         $this->transactions = $transactions;
-        $this->headers = new Headers(
-            (new Map('string', Header::class))
-                ->put(
-                    'content-type',
-                    new ContentType(
-                        new ContentTypeValue(
-                            'application',
-                            'json'
-                        )
-                    )
+        $this->headers = Headers::of(
+            new ContentType(
+                new ContentTypeValue(
+                    'application',
+                    'json'
                 )
-                ->put(
-                    'accept',
-                    new Accept(
-                        new AcceptValue(
-                            'application',
-                            'json',
-                            (new Map('string', Parameter::class))
-                                ->put(
-                                    'charset',
-                                    new Parameter\Parameter('charset', 'UTF-8')
-                                )
-                        )
-                    )
+            ),
+            new Accept(
+                new AcceptValue(
+                    'application',
+                    'json',
+                    Map::of('string', Parameter::class)
+                        ('charset', new Parameter\Parameter('charset', 'UTF-8'))
                 )
+            )
         );
     }
 
     /**
      * Transalate a dbal query into a http request
      */
-    public function translate(Query $query): Request
+    public function __invoke(Query $query): Request
     {
         return new Request\Request(
             $this->computeEndpoint(),
-            new Method(Method::POST),
+            Method::post(),
             new ProtocolVersion(1, 1),
             $this->headers,
             $this->computeBody($query)
@@ -112,7 +103,7 @@ final class HttpTranslator
             $statement['parameters'] = $parameters;
         }
 
-        return new StringStream(json_encode([
+        return new StringStream(Json::encode([
             'statements' => [$statement],
         ]));
     }

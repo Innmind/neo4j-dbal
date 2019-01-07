@@ -6,7 +6,8 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause\DeleteClause,
     Clause,
-    Query\Parameter
+    Query\Parameter,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -14,11 +15,11 @@ class DeleteClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new DeleteClause('n', false);
+        $clause = new DeleteClause('n', false);
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('DELETE', $c->identifier());
-        $this->assertSame('n', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('DELETE', $clause->identifier());
+        $this->assertSame('n', (string) $clause);
 
         $this->assertSame(
             'DETACH DELETE',
@@ -26,11 +27,10 @@ class DeleteClauseTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new DeleteClause('', false);
     }
 }

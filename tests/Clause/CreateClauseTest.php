@@ -9,7 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Clause\Parametrable,
     Clause,
     Clause\Expression\Path,
-    Clause\Expression\Relationship
+    Clause\Expression\Relationship,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -17,13 +17,13 @@ class CreateClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new CreateClause(Path::startWithNode(), false);
+        $clause = new CreateClause(Path::startWithNode(), false);
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertInstanceOf(PathAware::class, $c);
-        $this->assertInstanceOf(Parametrable::class, $c);
-        $this->assertSame('()', (string) $c);
-        $this->assertSame('CREATE', $c->identifier());
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertInstanceOf(PathAware::class, $clause);
+        $this->assertInstanceOf(Parametrable::class, $clause);
+        $this->assertSame('()', (string) $clause);
+        $this->assertSame('CREATE', $clause->identifier());
         $this->assertSame(
             'CREATE UNIQUE',
             (new CreateClause(Path::startWithNode(), true))->identifier()
@@ -32,7 +32,7 @@ class CreateClauseTest extends TestCase
 
     public function testComposition()
     {
-        $c = (new CreateClause(Path::startWithNode('a', ['A']), false))
+        $clause = (new CreateClause(Path::startWithNode('a', ['A']), false))
             ->withProperty('a', '{a}')
                 ->withParameter('a', 'foo')
             ->linkedTo('b', ['B'])
@@ -48,10 +48,10 @@ class CreateClauseTest extends TestCase
 
         $this->assertSame(
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
-            (string) $c
+            (string) $clause
         );
-        $this->assertTrue($c->hasParameters());
-        $this->assertCount(4, $c->parameters());
-        $this->assertInstanceOf(CreateClause::class, $c);
+        $this->assertTrue($clause->hasParameters());
+        $this->assertCount(4, $clause->parameters());
+        $this->assertInstanceOf(CreateClause::class, $clause);
     }
 }

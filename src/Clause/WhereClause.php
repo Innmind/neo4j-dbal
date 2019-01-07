@@ -6,23 +6,24 @@ namespace Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause,
     Query\Parameter,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
+    Str,
 };
 
 final class WhereClause implements Clause, Parametrable
 {
-    const IDENTIFIER = 'WHERE';
+    private const IDENTIFIER = 'WHERE';
 
     private $cypher;
     private $parameters;
 
     public function __construct(string $cypher)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 
@@ -51,7 +52,7 @@ final class WhereClause implements Clause, Parametrable
      */
     public function withParameter(string $key, $value): Clause
     {
-        if (empty($key)) {
+        if (Str::of($key)->empty()) {
             throw new DomainException;
         }
 

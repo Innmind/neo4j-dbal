@@ -6,21 +6,17 @@ namespace Tests\Innmind\Neo4j\DBAL\Transport;
 use Innmind\Neo4j\DBAL\{
     Transport\Http,
     Translator\HttpTranslator,
-    Server,
-    Authentication,
     Transactions,
     Query,
     Result,
     HttpTransport\Transport as HttpTransport,
-    Transport
+    Transport,
+    Exception\ServerDown,
+    Exception\QueryFailed,
 };
+use Innmind\Url\Url;
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\HttpTransport\GuzzleTransport;
-use Innmind\Http\{
-    Translator\Response\Psr7Translator,
-    Factory\Header\Factories
-};
-use GuzzleHttp\Client;
+use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
 class HttpTest extends TestCase
@@ -29,21 +25,9 @@ class HttpTest extends TestCase
 
     public function setUp()
     {
-        $server = new Server(
-            'http',
-            'localhost',
-            7474
-        );
-        $auth = new Authentication('neo4j', 'ci');
         $httpTransport = new HttpTransport(
-            $server,
-            $auth,
-            new GuzzleTransport(
-                new Client,
-                new Psr7Translator(
-                    Factories::default()
-                )
-            )
+            Url::fromString('http://neo4j:ci@localhost:7474/'),
+            http()['default']()
         );
         $this->transport = new Http(
             new HttpTranslator(
@@ -69,26 +53,11 @@ class HttpTest extends TestCase
         $this->assertSame($this->transport, $this->transport->ping());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\ServerDown
-     */
     public function testThrowWhenPingUnavailableServer()
     {
-        $server = new Server(
-            'http',
-            'localhost',
-            1337
-        );
-        $auth = new Authentication('neo4j', 'ci');
         $httpTransport = new HttpTransport(
-            $server,
-            $auth,
-            new GuzzleTransport(
-                new Client,
-                new Psr7Translator(
-                    Factories::default()
-                )
-            )
+            Url::fromString('http://neo4j:ci@localhost:1337/'),
+            http()['default']()
         );
         $transport = new Http(
             new HttpTranslator(
@@ -99,6 +68,8 @@ class HttpTest extends TestCase
             ),
             $httpTransport
         );
+
+        $this->expectException(ServerDown::class);
 
         $transport->ping();
     }
@@ -115,17 +86,16 @@ class HttpTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailed
-     * @expectedExceptionMessage The query failed to execute properly
-     * @expectedExceptionCode 400
-     */
     public function testThrowWhenQueryFailed()
     {
         $query = $this->createMock(Query::class);
         $query
             ->method('cypher')
             ->willReturn('foo');
+
+        $this->expectException(QueryFailed::class);
+        $this->expectExceptionMessage('The query failed to execute properly');
+        $this->expectExceptionCode(400);
 
         $this->transport->execute($query);
     }

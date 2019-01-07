@@ -5,7 +5,8 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\{
     Clause\Expression\Node,
-    Query\Parameter
+    Query\Parameter,
+    Exception\DomainException,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -14,30 +15,30 @@ class NodeTest extends TestCase
 {
     public function testParameters()
     {
-        $n = new Node;
+        $node = new Node;
 
-        $n2 = $n->withParameter('foo', 'bar');
-        $this->assertNotSame($n, $n2);
-        $this->assertInstanceOf(Node::class, $n2);
-        $this->assertInstanceOf(MapInterface::class, $n2->parameters());
+        $node2 = $node->withParameter('foo', 'bar');
+        $this->assertNotSame($node, $node2);
+        $this->assertInstanceOf(Node::class, $node2);
+        $this->assertInstanceOf(MapInterface::class, $node2->parameters());
         $this->assertSame(
             'string',
-            (string) $n2->parameters()->keyType()
+            (string) $node2->parameters()->keyType()
         );
         $this->assertSame(
             Parameter::class,
-            (string) $n2->parameters()->valueType()
+            (string) $node2->parameters()->valueType()
         );
-        $this->assertCount(1, $n2->parameters());
+        $this->assertCount(1, $node2->parameters());
     }
 
     public function testProperties()
     {
-        $n = new Node;
+        $node = new Node;
 
-        $n2 = $n->withProperty('foo', '{bar}');
-        $this->assertNotSame($n, $n2);
-        $this->assertInstanceOf(Node::class, $n2);
+        $node2 = $node->withProperty('foo', '{bar}');
+        $this->assertNotSame($node, $node2);
+        $this->assertInstanceOf(Node::class, $node2);
     }
 
     public function testCast()
@@ -56,19 +57,17 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyParameterKey()
     {
+        $this->expectException(DomainException::class);
+
         (new Node)->withParameter('', 'foo');
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyPropertyName()
     {
+        $this->expectException(DomainException::class);
+
         (new Node)->withProperty('', 'foo');
     }
 }

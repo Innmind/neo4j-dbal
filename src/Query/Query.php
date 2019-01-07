@@ -8,12 +8,12 @@ use Innmind\Neo4j\DBAL\{
     Clause,
     Exception\NonParametrableClause,
     Exception\NonPathAwareClause,
-    Exception\NonMergeClause
+    Exception\NonMergeClause,
 };
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    Stream
+    Stream,
 };
 
 final class Query implements QueryInterface
@@ -272,7 +272,7 @@ final class Query implements QueryInterface
     public function through(
         string $type,
         string $variable = null,
-        string $direction = Clause\Expression\Relationship::BOTH
+        string $direction = 'BOTH'
     ): self {
         $clause = $this->clauses->last();
 
@@ -588,11 +588,13 @@ final class Query implements QueryInterface
      */
     public function orderBy(
         string $cypher,
-        string $direction = Clause\OrderByClause::ASC
+        string $direction = 'ASC'
     ): self {
+        $direction = \strtolower($direction);
+
         $query = new self;
         $query->clauses = $this->clauses->add(
-            new Clause\OrderByClause($cypher, $direction)
+            Clause\OrderByClause::$direction($cypher)
         );
 
         return $query;

@@ -9,7 +9,7 @@ final class MergeClause implements Clause, PathAware
 {
     use PathAware\PathAware;
 
-    const IDENTIFIER = 'MERGE';
+    private const IDENTIFIER = 'MERGE';
 
     public function __construct(Expression\Path $path)
     {

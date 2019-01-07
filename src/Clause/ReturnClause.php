@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Clause;
 
 final class ReturnClause implements Clause
 {
-    const IDENTIFIER = 'RETURN';
+    private const IDENTIFIER = 'RETURN';
 
     private $variables;
 
@@ -29,6 +29,6 @@ final class ReturnClause implements Clause
      */
     public function __toString(): string
     {
-        return implode(', ', $this->variables);
+        return \implode(', ', $this->variables);
     }
 }

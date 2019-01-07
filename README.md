@@ -30,24 +30,21 @@ use Innmind\Neo4j\DBAL\{
 use Innmind\TimeContinuum\TimeContinuum\Earth;
 use function Innmind\HttpTransport\bootstrap as transports;
 
-$container = (new ContainerBuilder(new Yaml))(
-    new Path('container.yml'),
-    (new Map('string', 'mixed'))
-        ->put('transport', transports()['guzzle']())
-        ->put('clock', new Earth)
+$connection = bootstrap(
+    transports()['default'](),
+    new Earth
 );
-$conn = $container->get('connection');
 
 $query = (new Query)
     ->match('n', ['LabelA', 'LabelB'])
         ->withProperty('foo', '{param}')
         ->withParameter('param', 'value')
     ->linkedTo('n2')
-    ->through('r', 'REL_TYPE', Relationship::RIGHT)
+    ->through('r', 'REL_TYPE', 'right')
     ->return('n', 'n2', 'r');
 echo (string) $query; //MATCH (n:LabelA:LabelB { foo: {param} })-[r:REL_TYPE]->(n2) RETURN n, n2, r
 
-$result = $conn->execute($query);
+$result = $connection->execute($query);
 echo $result->nodes()->count(); //2
 echo $result->relationships()->count(); //1
 ```
@@ -62,3 +59,7 @@ You have 3 options to execute a query:
 * use [`Query`](Query.php) to build the query via its API
 * use [`Cypher`](Cypher.php) where you put the raw cypher query
 * create your own class that implements [`QueryInterface`](QueryInterface.php)
+
+## Structure
+
+![](graph.svg)

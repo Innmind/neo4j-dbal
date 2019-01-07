@@ -5,8 +5,6 @@ namespace Tests\Innmind\Neo4j\DBAL\HttpTransport;
 
 use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport,
-    Server,
-    Authentication
 };
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Http\{
@@ -17,7 +15,7 @@ use Innmind\Http\{
     Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue
+    Header\ContentTypeValue,
 };
 use Innmind\Url\Url;
 use Innmind\Immutable\Map;
@@ -30,8 +28,7 @@ class TransportTest extends TestCase
         $this->assertInstanceOf(
             TransportInterface::class,
             new Transport(
-                new Server('foo', 'bar', 7474),
-                new Authentication('user', 'pwd'),
+                Url::fromString('http://neo4j:ci@localhost:7474/'),
                 $this->createMock(TransportInterface::class)
             )
         );
@@ -43,20 +40,16 @@ class TransportTest extends TestCase
             Url::fromString('http://localhost:7474/path'),
             new Method('POST'),
             new ProtocolVersion(1, 1),
-            new Headers\Headers(
-                (new Map('string', Header::class))
-                    ->put(
-                        'content-type',
-                        new ContentType(
-                            new ContentTypeValue('application', 'json')
-                        )
-                    )
+            Headers\Headers::of(
+                new ContentType(
+                    new ContentTypeValue('application', 'json')
+                )
             )
         );
         $mock = $this->createMock(TransportInterface::class);
         $mock
             ->expects($this->once())
-            ->method('fulfill')
+            ->method('__invoke')
             ->with($this->callback(function(Request $request) use ($baseRequest): bool {
                 return (string) $request->url() === 'https://somewhere:7473/path' &&
                     $request->method() === $baseRequest->method() &&
@@ -64,19 +57,18 @@ class TransportTest extends TestCase
                     $request->body() === $baseRequest->body() &&
                     $request->headers()->count() === 2 &&
                     $request->headers()->has('authorization') &&
-                    (string) $request->headers()->get('authorization') === 'Authorization : "Basic" dXNlcjpwd2Q=' &&
+                    (string) $request->headers()->get('authorization') === 'Authorization: "Basic" dXNlcjpwd2Q=' &&
                     $request->headers()->has('content-type') &&
                     $request->headers()->get('content-type') === $baseRequest->headers()->get('content-type');
             }))
             ->willReturn(
                 $expected = $this->createMock(Response::class)
             );
-        $transport = new Transport(
-            new Server('https', 'somewhere', 7473),
-            new Authentication('user', 'pwd'),
+        $fulfill = new Transport(
+            Url::fromString('https://user:pwd@somewhere:7473/'),
             $mock
         );
 
-        $this->assertSame($expected, $transport->fulfill($baseRequest));
+        $this->assertSame($expected, $fulfill($baseRequest));
     }
 }

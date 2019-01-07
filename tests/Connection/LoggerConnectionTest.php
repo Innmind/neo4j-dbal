@@ -9,7 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Query,
     Result,
     Query\Parameter,
-    Exception\QueryFailed
+    Exception\QueryFailed,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Map;
@@ -52,8 +52,8 @@ class LoggerConnectionTest extends TestCase
             ->expects($this->once())
             ->method('parameters')
             ->willReturn(
-                (new Map('string', Parameter::class))
-                    ->put('bar', new Parameter('bar', 'baz'))
+                Map::of('string', Parameter::class)
+                    ('bar', new Parameter('bar', 'baz'))
             );
         $logger
             ->expects($this->once())
@@ -69,9 +69,6 @@ class LoggerConnectionTest extends TestCase
         $this->assertSame($result, $connection->execute($query));
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailed
-     */
     public function testLogWhenQueryFails()
     {
         $connection = new LoggerConnection(
@@ -102,6 +99,8 @@ class LoggerConnectionTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('bar'));
+
+        $this->expectException(QueryFailed::class);
 
         $connection->execute($query);
     }

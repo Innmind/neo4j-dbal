@@ -5,29 +5,37 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause,
-    Exception\DomainException
+    Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class OrderByClause implements Clause
 {
-    const IDENTIFIER = 'ORDER BY';
-    const ASC = 'ASC';
-    const DESC = 'DESC';
+    private const IDENTIFIER = 'ORDER BY';
+    private const ASC = 'ASC';
+    private const DESC = 'DESC';
 
     private $cypher;
     private $direction;
 
-    public function __construct(string $cypher, string $direction)
+    private function __construct(string $cypher, string $direction)
     {
-        if (
-            empty($cypher) ||
-            !in_array($direction, [self::ASC, self::DESC], true)
-        ) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 
         $this->cypher = $cypher;
         $this->direction = $direction;
+    }
+
+    public static function asc(string $cypher): self
+    {
+        return new self($cypher, self::ASC);
+    }
+
+    public static function desc(string $cypher): self
+    {
+        return new self($cypher, self::DESC);
     }
 
     /**
@@ -43,7 +51,7 @@ final class OrderByClause implements Clause
      */
     public function __toString(): string
     {
-        return sprintf(
+        return \sprintf(
             '%s %s',
             $this->cypher,
             $this->direction === self::ASC ? 'ASC' : 'DESC'

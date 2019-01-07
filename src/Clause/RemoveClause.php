@@ -5,18 +5,19 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause,
-    Exception\DomainException
+    Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class RemoveClause implements Clause
 {
-    const IDENTIFIER = 'REMOVE';
+    private const IDENTIFIER = 'REMOVE';
 
     private $cypher;
 
     public function __construct(string $cypher)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 

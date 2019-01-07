@@ -5,11 +5,11 @@ namespace Innmind\Neo4j\DBAL\Result\Node;
 
 use Innmind\Neo4j\DBAL\{
     Result\Node as NodeInterface,
-    Result\Id
+    Result\Id,
 };
 use Innmind\Immutable\{
     SetInterface,
-    MapInterface
+    MapInterface,
 };
 
 final class Node implements NodeInterface
