@@ -588,7 +588,7 @@ final class Query implements QueryInterface
      */
     public function orderBy(
         string $cypher,
-        string $direction = Clause\OrderByClause::ASC
+        string $direction = 'ASC'
     ): self {
         $direction = \strtolower($direction);
 
