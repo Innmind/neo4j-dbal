@@ -27,7 +27,7 @@ final class Relationship
     private $parameters;
     private $properties;
 
-    public function __construct(
+    private function __construct(
         string $variable = null,
         string $type = null,
         string $direction = self::BOTH,
@@ -39,6 +39,30 @@ final class Relationship
         $this->distance = $distance ?? new Distance;
         $this->parameters = new Map('string', Parameter::class);
         $this->properties = new Map('string', 'string');
+    }
+
+    public static function both(
+        string $variable = null,
+        string $type = null,
+        Distance $distance = null
+    ): self {
+        return new self($variable, $type, self::BOTH, $distance);
+    }
+
+    public static function left(
+        string $variable = null,
+        string $type = null,
+        Distance $distance = null
+    ): self {
+        return new self($variable, $type, self::LEFT, $distance);
+    }
+
+    public static function right(
+        string $variable = null,
+        string $type = null,
+        Distance $distance = null
+    ): self {
+        return new self($variable, $type, self::RIGHT, $distance);
     }
 
     public function withADistanceOf(int $distance): self

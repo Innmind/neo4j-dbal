@@ -58,7 +58,7 @@ final class Path
         $path = new self;
         $path->elements = $this
             ->elements
-            ->add(new Relationship)
+            ->add(Relationship::both())
             ->add(new Node($variable, $labels));
         $path->lastOperation = Node::class;
 
@@ -79,17 +79,19 @@ final class Path
     public function through(
         string $variable = null,
         string $type = null,
-        string $direction = Relationship::BOTH
+        string $direction = 'BOTH'
     ): self {
         if ($this->elements->size() < 3) {
             throw new LogicException;
         }
 
+        $direction = \strtolower($direction);
+
         $path = new self;
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(new Relationship($variable, $type, $direction))
+            ->add(Relationship::$direction($variable, $type))
             ->add($this->elements->last());
         $path->lastOperation = Relationship::class;
 

@@ -32,7 +32,7 @@ interface PathAware extends Parametrable
     public function through(
         string $variable = null,
         string $type = null,
-        string $direction = Expression\Relationship::BOTH
+        string $direction = 'BOTH'
     ): Clause;
 
     /**

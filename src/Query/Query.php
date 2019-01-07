@@ -272,7 +272,7 @@ final class Query implements QueryInterface
     public function through(
         string $type,
         string $variable = null,
-        string $direction = Clause\Expression\Relationship::BOTH
+        string $direction = 'BOTH'
     ): self {
         $clause = $this->clauses->last();
 
