@@ -25,17 +25,17 @@ use Innmind\Immutable\{
 final class Transactions
 {
     private $transactions;
-    private $transport;
+    private $fulfill;
     private $clock;
     private $headers;
     private $body;
 
     public function __construct(
-        Transport $transport,
+        Transport $fulfill,
         TimeContinuumInterface $clock
     ) {
         $this->transactions = new Stream(Transaction::class);
-        $this->transport = $transport;
+        $this->fulfill = $fulfill;
         $this->clock = $clock;
         $this->headers = new Headers(
             (new Map('string', Header::class))
@@ -64,7 +64,7 @@ final class Transactions
      */
     public function open(): Transaction
     {
-        $response = $this->transport->fulfill(
+        $response = ($this->fulfill)(
             new Request(
                 Url::fromString('/db/data/transaction'),
                 new Method(Method::POST),
@@ -118,7 +118,7 @@ final class Transactions
      */
     public function commit(): self
     {
-        $this->transport->fulfill(
+        ($this->fulfill)(
             new Request(
                 $this->current()->commitEndpoint(),
                 new Method(Method::POST),
@@ -139,7 +139,7 @@ final class Transactions
      */
     public function rollback(): self
     {
-        $this->transport->fulfill(
+        ($this->fulfill)(
             new Request(
                 $this->current()->endpoint(),
                 new Method(Method::DELETE),

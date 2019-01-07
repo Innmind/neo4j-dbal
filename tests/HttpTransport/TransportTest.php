@@ -56,7 +56,7 @@ class TransportTest extends TestCase
         $mock = $this->createMock(TransportInterface::class);
         $mock
             ->expects($this->once())
-            ->method('fulfill')
+            ->method('__invoke')
             ->with($this->callback(function(Request $request) use ($baseRequest): bool {
                 return (string) $request->url() === 'https://somewhere:7473/path' &&
                     $request->method() === $baseRequest->method() &&
@@ -64,19 +64,19 @@ class TransportTest extends TestCase
                     $request->body() === $baseRequest->body() &&
                     $request->headers()->count() === 2 &&
                     $request->headers()->has('authorization') &&
-                    (string) $request->headers()->get('authorization') === 'Authorization : "Basic" dXNlcjpwd2Q=' &&
+                    (string) $request->headers()->get('authorization') === 'Authorization: "Basic" dXNlcjpwd2Q=' &&
                     $request->headers()->has('content-type') &&
                     $request->headers()->get('content-type') === $baseRequest->headers()->get('content-type');
             }))
             ->willReturn(
                 $expected = $this->createMock(Response::class)
             );
-        $transport = new Transport(
+        $fulfill = new Transport(
             new Server('https', 'somewhere', 7473),
             new Authentication('user', 'pwd'),
             $mock
         );
 
-        $this->assertSame($expected, $transport->fulfill($baseRequest));
+        $this->assertSame($expected, $fulfill($baseRequest));
     }
 }

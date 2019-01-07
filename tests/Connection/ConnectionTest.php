@@ -16,7 +16,7 @@ use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\HttpTransport\GuzzleTransport;
+use Innmind\HttpTransport\DefaultTransport;
 use Innmind\Http\{
     Translator\Response\Psr7Translator,
     Factory\Header\Factories
@@ -39,7 +39,7 @@ class ConnectionTest extends TestCase
         $httpTransport = new Transport(
             $server,
             $auth,
-            new GuzzleTransport(
+            new DefaultTransport(
                 new Client,
                 new Psr7Translator(
                     Factories::default()
@@ -102,7 +102,7 @@ class ConnectionTest extends TestCase
         $httpTransport = new Transport(
             $server,
             $auth,
-            new GuzzleTransport(
+            new DefaultTransport(
                 new Client,
                 new Psr7Translator(
                     Factories::default()

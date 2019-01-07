@@ -33,12 +33,12 @@ final class Transport implements TransportInterface
 {
     private $server;
     private $authorization;
-    private $transport;
+    private $fulfill;
 
     public function __construct(
         Server $server,
         Authentication $authentication,
-        TransportInterface $transport
+        TransportInterface $fulfill
     ) {
         $this->server = new Url(
             new Scheme($server->scheme()),
@@ -63,13 +63,13 @@ final class Transport implements TransportInterface
                 )
             )
         );
-        $this->transport = $transport;
+        $this->fulfill = $fulfill;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function fulfill(Request $request): Response
+    public function __invoke(Request $request): Response
     {
         $request = new Request\Request(
             $this->server->withPath($request->url()->path()),
@@ -79,7 +79,7 @@ final class Transport implements TransportInterface
             $request->body()
         );
 
-        return $this->transport->fulfill($request);
+        return ($this->fulfill)($request);
     }
 
     private function addAuthorizationHeader(Headers $headers): Headers

@@ -25,14 +25,14 @@ use Innmind\Url\Url;
 final class Http implements Transport
 {
     private $translator;
-    private $transport;
+    private $fulfill;
 
     public function __construct(
         HttpTranslator $translator,
-        HttpTransport $transport
+        HttpTransport $fulfill
     ) {
         $this->translator = $translator;
-        $this->transport = $transport;
+        $this->fulfill = $fulfill;
     }
 
     /**
@@ -40,7 +40,7 @@ final class Http implements Transport
      */
     public function execute(Query $query): Result
     {
-        $response = $this->transport->fulfill(
+        $response = ($this->fulfill)(
             $this->translator->translate($query)
         );
 
@@ -60,9 +60,8 @@ final class Http implements Transport
     public function ping(): Transport
     {
         try {
-            $code = $this
-                ->transport
-                ->fulfill(
+            $code = ($this->fulfill)
+                (
                     new Request(
                         Url::fromString('/'),
                         new Method(Method::OPTIONS),

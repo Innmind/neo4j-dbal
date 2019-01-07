@@ -103,7 +103,7 @@ class HttpTranslatorTest extends TestCase
         $this
             ->transport
             ->expects($this->at(0))
-            ->method('fulfill')
+            ->method('__invoke')
             ->willReturn($response = $this->createMock(Response::class));
         $response
             ->expects($this->once())
