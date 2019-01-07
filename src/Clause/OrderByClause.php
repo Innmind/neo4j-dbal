@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause,
     Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class OrderByClause implements Clause
 {
@@ -20,7 +21,7 @@ final class OrderByClause implements Clause
     public function __construct(string $cypher, string $direction)
     {
         if (
-            empty($cypher) ||
+            Str::of($cypher)->empty() ||
             !in_array($direction, [self::ASC, self::DESC], true)
         ) {
             throw new DomainException;

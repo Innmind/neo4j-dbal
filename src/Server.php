@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Exception\DomainException;
+use Innmind\Immutable\Str;
 
 final class Server
 {
@@ -21,8 +22,8 @@ final class Server
         $port = $port ?? 7474;
 
         if (
-            empty($scheme) ||
-            empty($host) ||
+            Str::of($scheme)->empty() ||
+            Str::of($host)->empty() ||
             $port < 1
         ) {
             throw new DomainException;

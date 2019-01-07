@@ -11,6 +11,7 @@ use Innmind\Immutable\{
     MapInterface,
     Map,
     Set,
+    Str,
 };
 
 final class Node
@@ -30,7 +31,7 @@ final class Node
 
     public function withParameter(string $key, $value): self
     {
-        if (empty($key)) {
+        if (Str::of($key)->empty()) {
             throw new DomainException;
         }
 
@@ -46,7 +47,7 @@ final class Node
 
     public function withProperty(string $property, string $cypher): self
     {
-        if (empty($property)) {
+        if (Str::of($property)->empty()) {
             throw new DomainException;
         }
 

@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause,
     Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class DeleteClause implements Clause
 {
@@ -17,7 +18,7 @@ final class DeleteClause implements Clause
 
     public function __construct(string $cypher, bool $detachable)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 

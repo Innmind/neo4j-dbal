@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\Exception\DomainException;
+use Innmind\Immutable\Str;
 
 final class Authentication
 {
@@ -15,7 +16,7 @@ final class Authentication
         $user = $user ?? 'neo4j';
         $password = $password ?? 'neo4j';
 
-        if (empty($user) || empty($password)) {
+        if (Str::of($user)->empty() || Str::of($password)->empty()) {
             throw new DomainException;
         }
 

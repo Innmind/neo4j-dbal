@@ -11,6 +11,7 @@ use Innmind\Neo4j\DBAL\{
 use Innmind\Immutable\{
     MapInterface,
     Map,
+    Str,
 };
 
 final class WhereClause implements Clause, Parametrable
@@ -22,7 +23,7 @@ final class WhereClause implements Clause, Parametrable
 
     public function __construct(string $cypher)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 
@@ -51,7 +52,7 @@ final class WhereClause implements Clause, Parametrable
      */
     public function withParameter(string $key, $value): Clause
     {
-        if (empty($key)) {
+        if (Str::of($key)->empty()) {
             throw new DomainException;
         }
 

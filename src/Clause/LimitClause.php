@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause,
     Exception\DomainException,
 };
+use Innmind\Immutable\Str;
 
 final class LimitClause implements Clause
 {
@@ -16,7 +17,7 @@ final class LimitClause implements Clause
 
     public function __construct(string $cypher)
     {
-        if (empty($cypher)) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 
