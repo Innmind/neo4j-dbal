@@ -6,11 +6,11 @@ namespace Tests\Innmind\Neo4j\DBAL\Result\Node;
 use Innmind\Neo4j\DBAL\Result\{
     Node\Node,
     Node as NodeInterface,
-    Id
+    Id,
 };
 use Innmind\Immutable\{
     Set,
-    Map
+    Map,
 };
 use PHPUnit\Framework\TestCase;
 

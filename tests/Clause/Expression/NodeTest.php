@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\{
     Clause\Expression\Node,
-    Query\Parameter
+    Query\Parameter,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;

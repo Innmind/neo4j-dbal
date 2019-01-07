@@ -9,7 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Query,
     Result,
     Query\Parameter,
-    Exception\QueryFailed
+    Exception\QueryFailed,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Immutable\Map;

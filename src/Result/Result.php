@@ -9,7 +9,7 @@ use Innmind\Immutable\{
     StreamInterface,
     Map,
     Stream,
-    Set
+    Set,
 };
 
 final class Result implements ResultInterface

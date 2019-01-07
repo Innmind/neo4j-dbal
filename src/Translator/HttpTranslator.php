@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Translator;
 
 use Innmind\Neo4j\DBAL\{
     Query,
-    Transactions
+    Transactions,
 };
 use Innmind\Http\{
     Headers\Headers,
@@ -18,12 +18,12 @@ use Innmind\Http\{
     Header\Parameter,
     Message\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion
+    ProtocolVersion\ProtocolVersion,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\{
     UrlInterface,
-    Url
+    Url,
 };
 use Innmind\Json\Json;
 use Innmind\Immutable\Map;

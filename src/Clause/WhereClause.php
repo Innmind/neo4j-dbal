@@ -6,11 +6,11 @@ namespace Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause,
     Query\Parameter,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
 final class WhereClause implements Clause, Parametrable

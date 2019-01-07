@@ -6,7 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\HttpTransport;
 use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport,
     Server,
-    Authentication
+    Authentication,
 };
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Http\{
@@ -17,7 +17,7 @@ use Innmind\Http\{
     Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue
+    Header\ContentTypeValue,
 };
 use Innmind\Url\Url;
 use Innmind\Immutable\Map;

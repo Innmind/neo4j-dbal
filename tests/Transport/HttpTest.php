@@ -12,13 +12,13 @@ use Innmind\Neo4j\DBAL\{
     Query,
     Result,
     HttpTransport\Transport as HttpTransport,
-    Transport
+    Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\HttpTransport\DefaultTransport;
 use Innmind\Http\{
     Translator\Response\Psr7Translator,
-    Factory\Header\Factories
+    Factory\Header\Factories,
 };
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;

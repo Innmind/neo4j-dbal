@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Immutable\{
     MapInterface,
-    StreamInterface
+    StreamInterface,
 };
 
 interface Result

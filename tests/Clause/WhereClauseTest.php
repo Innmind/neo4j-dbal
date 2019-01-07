@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause\WhereClause,
     Clause,
     Clause\Parametrable,
-    Query\Parameter
+    Query\Parameter,
 };
 use PHPUnit\Framework\TestCase;
 

@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Result\{
     Relationship\Relationship,
     Relationship as RelationshipInterface,
     Id,
-    Type
+    Type,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

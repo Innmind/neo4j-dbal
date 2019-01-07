@@ -5,11 +5,11 @@ namespace Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
     Query as QueryInterface,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
 final class Cypher implements QueryInterface

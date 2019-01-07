@@ -4,7 +4,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Query;
 
 use Innmind\Neo4j\DBAL\{
     Query\Query,
-    Query as QueryInterface
+    Query as QueryInterface,
 };
 use PHPUnit\Framework\TestCase;
 

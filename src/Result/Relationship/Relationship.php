@@ -6,7 +6,7 @@ namespace Innmind\Neo4j\DBAL\Result\Relationship;
 use Innmind\Neo4j\DBAL\{
     Result\Relationship as RelationshipInterface,
     Result\Id,
-    Result\Type
+    Result\Type,
 };
 use Innmind\Immutable\MapInterface;
 

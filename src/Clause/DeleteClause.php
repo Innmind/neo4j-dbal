@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause,
-    Exception\DomainException
+    Exception\DomainException,
 };
 
 final class DeleteClause implements Clause

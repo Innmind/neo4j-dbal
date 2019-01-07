@@ -12,13 +12,13 @@ use Innmind\Neo4j\DBAL\{
     Translator\HttpTranslator,
     HttpTransport\Transport as HttpTransport,
     Exception\ServerDown,
-    Exception\QueryFailed
+    Exception\QueryFailed,
 };
 use Innmind\Http\{
     Message\Response,
     Message\Request\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion
+    ProtocolVersion\ProtocolVersion,
 };
 use Innmind\Url\Url;
 use Innmind\Json\Json;

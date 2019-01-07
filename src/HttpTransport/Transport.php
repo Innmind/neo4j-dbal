@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\HttpTransport;
 
 use Innmind\Neo4j\DBAL\{
     Server,
-    Authentication
+    Authentication,
 };
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Url\{
@@ -17,7 +17,7 @@ use Innmind\Url\{
     Authority\Port,
     NullPath,
     NullQuery,
-    NullFragment
+    NullFragment,
 };
 use Innmind\Http\{
     Header,
@@ -25,7 +25,7 @@ use Innmind\Http\{
     Header\AuthorizationValue,
     Message\Request,
     Message\Response,
-    Headers
+    Headers,
 };
 use Innmind\Immutable\Map;
 

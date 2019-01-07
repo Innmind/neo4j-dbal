@@ -5,12 +5,12 @@ namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\{
     Query\Parameter,
-    Exception\LogicException
+    Exception\LogicException,
 };
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    Stream
+    Stream,
 };
 
 final class Path

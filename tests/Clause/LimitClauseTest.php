@@ -6,7 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause\LimitClause,
     Clause,
-    Query\Parameter
+    Query\Parameter,
 };
 use PHPUnit\Framework\TestCase;
 

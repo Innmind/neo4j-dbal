@@ -10,7 +10,7 @@ use Innmind\Neo4j\DBAL\{
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
 final class Relationship

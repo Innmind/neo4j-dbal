@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\{
     Clause\UsingClause,
-    Clause
+    Clause,
 };
 use PHPUnit\Framework\TestCase;
 

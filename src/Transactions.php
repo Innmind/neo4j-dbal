@@ -13,14 +13,14 @@ use Innmind\Http\{
     Header\Parameter,
     Message\Request\Request,
     Message\Method\Method,
-    ProtocolVersion\ProtocolVersion
+    ProtocolVersion\ProtocolVersion,
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\Url;
 use Innmind\Json\Json;
 use Innmind\Immutable\{
     Stream,
-    Map
+    Map,
 };
 
 final class Transactions

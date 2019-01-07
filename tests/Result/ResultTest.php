@@ -8,11 +8,11 @@ use Innmind\Neo4j\DBAL\{
     Result as ResultInterface,
     Result\Node,
     Result\Relationship,
-    Result\Row
+    Result\Row,
 };
 use Innmind\Immutable\{
     MapInterface,
-    StreamInterface
+    StreamInterface,
 };
 use PHPUnit\Framework\TestCase;
 

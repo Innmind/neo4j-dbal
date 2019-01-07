@@ -5,7 +5,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Result\Row;
 
 use Innmind\Neo4j\DBAL\Result\{
     Row\Row,
-    Row as RowInterface
+    Row as RowInterface,
 };
 use PHPUnit\Framework\TestCase;
 

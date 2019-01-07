@@ -9,7 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Clause\PathAware,
     Clause,
     Clause\Expression\Path,
-    Clause\Expression\Relationship
+    Clause\Expression\Relationship,
 };
 use PHPUnit\Framework\TestCase;
 

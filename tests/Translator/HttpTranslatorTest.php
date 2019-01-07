@@ -10,7 +10,7 @@ use Innmind\Neo4j\DBAL\{
     Authentication,
     Query,
     Query\Parameter,
-    HttpTransport\Transport
+    HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\HttpTransport\Transport as TransportInterface;
@@ -19,7 +19,7 @@ use Innmind\Http\{
     Message\Response,
     Headers\Headers,
     Header\Header,
-    Header\Value\Value
+    Header\Value\Value,
 };
 use Innmind\Stream\Readable;
 use Innmind\Immutable\Map;

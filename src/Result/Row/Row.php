@@ -5,7 +5,7 @@ namespace Innmind\Neo4j\DBAL\Result\Row;
 
 use Innmind\Neo4j\DBAL\{
     Result\Row as RowInterface,
-    Exception\DomainException
+    Exception\DomainException,
 };
 
 final class Row implements RowInterface

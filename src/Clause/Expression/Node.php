@@ -5,12 +5,12 @@ namespace Innmind\Neo4j\DBAL\Clause\Expression;
 
 use Innmind\Neo4j\DBAL\{
     Query\Parameter,
-    Exception\DomainException
+    Exception\DomainException,
 };
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    Set
+    Set,
 };
 
 final class Node

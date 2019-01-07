@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Transport,
     Transactions,
     Query,
-    Result
+    Result,
 };
 
 final class Connection implements ConnectionInterface

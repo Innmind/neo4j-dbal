@@ -8,13 +8,13 @@ use Innmind\Neo4j\DBAL\{
     Transaction,
     Server,
     Authentication,
-    HttpTransport\Transport
+    HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\HttpTransport\DefaultTransport;
 use Innmind\Http\{
     Translator\Response\Psr7Translator,
-    Factory\Header\Factories
+    Factory\Header\Factories,
 };
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;

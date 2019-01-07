@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Query,
     Result,
     Exception\QueryFailed,
-    Query\Parameter
+    Query\Parameter,
 };
 use Psr\Log\LoggerInterface;
 

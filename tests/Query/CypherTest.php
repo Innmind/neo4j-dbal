@@ -6,7 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Query;
 use Innmind\Neo4j\DBAL\{
     Query\Cypher,
     Query,
-    Query\Parameter
+    Query\Parameter,
 };
 use PHPUnit\Framework\TestCase;
 

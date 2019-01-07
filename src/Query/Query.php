@@ -8,12 +8,12 @@ use Innmind\Neo4j\DBAL\{
     Clause,
     Exception\NonParametrableClause,
     Exception\NonPathAwareClause,
-    Exception\NonMergeClause
+    Exception\NonMergeClause,
 };
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    Stream
+    Stream,
 };
 
 final class Query implements QueryInterface
