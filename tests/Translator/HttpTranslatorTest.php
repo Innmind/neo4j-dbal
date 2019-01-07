@@ -27,13 +27,13 @@ use PHPUnit\Framework\TestCase;
 
 class HttpTranslatorTest extends TestCase
 {
-    private $translator;
+    private $translate;
     private $transactions;
     private $transport;
 
     public function setUp()
     {
-        $this->translator = new HttpTranslator(
+        $this->translate = new HttpTranslator(
             $this->transactions = new Transactions(
                 new Transport(
                     new Server(
@@ -68,7 +68,7 @@ class HttpTranslatorTest extends TestCase
                     ('foo', new Parameter('foo', 'bar'))
             );
 
-        $request = $this->translator->translate($query);
+        $request = ($this->translate)($query);
 
         $this->assertInstanceOf(Request::class, $request);
         $this->assertSame('POST', (string) $request->method());
@@ -121,7 +121,7 @@ class HttpTranslatorTest extends TestCase
             ));
 
         $this->transactions->open();
-        $request = $this->translator->translate($query);
+        $request = ($this->translate)($query);
 
         $this->assertInstanceOf(Request::class, $request);
         $this->assertSame('POST', (string) $request->method());

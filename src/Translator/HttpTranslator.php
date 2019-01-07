@@ -60,7 +60,7 @@ final class HttpTranslator
     /**
      * Transalate a dbal query into a http request
      */
-    public function translate(Query $query): Request
+    public function __invoke(Query $query): Request
     {
         return new Request\Request(
             $this->computeEndpoint(),

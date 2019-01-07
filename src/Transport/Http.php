@@ -25,14 +25,14 @@ use Innmind\Json\Json;
 
 final class Http implements Transport
 {
-    private $translator;
+    private $translate;
     private $fulfill;
 
     public function __construct(
-        HttpTranslator $translator,
+        HttpTranslator $translate,
         HttpTransport $fulfill
     ) {
-        $this->translator = $translator;
+        $this->translate = $translate;
         $this->fulfill = $fulfill;
     }
 
@@ -42,7 +42,7 @@ final class Http implements Transport
     public function execute(Query $query): Result
     {
         $response = ($this->fulfill)(
-            $this->translator->translate($query)
+            ($this->translate)($query)
         );
 
         if (!$this->isSuccessful($response)) {
