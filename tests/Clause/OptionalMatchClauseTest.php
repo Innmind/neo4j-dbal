@@ -17,18 +17,18 @@ class OptionalMatchClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new OptionalMatchClause(Path::startWithNode());
+        $clause = new OptionalMatchClause(Path::startWithNode());
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertInstanceOf(Parametrable::class, $c);
-        $this->assertInstanceOf(PathAware::class, $c);
-        $this->assertSame('()', (string) $c);
-        $this->assertSame('OPTIONAL MATCH', $c->identifier());
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertInstanceOf(Parametrable::class, $clause);
+        $this->assertInstanceOf(PathAware::class, $clause);
+        $this->assertSame('()', (string) $clause);
+        $this->assertSame('OPTIONAL MATCH', $clause->identifier());
     }
 
     public function testComposition()
     {
-        $c = (new OptionalMatchClause(Path::startWithNode('a', ['A'])))
+        $clause = (new OptionalMatchClause(Path::startWithNode('a', ['A'])))
             ->withProperty('a', '{a}')
                 ->withParameter('a', 'foo')
             ->linkedTo('b', ['B'])
@@ -44,10 +44,10 @@ class OptionalMatchClauseTest extends TestCase
 
         $this->assertSame(
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
-            (string) $c
+            (string) $clause
         );
-        $this->assertTrue($c->hasParameters());
-        $this->assertCount(4, $c->parameters());
-        $this->assertInstanceOf(OptionalMatchClause::class, $c);
+        $this->assertTrue($clause->hasParameters());
+        $this->assertCount(4, $clause->parameters());
+        $this->assertInstanceOf(OptionalMatchClause::class, $clause);
     }
 }

@@ -14,24 +14,24 @@ class RelationshipTest extends TestCase
 {
     public function testParameters()
     {
-        $n = Relationship::both();
+        $relationship = Relationship::both();
 
-        $n2 = $n->withParameter('foo', 'bar');
-        $this->assertNotSame($n, $n2);
-        $this->assertInstanceOf(Relationship::class, $n2);
-        $this->assertInstanceOf(MapInterface::class, $n2->parameters());
-        $this->assertSame('string', (string) $n2->parameters()->keyType());
-        $this->assertSame(Parameter::class, (string) $n2->parameters()->valueType());
-        $this->assertCount(1, $n2->parameters());
+        $relationship2 = $relationship->withParameter('foo', 'bar');
+        $this->assertNotSame($relationship, $relationship2);
+        $this->assertInstanceOf(Relationship::class, $relationship2);
+        $this->assertInstanceOf(MapInterface::class, $relationship2->parameters());
+        $this->assertSame('string', (string) $relationship2->parameters()->keyType());
+        $this->assertSame(Parameter::class, (string) $relationship2->parameters()->valueType());
+        $this->assertCount(1, $relationship2->parameters());
     }
 
     public function testProperties()
     {
-        $n = Relationship::both();
+        $relationship = Relationship::both();
 
-        $n2 = $n->withProperty('foo', '{bar}');
-        $this->assertNotSame($n, $n2);
-        $this->assertInstanceOf(Relationship::class, $n2);
+        $relationship2 = $relationship->withProperty('foo', '{bar}');
+        $this->assertNotSame($relationship, $relationship2);
+        $this->assertInstanceOf(Relationship::class, $relationship2);
     }
 
     public function testCast()

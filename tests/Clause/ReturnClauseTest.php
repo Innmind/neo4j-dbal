@@ -13,10 +13,10 @@ class ReturnClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new ReturnClause('a', 'b', 'c', 'd');
+        $clause = new ReturnClause('a', 'b', 'c', 'd');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('RETURN', $c->identifier());
-        $this->assertSame('a, b, c, d', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('RETURN', $clause->identifier());
+        $this->assertSame('a, b, c, d', (string) $clause);
     }
 }

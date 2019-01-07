@@ -14,11 +14,11 @@ class ForeachClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new ForeachClause('(n IN nodes(p)| SET n.marked = TRUE )');
+        $clause = new ForeachClause('(n IN nodes(p)| SET n.marked = TRUE )');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('FOREACH', $c->identifier());
-        $this->assertSame('(n IN nodes(p)| SET n.marked = TRUE )', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('FOREACH', $clause->identifier());
+        $this->assertSame('(n IN nodes(p)| SET n.marked = TRUE )', (string) $clause);
     }
 
     /**

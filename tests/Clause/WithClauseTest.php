@@ -13,10 +13,10 @@ class WithClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new WithClause('a', 'b', 'c', 'd');
+        $clause = new WithClause('a', 'b', 'c', 'd');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('WITH', $c->identifier());
-        $this->assertSame('a, b, c, d', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('WITH', $clause->identifier());
+        $this->assertSame('a, b, c, d', (string) $clause);
     }
 }

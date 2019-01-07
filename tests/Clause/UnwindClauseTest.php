@@ -13,11 +13,11 @@ class UnwindClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new UnwindClause('[1,1,2,2] as x');
+        $clause = new UnwindClause('[1,1,2,2] as x');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('UNWIND', $c->identifier());
-        $this->assertSame('[1,1,2,2] as x', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('UNWIND', $clause->identifier());
+        $this->assertSame('[1,1,2,2] as x', (string) $clause);
     }
 
     /**

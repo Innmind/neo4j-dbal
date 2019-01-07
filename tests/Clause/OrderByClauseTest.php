@@ -13,11 +13,11 @@ class OrderByClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = OrderByClause::asc('n.foo');
+        $clause = OrderByClause::asc('n.foo');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('ORDER BY', $c->identifier());
-        $this->assertSame('n.foo ASC', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('ORDER BY', $clause->identifier());
+        $this->assertSame('n.foo ASC', (string) $clause);
         $this->assertSame(
             'n.foo DESC',
             (string) OrderByClause::desc('n.foo')

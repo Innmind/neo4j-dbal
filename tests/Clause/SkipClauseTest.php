@@ -14,11 +14,11 @@ class SkipClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new SkipClause('42');
+        $clause = new SkipClause('42');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('SKIP', $c->identifier());
-        $this->assertSame('42', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('SKIP', $clause->identifier());
+        $this->assertSame('42', (string) $clause);
     }
 
     /**

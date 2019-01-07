@@ -13,11 +13,11 @@ class OnMatchClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new OnMatchClause('SET n:Foo');
+        $clause = new OnMatchClause('SET n:Foo');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('ON MATCH', $c->identifier());
-        $this->assertSame('SET n:Foo', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('ON MATCH', $clause->identifier());
+        $this->assertSame('SET n:Foo', (string) $clause);
     }
 
     /**

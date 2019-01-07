@@ -13,11 +13,11 @@ class OnCreateClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new OnCreateClause('SET n:Foo');
+        $clause = new OnCreateClause('SET n:Foo');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('ON CREATE', $c->identifier());
-        $this->assertSame('SET n:Foo', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('ON CREATE', $clause->identifier());
+        $this->assertSame('SET n:Foo', (string) $clause);
     }
 
     /**

@@ -14,11 +14,11 @@ class LimitClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new LimitClause('42');
+        $clause = new LimitClause('42');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('LIMIT', $c->identifier());
-        $this->assertSame('42', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('LIMIT', $clause->identifier());
+        $this->assertSame('42', (string) $clause);
     }
 
     /**

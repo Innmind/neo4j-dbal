@@ -14,11 +14,11 @@ class DeleteClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new DeleteClause('n', false);
+        $clause = new DeleteClause('n', false);
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('DELETE', $c->identifier());
-        $this->assertSame('n', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('DELETE', $clause->identifier());
+        $this->assertSame('n', (string) $clause);
 
         $this->assertSame(
             'DETACH DELETE',

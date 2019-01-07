@@ -13,11 +13,11 @@ class UsingClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new UsingClause('INDEX n.foo');
+        $clause = new UsingClause('INDEX n.foo');
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('USING', $c->identifier());
-        $this->assertSame('INDEX n.foo', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('USING', $clause->identifier());
+        $this->assertSame('INDEX n.foo', (string) $clause);
     }
 
     /**

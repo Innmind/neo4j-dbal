@@ -13,10 +13,10 @@ class UnionClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new UnionClause;
+        $clause = new UnionClause;
 
-        $this->assertInstanceOf(Clause::class, $c);
-        $this->assertSame('UNION', $c->identifier());
-        $this->assertSame('', (string) $c);
+        $this->assertInstanceOf(Clause::class, $clause);
+        $this->assertSame('UNION', $clause->identifier());
+        $this->assertSame('', (string) $clause);
     }
 }
