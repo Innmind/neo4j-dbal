@@ -13,14 +13,14 @@ class OrderByClauseTest extends TestCase
 {
     public function testInterface()
     {
-        $c = new OrderByClause('n.foo', OrderByClause::ASC);
+        $c = OrderByClause::asc('n.foo');
 
         $this->assertInstanceOf(Clause::class, $c);
         $this->assertSame('ORDER BY', $c->identifier());
         $this->assertSame('n.foo ASC', (string) $c);
         $this->assertSame(
             'n.foo DESC',
-            (string) new OrderByClause('n.foo', OrderByClause::DESC)
+            (string) OrderByClause::desc('n.foo')
         );
     }
 
@@ -29,14 +29,6 @@ class OrderByClauseTest extends TestCase
      */
     public function testThrowWhenEmptyCypher()
     {
-        new OrderByClause('', OrderByClause::ASC);
-    }
-
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
-    public function testThrowWhenEmptyDirection()
-    {
-        new OrderByClause('foo', '');
+        OrderByClause::asc('');
     }
 }

@@ -590,9 +590,11 @@ final class Query implements QueryInterface
         string $cypher,
         string $direction = Clause\OrderByClause::ASC
     ): self {
+        $direction = \strtolower($direction);
+
         $query = new self;
         $query->clauses = $this->clauses->add(
-            new Clause\OrderByClause($cypher, $direction)
+            Clause\OrderByClause::$direction($cypher)
         );
 
         return $query;

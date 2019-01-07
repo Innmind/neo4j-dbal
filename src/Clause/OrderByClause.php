@@ -11,24 +11,31 @@ use Innmind\Immutable\Str;
 
 final class OrderByClause implements Clause
 {
-    const IDENTIFIER = 'ORDER BY';
-    const ASC = 'ASC';
-    const DESC = 'DESC';
+    public const IDENTIFIER = 'ORDER BY';
+    private const ASC = 'ASC';
+    private const DESC = 'DESC';
 
     private $cypher;
     private $direction;
 
-    public function __construct(string $cypher, string $direction)
+    private function __construct(string $cypher, string $direction)
     {
-        if (
-            Str::of($cypher)->empty() ||
-            !in_array($direction, [self::ASC, self::DESC], true)
-        ) {
+        if (Str::of($cypher)->empty()) {
             throw new DomainException;
         }
 
         $this->cypher = $cypher;
         $this->direction = $direction;
+    }
+
+    public static function asc(string $cypher): self
+    {
+        return new self($cypher, self::ASC);
+    }
+
+    public static function desc(string $cypher): self
+    {
+        return new self($cypher, self::DESC);
     }
 
     /**
