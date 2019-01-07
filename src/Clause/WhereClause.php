@@ -16,7 +16,7 @@ use Innmind\Immutable\{
 
 final class WhereClause implements Clause, Parametrable
 {
-    const IDENTIFIER = 'WHERE';
+    private const IDENTIFIER = 'WHERE';
 
     private $cypher;
     private $parameters;

@@ -9,7 +9,7 @@ final class CreateClause implements Clause, PathAware
 {
     use PathAware\PathAware;
 
-    const IDENTIFIER = 'CREATE';
+    private const IDENTIFIER = 'CREATE';
 
     private $path;
     private $unique;

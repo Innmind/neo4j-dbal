@@ -16,7 +16,7 @@ use Innmind\Immutable\{
 
 final class SetClause implements Clause, Parametrable
 {
-    const IDENTIFIER = 'SET';
+    private const IDENTIFIER = 'SET';
 
     private $cypher;
     private $parameters;

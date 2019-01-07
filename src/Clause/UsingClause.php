@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class UsingClause implements Clause
 {
-    const IDENTIFIER = 'USING';
+    private const IDENTIFIER = 'USING';
 
     private $cypher;
 

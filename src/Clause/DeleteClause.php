@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class DeleteClause implements Clause
 {
-    const IDENTIFIER = 'DELETE';
+    private const IDENTIFIER = 'DELETE';
 
     private $cypher;
     private $detachable = false;

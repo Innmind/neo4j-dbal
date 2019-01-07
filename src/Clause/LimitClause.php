@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class LimitClause implements Clause
 {
-    const IDENTIFIER = 'LIMIT';
+    private const IDENTIFIER = 'LIMIT';
 
     private $cypher;
 

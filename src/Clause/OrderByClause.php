@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class OrderByClause implements Clause
 {
-    public const IDENTIFIER = 'ORDER BY';
+    private const IDENTIFIER = 'ORDER BY';
     private const ASC = 'ASC';
     private const DESC = 'DESC';
 

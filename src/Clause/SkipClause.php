@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class SkipClause implements Clause
 {
-    const IDENTIFIER = 'SKIP';
+    private const IDENTIFIER = 'SKIP';
 
     private $cypher;
 

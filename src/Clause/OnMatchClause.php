@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class OnMatchClause implements Clause
 {
-    const IDENTIFIER = 'ON MATCH';
+    private const IDENTIFIER = 'ON MATCH';
 
     private $cypher;
 

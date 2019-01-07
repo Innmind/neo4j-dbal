@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class UnwindClause implements Clause
 {
-    const IDENTIFIER = 'UNWIND';
+    private const IDENTIFIER = 'UNWIND';
 
     private $cypher;
 

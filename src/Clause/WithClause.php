@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Clause;
 
 final class WithClause implements Clause
 {
-    const IDENTIFIER = 'WITH';
+    private const IDENTIFIER = 'WITH';
 
     private $variables;
 

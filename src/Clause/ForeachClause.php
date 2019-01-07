@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class ForeachClause implements Clause
 {
-    const IDENTIFIER = 'FOREACH';
+    private const IDENTIFIER = 'FOREACH';
 
     private $cypher;
 

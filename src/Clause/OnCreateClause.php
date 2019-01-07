@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class OnCreateClause implements Clause
 {
-    const IDENTIFIER = 'ON CREATE';
+    private const IDENTIFIER = 'ON CREATE';
 
     private $cypher;
 
