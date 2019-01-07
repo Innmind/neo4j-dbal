@@ -7,8 +7,6 @@ use Innmind\Neo4j\DBAL\{
     Transport,
     Query,
     Result,
-    Server,
-    Authentication,
     Translator\HttpTranslator,
     HttpTransport\Transport as HttpTransport,
     Exception\ServerDown,
