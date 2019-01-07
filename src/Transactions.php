@@ -17,6 +17,7 @@ use Innmind\Http\{
 };
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\Url\Url;
+use Innmind\Json\Json;
 use Innmind\Immutable\{
     Stream,
     Map
@@ -54,7 +55,7 @@ final class Transactions
                     )
                 )
         );
-        $this->body = new StringStream(json_encode(['statements' => []]));
+        $this->body = new StringStream(Json::encode(['statements' => []]));
     }
 
     /**
@@ -74,7 +75,7 @@ final class Transactions
             )
         );
 
-        $body = json_decode((string) $response->body(), true);
+        $body = Json::decode((string) $response->body());
         $location = (string) $response
             ->headers()
             ->get('Location')

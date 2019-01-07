@@ -25,6 +25,7 @@ use Innmind\Url\{
     UrlInterface,
     Url
 };
+use Innmind\Json\Json;
 use Innmind\Immutable\Map;
 
 /**
@@ -102,7 +103,7 @@ final class HttpTranslator
             $statement['parameters'] = $parameters;
         }
 
-        return new StringStream(json_encode([
+        return new StringStream(Json::encode([
             'statements' => [$statement],
         ]));
     }

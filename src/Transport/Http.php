@@ -21,6 +21,7 @@ use Innmind\Http\{
     ProtocolVersion\ProtocolVersion
 };
 use Innmind\Url\Url;
+use Innmind\Json\Json;
 
 final class Http implements Transport
 {
@@ -48,7 +49,7 @@ final class Http implements Transport
             throw new QueryFailed($query, $response);
         }
 
-        $response = json_decode((string) $response->body(), true);
+        $response = Json::decode((string) $response->body());
         $result = Result\Result::fromRaw($response['results'][0] ?? []);
 
         return $result;
@@ -98,7 +99,7 @@ final class Http implements Transport
             return false;
         }
 
-        $json = json_decode((string) $response->body(), true);
+        $json = Json::decode((string) $response->body());
 
         return count($json['errors']) === 0;
     }
