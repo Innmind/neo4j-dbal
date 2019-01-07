@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause\ForeachClause,
     Clause,
     Query\Parameter,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -21,11 +22,10 @@ class ForeachClauseTest extends TestCase
         $this->assertSame('(n IN nodes(p)| SET n.marked = TRUE )', (string) $clause);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new ForeachClause('');
     }
 }

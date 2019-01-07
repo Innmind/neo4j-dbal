@@ -11,6 +11,8 @@ use Innmind\Neo4j\DBAL\{
     Result,
     HttpTransport\Transport as HttpTransport,
     Transport,
+    Exception\ServerDown,
+    Exception\QueryFailed,
 };
 use Innmind\Url\Url;
 use Innmind\TimeContinuum\TimeContinuumInterface;
@@ -51,9 +53,6 @@ class HttpTest extends TestCase
         $this->assertSame($this->transport, $this->transport->ping());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\ServerDown
-     */
     public function testThrowWhenPingUnavailableServer()
     {
         $httpTransport = new HttpTransport(
@@ -70,6 +69,8 @@ class HttpTest extends TestCase
             $httpTransport
         );
 
+        $this->expectException(ServerDown::class);
+
         $transport->ping();
     }
 
@@ -85,17 +86,16 @@ class HttpTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailed
-     * @expectedExceptionMessage The query failed to execute properly
-     * @expectedExceptionCode 400
-     */
     public function testThrowWhenQueryFailed()
     {
         $query = $this->createMock(Query::class);
         $query
             ->method('cypher')
             ->willReturn('foo');
+
+        $this->expectException(QueryFailed::class);
+        $this->expectExceptionMessage('The query failed to execute properly');
+        $this->expectExceptionCode(400);
 
         $this->transport->execute($query);
     }

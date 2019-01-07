@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Result\Row;
 
-use Innmind\Neo4j\DBAL\Result\{
-    Row\Row,
-    Row as RowInterface,
+use Innmind\Neo4j\DBAL\{
+    Result\Row\Row,
+    Result\Row as RowInterface,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -20,11 +21,10 @@ class RowTest extends TestCase
         $this->assertSame('baz', $row->column());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyColumn()
     {
+        $this->expectException(DomainException::class);
+
         new Row('', 'foo');
     }
 }

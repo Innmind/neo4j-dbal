@@ -44,12 +44,11 @@ class RelationshipTest extends TestCase
         $this->assertFalse($relationship->hasProperties());
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 5 must be of type MapInterface<string, variable>
-     */
     public function testThrowWhenInvalidPropertyMap()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 5 must be of type MapInterface<string, variable>');
+
         new Relationship(
             new Id(42),
             new Type('foo'),

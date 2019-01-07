@@ -42,12 +42,11 @@ class NodeTest extends TestCase
         $this->assertTrue($node->hasProperties());
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 2 must be of type SetInterface<string>
-     */
     public function testThrowWhenInvalidLabelSet()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 2 must be of type SetInterface<string>');
+
         new Node(
             new Id(42),
             new Set('str'),
@@ -55,12 +54,11 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException TypeError
-     * @expectedExceptionMessage Argument 3 must be of type MapInterface<string, variable>
-     */
     public function testThrowWhenInvalidPropertyMap()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument 3 must be of type MapInterface<string, variable>');
+
         new Node(
             new Id(42),
             new Set('string'),

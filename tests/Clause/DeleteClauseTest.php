@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause\DeleteClause,
     Clause,
     Query\Parameter,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -26,11 +27,10 @@ class DeleteClauseTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new DeleteClause('', false);
     }
 }

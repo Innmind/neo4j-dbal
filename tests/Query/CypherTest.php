@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Query\Cypher,
     Query,
     Query\Parameter,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -38,19 +39,17 @@ class CypherTest extends TestCase
         $this->assertSame(Parameter::class, (string) $cypher->parameters()->valueType());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new Cypher('');
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyParameterKey()
     {
+        $this->expectException(DomainException::class);
+
         (new Cypher('foo'))->withParameter('', 'foo');
     }
 }

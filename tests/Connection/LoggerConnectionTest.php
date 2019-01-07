@@ -69,9 +69,6 @@ class LoggerConnectionTest extends TestCase
         $this->assertSame($result, $connection->execute($query));
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\QueryFailed
-     */
     public function testLogWhenQueryFails()
     {
         $connection = new LoggerConnection(
@@ -102,6 +99,8 @@ class LoggerConnectionTest extends TestCase
             ->expects($this->once())
             ->method('body')
             ->willReturn(new StringStream('bar'));
+
+        $this->expectException(QueryFailed::class);
 
         $connection->execute($query);
     }

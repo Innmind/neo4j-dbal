@@ -6,6 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause\UsingClause,
     Clause,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -20,11 +21,10 @@ class UsingClauseTest extends TestCase
         $this->assertSame('INDEX n.foo', (string) $clause);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new UsingClause('');
     }
 }

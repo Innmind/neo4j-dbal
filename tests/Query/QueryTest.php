@@ -5,6 +5,9 @@ namespace Tests\Innmind\Neo4j\DBAL\Query;
 use Innmind\Neo4j\DBAL\{
     Query\Query,
     Query as QueryInterface,
+    Exception\NonParametrableClause,
+    Exception\NonPathAwareClause,
+    Exception\NonMergeClause,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -58,111 +61,100 @@ class QueryTest extends TestCase
         $this->assertCount(5, $query->parameters());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\NonParametrableClause
-     */
     public function testThrowWhenApplyingParameterOnNonParametrableClause()
     {
+        $this->expectException(NonParametrableClause::class);
+
         (new Query)
             ->delete('n')
             ->withParameter('foo', 'bar');
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingPropertyOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->withProperty('foo', 'foo');
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingLinkedToOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->linkedTo();
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingTypedRelationshipOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->through('r');
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingADistanceOfOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->withADistanceOf(2);
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingADistanceBetweenOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->withADistanceBetween(2, 3);
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingADistanceOfAtLeastOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->withADistanceOfAtLeast(2);
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingADistanceOfAtMostOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->withADistanceOfAtMost(2);
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonPathAwareClause
-     */
     public function testThrowWhenApplyingAnyDistanceOnNonPathAwareClause()
     {
+        $this->expectException(NonPathAwareClause::class);
+
         (new Query)
             ->delete('n')
             ->withAnyDistance();
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonMergeClause
-     */
     public function testThrowWhenApplyingOnMatchOnNonMergeClause()
     {
+        $this->expectException(NonMergeClause::class);
+
         (new Query)
             ->delete('n')
             ->onMatch('SET foo.updated = timestamp()');
     }
 
-    /**
-     * @expectedException Innmind\neo4j\DBAL\Exception\NonMergeClause
-     */
     public function testThrowWhenApplyingOnCreateOnNonMergeClause()
     {
+        $this->expectException(NonMergeClause::class);
+
         (new Query)
             ->delete('n')
             ->onCreate('SET foo.created = timestamp()');

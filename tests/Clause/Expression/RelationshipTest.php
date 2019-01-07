@@ -6,6 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 use Innmind\Neo4j\DBAL\{
     Clause\Expression\Relationship,
     Query\Parameter,
+    Exception\DomainException,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -59,19 +60,17 @@ class RelationshipTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyParameterKey()
     {
+        $this->expectException(DomainException::class);
+
         Relationship::both()->withParameter('', 'foo');
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyPropertyName()
     {
+        $this->expectException(DomainException::class);
+
         Relationship::both()->withProperty('', 'foo');
     }
 }

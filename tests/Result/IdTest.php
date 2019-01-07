@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Neo4j\DBAL\Result\Id;
+use Innmind\Neo4j\DBAL\{
+    Result\Id,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class IdTest extends TestCase
@@ -16,11 +19,10 @@ class IdTest extends TestCase
         $this->assertSame('42', (string) $id);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenNegativeId()
     {
+        $this->expectException(DomainException::class);
+
         new Id(-1);
     }
 }

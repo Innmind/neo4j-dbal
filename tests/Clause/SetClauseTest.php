@@ -8,6 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Clause,
     Clause\Parametrable,
     Query\Parameter,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -29,19 +30,17 @@ class SetClauseTest extends TestCase
         $this->assertCount(1, $clause->withParameter('dumb', 'dumb')->parameters());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new SetClause('');
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyParameterKey()
     {
+        $this->expectException(DomainException::class);
+
         (new SetClause('foo'))->withParameter('', 'foo');
     }
 }

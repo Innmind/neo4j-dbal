@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Clause\SkipClause,
     Clause,
     Query\Parameter,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -21,11 +22,10 @@ class SkipClauseTest extends TestCase
         $this->assertSame('42', (string) $clause);
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         new SkipClause('');
     }
 }

@@ -42,11 +42,10 @@ class PathTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\LogicException
-     */
     public function testThrowWhenNoRelationshipToType()
     {
+        $this->expectException(LogicException::class);
+
         Path::startWithNode()->through();
     }
 

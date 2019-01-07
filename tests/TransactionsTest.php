@@ -10,6 +10,7 @@ use Innmind\Neo4j\DBAL\{
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
 use Innmind\Url\Url;
+use Innmind\Immutable\Exception\OutOfBoundException;
 use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
@@ -59,27 +60,24 @@ class TransactionsTest extends TestCase
         $this->assertFalse($this->transactions->isOpened());
     }
 
-    /**
-     * @expectedException Innmind\Immutable\Exception\OutOfBoundException
-     */
     public function testThrowWhenAskingForTransactionWhenThereIsNone()
     {
+        $this->expectException(OutOfBoundException::class);
+
         $this->transactions->current();
     }
 
-    /**
-     * @expectedException Innmind\Immutable\Exception\OutOfBoundException
-     */
     public function testThrowWhenAskingForCommitWhenThereIsNoTransaction()
     {
+        $this->expectException(OutOfBoundException::class);
+
         $this->transactions->commit();
     }
 
-    /**
-     * @expectedException Innmind\Immutable\Exception\OutOfBoundException
-     */
     public function testThrowWhenAskingForRollbackWhenThereIsNoTransaction()
     {
+        $this->expectException(OutOfBoundException::class);
+
         $this->transactions->rollback();
     }
 

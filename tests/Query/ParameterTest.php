@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Query;
 
-use Innmind\Neo4j\DBAL\Query\Parameter;
+use Innmind\Neo4j\DBAL\{
+    Query\Parameter,
+    Exception\DomainException,
+};
 use PHPUnit\Framework\TestCase;
 
 class ParameterTest extends TestCase
@@ -15,11 +18,10 @@ class ParameterTest extends TestCase
         $this->assertSame(['value'], $parameter->value());
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyKey()
     {
+        $this->expectException(DomainException::class);
+
         new Parameter('', 'foo');
     }
 }

@@ -6,6 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause;
 use Innmind\Neo4j\DBAL\{
     Clause\OrderByClause,
     Clause,
+    Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -24,11 +25,10 @@ class OrderByClauseTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyCypher()
     {
+        $this->expectException(DomainException::class);
+
         OrderByClause::asc('');
     }
 }

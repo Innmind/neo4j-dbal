@@ -6,6 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL\Clause\Expression;
 use Innmind\Neo4j\DBAL\{
     Clause\Expression\Node,
     Query\Parameter,
+    Exception\DomainException,
 };
 use Innmind\Immutable\MapInterface;
 use PHPUnit\Framework\TestCase;
@@ -56,19 +57,17 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyParameterKey()
     {
+        $this->expectException(DomainException::class);
+
         (new Node)->withParameter('', 'foo');
     }
 
-    /**
-     * @expectedException Innmind\Neo4j\DBAL\Exception\DomainException
-     */
     public function testThrowWhenEmptyPropertyName()
     {
+        $this->expectException(DomainException::class);
+
         (new Node)->withProperty('', 'foo');
     }
 }
