@@ -16,12 +16,7 @@ use Innmind\Neo4j\DBAL\{
     HttpTransport\Transport,
 };
 use Innmind\TimeContinuum\TimeContinuumInterface;
-use Innmind\HttpTransport\DefaultTransport;
-use Innmind\Http\{
-    Translator\Response\Psr7Translator,
-    Factory\Header\Factories,
-};
-use GuzzleHttp\Client;
+use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
@@ -39,12 +34,7 @@ class ConnectionTest extends TestCase
         $httpTransport = new Transport(
             $server,
             $auth,
-            new DefaultTransport(
-                new Client,
-                new Psr7Translator(
-                    Factories::default()
-                )
-            )
+            http()['default']()
         );
         $transactions = new Transactions(
             $httpTransport,
@@ -102,12 +92,7 @@ class ConnectionTest extends TestCase
         $httpTransport = new Transport(
             $server,
             $auth,
-            new DefaultTransport(
-                new Client,
-                new Psr7Translator(
-                    Factories::default()
-                )
-            )
+            http()['default']()
         );
         $transactions = new Transactions(
             $httpTransport,
