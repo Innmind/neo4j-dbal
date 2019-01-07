@@ -59,3 +59,7 @@ You have 3 options to execute a query:
 * use [`Query`](Query.php) to build the query via its API
 * use [`Cypher`](Cypher.php) where you put the raw cypher query
 * create your own class that implements [`QueryInterface`](QueryInterface.php)
+
+## Structure
+
+![](graph.svg)
