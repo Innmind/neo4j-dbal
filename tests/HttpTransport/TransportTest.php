@@ -43,14 +43,10 @@ class TransportTest extends TestCase
             Url::fromString('http://localhost:7474/path'),
             new Method('POST'),
             new ProtocolVersion(1, 1),
-            new Headers\Headers(
-                (new Map('string', Header::class))
-                    ->put(
-                        'content-type',
-                        new ContentType(
-                            new ContentTypeValue('application', 'json')
-                        )
-                    )
+            Headers\Headers::of(
+                new ContentType(
+                    new ContentTypeValue('application', 'json')
+                )
             )
         );
         $mock = $this->createMock(TransportInterface::class);

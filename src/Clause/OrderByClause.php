@@ -43,7 +43,7 @@ final class OrderByClause implements Clause
      */
     public function __toString(): string
     {
-        return sprintf(
+        return \sprintf(
             '%s %s',
             $this->cypher,
             $this->direction === self::ASC ? 'ASC' : 'DESC'

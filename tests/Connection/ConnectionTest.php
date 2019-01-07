@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
 {
-    private $c;
+    private $connection;
 
     public function setUp()
     {
@@ -50,7 +50,7 @@ class ConnectionTest extends TestCase
             $httpTransport,
             $this->createMock(TimeContinuumInterface::class)
         );
-        $this->c = new Connection(
+        $this->connection = new Connection(
             new Http(
                 new HttpTranslator($transactions),
                 $httpTransport
@@ -61,37 +61,37 @@ class ConnectionTest extends TestCase
 
     public function testInterface()
     {
-        $this->assertInstanceOf(ConnectionInterface::class, $this->c);
+        $this->assertInstanceOf(ConnectionInterface::class, $this->connection);
     }
 
     public function testExecute()
     {
-        $q = $this->createMock(Query::class);
-        $q
+        $query = $this->createMock(Query::class);
+        $query
             ->method('cypher')
             ->willReturn('match (n) return n');
 
-        $r = $this->c->execute($q);
+        $result = $this->connection->execute($query);
 
-        $this->assertInstanceOf(Result::class, $r);
+        $this->assertInstanceOf(Result::class, $result);
     }
 
     public function testTransactions()
     {
-        $this->assertFalse($this->c->isTransactionOpened());
-        $this->assertSame($this->c, $this->c->openTransaction());
-        $this->assertTrue($this->c->isTransactionOpened());
-        $this->assertSame($this->c, $this->c->commit());
-        $this->assertFalse($this->c->isTransactionOpened());
-        $this->c->openTransaction();
-        $this->assertTrue($this->c->isTransactionOpened());
-        $this->assertSame($this->c, $this->c->rollback());
-        $this->assertFalse($this->c->isTransactionOpened());
+        $this->assertFalse($this->connection->isTransactionOpened());
+        $this->assertSame($this->connection, $this->connection->openTransaction());
+        $this->assertTrue($this->connection->isTransactionOpened());
+        $this->assertSame($this->connection, $this->connection->commit());
+        $this->assertFalse($this->connection->isTransactionOpened());
+        $this->connection->openTransaction();
+        $this->assertTrue($this->connection->isTransactionOpened());
+        $this->assertSame($this->connection, $this->connection->rollback());
+        $this->assertFalse($this->connection->isTransactionOpened());
     }
 
     public function testAlive()
     {
-        $this->assertTrue($this->c->isAlive());
+        $this->assertTrue($this->connection->isAlive());
 
         $server = new Server(
             'http',
@@ -113,7 +113,7 @@ class ConnectionTest extends TestCase
             $httpTransport,
             $this->createMock(TimeContinuumInterface::class)
         );
-        $c = new Connection(
+        $connection = new Connection(
             new Http(
                 new HttpTranslator($transactions),
                 $httpTransport
@@ -121,38 +121,38 @@ class ConnectionTest extends TestCase
             $transactions
         );
 
-        $this->assertFalse($c->isAlive());
+        $this->assertFalse($connection->isAlive());
     }
 
     public function testConcrete()
     {
-        $q = (new Query\Query)
+        $query = (new Query\Query)
             ->create('n', ['Foo', 'Bar'])
             ->withProperty('foo', '{bar}')
             ->withParameter('bar', 'baz')
             ->return('n');
 
-        $r = $this->c->execute($q);
+        $result = $this->connection->execute($query);
 
-        $this->assertSame(1, $r->nodes()->count());
+        $this->assertSame(1, $result->nodes()->count());
         $this->assertTrue(
-            in_array('Bar', $r->nodes()->current()->labels()->toPrimitive())
+            in_array('Bar', $result->nodes()->current()->labels()->toPrimitive())
         );
         $this->assertTrue(
-            in_array('Foo', $r->nodes()->current()->labels()->toPrimitive())
+            in_array('Foo', $result->nodes()->current()->labels()->toPrimitive())
         );
-        $this->assertCount(1, $r->nodes()->current()->properties());
+        $this->assertCount(1, $result->nodes()->current()->properties());
         $this->assertSame(
             'baz',
-            $r->nodes()->current()->properties()->get('foo')
+            $result->nodes()->current()->properties()->get('foo')
         );
         $this->assertSame(
             'n',
-            $r->rows()->current()->column()
+            $result->rows()->current()->column()
         );
         $this->assertSame(
             ['foo' => 'baz'],
-            $r->rows()->current()->value()
+            $result->rows()->current()->value()
         );
     }
 }

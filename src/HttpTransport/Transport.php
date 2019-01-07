@@ -84,14 +84,9 @@ final class Transport implements TransportInterface
 
     private function addAuthorizationHeader(Headers $headers): Headers
     {
-        $map = new Map('string', Header::class);
-
-        foreach ($headers as $header) {
-            $map = $map->put($header->name(), $header);
-        }
-
-        $map = $map->put($this->authorization->name(), $this->authorization);
-
-        return new Headers\Headers($map);
+        return Headers\Headers::of(
+            $this->authorization,
+            ...\array_values(\iterator_to_array($headers))
+        );
     }
 }

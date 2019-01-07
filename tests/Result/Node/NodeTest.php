@@ -19,23 +19,23 @@ class NodeTest extends TestCase
     public function testNode()
     {
         $node = new Node(
-            $i = new Id(42),
-            $l = new Set('string'),
-            $p = new Map('string', 'variable')
+            $id = new Id(42),
+            $labels = new Set('string'),
+            $properties = new Map('string', 'variable')
         );
 
         $this->assertInstanceOf(NodeInterface::class, $node);
-        $this->assertSame($i, $node->id());
-        $this->assertSame($l, $node->labels());
-        $this->assertSame($p, $node->properties());
+        $this->assertSame($id, $node->id());
+        $this->assertSame($labels, $node->labels());
+        $this->assertSame($properties, $node->properties());
         $this->assertFalse($node->hasLabels());
         $this->assertFalse($node->hasProperties());
 
         $node = new Node(
             new Id(42),
-            (new Set('string'))->add('foo'),
-            (new Map('string', 'variable'))
-                ->put('foo', 'bar')
+            Set::of('string', 'foo'),
+            Map::of('string', 'variable')
+                ('foo', 'bar')
         );
 
         $this->assertTrue($node->hasLabels());

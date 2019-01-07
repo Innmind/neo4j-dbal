@@ -67,7 +67,7 @@ final class Transactions
         $response = ($this->fulfill)(
             new Request(
                 Url::fromString('/db/data/transaction'),
-                new Method(Method::POST),
+                Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
                 $this->body
@@ -121,7 +121,7 @@ final class Transactions
         ($this->fulfill)(
             new Request(
                 $this->current()->commitEndpoint(),
-                new Method(Method::POST),
+                Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
                 $this->body
@@ -142,7 +142,7 @@ final class Transactions
         ($this->fulfill)(
             new Request(
                 $this->current()->endpoint(),
-                new Method(Method::DELETE),
+                Method::delete(),
                 new ProtocolVersion(1, 1)
             )
         );

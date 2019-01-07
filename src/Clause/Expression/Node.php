@@ -22,14 +22,8 @@ final class Node
 
     public function __construct(string $variable = null, array $labels = [])
     {
-        $set = new Set('string');
-
-        foreach ($labels as $value) {
-            $set = $set->add($value);
-        }
-
         $this->variable = $variable;
-        $this->labels = $set;
+        $this->labels = Set::of('string', ...$labels);;
         $this->parameters = new Map('string', Parameter::class);
         $this->properties = new Map('string', 'string');
     }

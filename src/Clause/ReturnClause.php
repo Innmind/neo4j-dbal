@@ -29,6 +29,6 @@ final class ReturnClause implements Clause
      */
     public function __toString(): string
     {
-        return implode(', ', $this->variables);
+        return \implode(', ', $this->variables);
     }
 }

@@ -64,7 +64,7 @@ final class Http implements Transport
                 (
                     new Request(
                         Url::fromString('/'),
-                        new Method(Method::OPTIONS),
+                        Method::options(),
                         new ProtocolVersion(1, 1)
                     )
                 )

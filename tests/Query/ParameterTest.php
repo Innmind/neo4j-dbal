@@ -10,9 +10,9 @@ class ParameterTest extends TestCase
 {
     public function testInterface()
     {
-        $p = new Parameter('foo', ['value']);
-        $this->assertSame('foo', $p->key());
-        $this->assertSame(['value'], $p->value());
+        $parameter = new Parameter('foo', ['value']);
+        $this->assertSame('foo', $parameter->key());
+        $this->assertSame(['value'], $parameter->value());
     }
 
     /**

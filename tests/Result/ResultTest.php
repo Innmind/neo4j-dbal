@@ -20,22 +20,22 @@ class ResultTest extends TestCase
 {
     public function testFromRaw()
     {
-        $r = Result::fromRaw([]);
+        $result = Result::fromRaw([]);
 
-        $this->assertInstanceOf(ResultInterface::class, $r);
-        $this->assertInstanceOf(MapInterface::class, $r->nodes());
-        $this->assertInstanceOf(MapInterface::class, $r->relationships());
-        $this->assertInstanceOf(StreamInterface::class, $r->rows());
-        $this->assertSame('int', (string) $r->nodes()->keyType());
-        $this->assertSame(Node::class, (string) $r->nodes()->valueType());
-        $this->assertSame('int', (string) $r->relationships()->keyType());
-        $this->assertSame(Relationship::class, (string) $r->relationships()->valueType());
-        $this->assertSame(Row::class, (string) $r->rows()->type());
-        $this->assertCount(0, $r->nodes());
-        $this->assertCount(0, $r->relationships());
-        $this->assertCount(0, $r->rows());
+        $this->assertInstanceOf(ResultInterface::class, $result);
+        $this->assertInstanceOf(MapInterface::class, $result->nodes());
+        $this->assertInstanceOf(MapInterface::class, $result->relationships());
+        $this->assertInstanceOf(StreamInterface::class, $result->rows());
+        $this->assertSame('int', (string) $result->nodes()->keyType());
+        $this->assertSame(Node::class, (string) $result->nodes()->valueType());
+        $this->assertSame('int', (string) $result->relationships()->keyType());
+        $this->assertSame(Relationship::class, (string) $result->relationships()->valueType());
+        $this->assertSame(Row::class, (string) $result->rows()->type());
+        $this->assertCount(0, $result->nodes());
+        $this->assertCount(0, $result->relationships());
+        $this->assertCount(0, $result->rows());
 
-        $r = Result::fromRaw([
+        $result = Result::fromRaw([
             'columns' => ['baz'],
             'data' => [[
                 'row' => [[
@@ -82,54 +82,54 @@ class ResultTest extends TestCase
             ]],
         ]);
 
-        $this->assertCount(2, $r->nodes());
+        $this->assertCount(2, $result->nodes());
         $this->assertSame(
             ['name' => 'value'],
-            $r->rows()->first()->value()
+            $result->rows()->first()->value()
         );
-        $this->assertSame('baz', $r->rows()->first()->column());
+        $this->assertSame('baz', $result->rows()->first()->column());
         $this->assertSame(
             19,
-            $r->nodes()->current()->id()->value()
+            $result->nodes()->current()->id()->value()
         );
-        $this->assertSame([19, 21], $r->nodes()->keys()->toPrimitive());
+        $this->assertSame([19, 21], $result->nodes()->keys()->toPrimitive());
         $this->assertSame(
             ['Bike'],
-            $r->nodes()->current()->labels()->toPrimitive()
+            $result->nodes()->current()->labels()->toPrimitive()
         );
-        $this->assertCount(1, $r->relationships()->current()->properties());
+        $this->assertCount(1, $result->relationships()->current()->properties());
         $this->assertSame(
             10,
-            $r->nodes()->current()->properties()->get('weight')
+            $result->nodes()->current()->properties()->get('weight')
         );
-        $this->assertCount(2, $r->relationships());
+        $this->assertCount(2, $result->relationships());
         $this->assertSame(
             9,
-            $r->relationships()->current()->id()->value()
+            $result->relationships()->current()->id()->value()
         );
-        $this->assertSame([9, 10], $r->relationships()->keys()->toPrimitive());
+        $this->assertSame([9, 10], $result->relationships()->keys()->toPrimitive());
         $this->assertSame(
             'HAS',
-            $r->relationships()->current()->type()->value()
+            $result->relationships()->current()->type()->value()
         );
         $this->assertSame(
             19,
-            $r->relationships()->current()->startNode()->value()
+            $result->relationships()->current()->startNode()->value()
         );
         $this->assertSame(
             20,
-            $r->relationships()->current()->endNode()->value()
+            $result->relationships()->current()->endNode()->value()
         );
-        $this->assertCount(1, $r->relationships()->current()->properties());
+        $this->assertCount(1, $result->relationships()->current()->properties());
         $this->assertSame(
             1,
-            $r->relationships()->current()->properties()->get('position')
+            $result->relationships()->current()->properties()->get('position')
         );
     }
 
     public function testFromRawWithMultipleRows()
     {
-        $r = Result::fromRaw([
+        $result = Result::fromRaw([
             'columns' => [
                 'entity',
                 'n2',
@@ -289,8 +289,8 @@ class ResultTest extends TestCase
             ],
         ]);
 
-        $this->assertCount(10, $r->rows());
-        $this->assertCount(6, $r->nodes());
-        $this->assertCount(0, $r->relationships());
+        $this->assertCount(10, $result->rows());
+        $this->assertCount(6, $result->nodes());
+        $this->assertCount(0, $result->relationships());
     }
 }

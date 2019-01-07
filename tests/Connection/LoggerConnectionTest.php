@@ -52,8 +52,8 @@ class LoggerConnectionTest extends TestCase
             ->expects($this->once())
             ->method('parameters')
             ->willReturn(
-                (new Map('string', Parameter::class))
-                    ->put('bar', new Parameter('bar', 'baz'))
+                Map::of('string', Parameter::class)
+                    ('bar', new Parameter('bar', 'baz'))
             );
         $logger
             ->expects($this->once())

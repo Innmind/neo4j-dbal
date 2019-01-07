@@ -38,31 +38,21 @@ final class HttpTranslator
     public function __construct(Transactions $transactions)
     {
         $this->transactions = $transactions;
-        $this->headers = new Headers(
-            (new Map('string', Header::class))
-                ->put(
-                    'content-type',
-                    new ContentType(
-                        new ContentTypeValue(
-                            'application',
-                            'json'
-                        )
-                    )
+        $this->headers = Headers::of(
+            new ContentType(
+                new ContentTypeValue(
+                    'application',
+                    'json'
                 )
-                ->put(
-                    'accept',
-                    new Accept(
-                        new AcceptValue(
-                            'application',
-                            'json',
-                            (new Map('string', Parameter::class))
-                                ->put(
-                                    'charset',
-                                    new Parameter\Parameter('charset', 'UTF-8')
-                                )
-                        )
-                    )
+            ),
+            new Accept(
+                new AcceptValue(
+                    'application',
+                    'json',
+                    Map::of('string', Parameter::class)
+                        ('charset', new Parameter\Parameter('charset', 'UTF-8'))
                 )
+            )
         );
     }
 
@@ -73,7 +63,7 @@ final class HttpTranslator
     {
         return new Request\Request(
             $this->computeEndpoint(),
-            new Method(Method::POST),
+            Method::post(),
             new ProtocolVersion(1, 1),
             $this->headers,
             $this->computeBody($query)

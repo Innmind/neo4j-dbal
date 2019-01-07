@@ -81,11 +81,7 @@ final class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
-                $labels = new Set('string');
-
-                foreach ($node['labels'] as $label) {
-                    $labels = $labels->add($label);
-                }
+                $labels = Set::of('string', ...\array_values($node['labels']));
 
                 $nodes = $nodes->put(
                     (int) $node['id'],
@@ -155,12 +151,11 @@ final class Result implements ResultInterface
      */
     private static function buildProperties(array $data): MapInterface
     {
-        $properties = new Map('string', 'variable');
-
-        foreach ($data as $key => $value) {
-            $properties = $properties->put($key, $value);
-        }
-
-        return $properties;
+        return Map::of(
+            'string',
+            'variable',
+            \array_keys($data),
+            \array_values($data)
+        );
     }
 }

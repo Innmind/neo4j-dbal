@@ -10,10 +10,10 @@ class TypeTest extends TestCase
 {
     public function testType()
     {
-        $t = new Type('foo');
+        $type = new Type('foo');
 
-        $this->assertSame('foo', $t->value());
-        $this->assertSame('foo', (string) $t);
+        $this->assertSame('foo', $type->value());
+        $this->assertSame('foo', (string) $type);
     }
 
     /**

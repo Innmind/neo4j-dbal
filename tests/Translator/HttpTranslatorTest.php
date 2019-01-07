@@ -38,7 +38,7 @@ class HttpTranslatorTest extends TestCase
                 new Transport(
                     new Server(
                         'http',
-                        getenv('CI') ? 'localhost' : 'docker',
+                        'localhost',
                         7474
                     ),
                     new Authentication(
@@ -64,8 +64,8 @@ class HttpTranslatorTest extends TestCase
         $query
             ->method('parameters')
             ->willReturn(
-                (new Map('string', Parameter::class))
-                    ->put('foo', new Parameter('foo', 'bar'))
+                Map::of('string', Parameter::class)
+                    ('foo', new Parameter('foo', 'bar'))
             );
 
         $request = $this->translator->translate($query);
@@ -97,8 +97,8 @@ class HttpTranslatorTest extends TestCase
         $query
             ->method('parameters')
             ->willReturn(
-                (new Map('string', Parameter::class))
-                    ->put('foo', new Parameter('foo', 'bar'))
+                Map::of('string', Parameter::class)
+                    ('foo', new Parameter('foo', 'bar'))
             );
         $this
             ->transport
