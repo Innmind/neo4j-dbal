@@ -13,18 +13,26 @@ use Innmind\Server\Control\Server\Command;
 use Innmind\ObjectGraph\{
     Graph,
     Visualize,
+    Visitor\FlagDependencies,
+    Visitor\RemoveDependenciesSubGraph,
 };
 
 new class extends Main {
     protected function main(Environment $env, OperatingSystem $os): void
     {
         $package = bootstrap(
-            $os->remote()->http(),
-            $os->clock()
+            $http = $os->remote()->http(),
+            $clock = $os->clock()
         );
 
         $graph = new Graph;
         $visualize = new Visualize;
+        $flag = new FlagDependencies($http, $clock);
+        $remove = new RemoveDependenciesSubGraph;
+
+        $node = $graph($package);
+        $flag($node);
+        $remove($node);
 
         $os
             ->control()
@@ -34,7 +42,7 @@ new class extends Main {
                     ->withShortOption('Tsvg')
                     ->withShortOption('o', 'graph.svg')
                     ->withInput(
-                        $visualize($graph($package))
+                        $visualize($node)
                     )
             )
             ->wait();
