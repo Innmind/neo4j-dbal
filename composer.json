@@ -39,8 +39,5 @@
         "innmind/cli": "^1.5",
         "innmind/object-graph": "^1.2",
         "innmind/server-control": "^2.7"
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit --colors=always"
     }
 }
