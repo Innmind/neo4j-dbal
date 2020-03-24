@@ -8,8 +8,8 @@ use Innmind\Http\Message\Response;
 
 final class QueryFailed extends \RuntimeException implements Exception
 {
-    private $query;
-    private $response;
+    private Query $query;
+    private Response $response;
 
     public function __construct(
         Query $query,

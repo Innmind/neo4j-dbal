@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Id
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {

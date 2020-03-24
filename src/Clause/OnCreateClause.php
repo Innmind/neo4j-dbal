@@ -13,7 +13,7 @@ final class OnCreateClause implements Clause
 {
     private const IDENTIFIER = 'ON CREATE';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

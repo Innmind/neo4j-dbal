@@ -18,9 +18,9 @@ use Innmind\Immutable\{
 
 final class Query implements QueryInterface
 {
-    private $clauses;
-    private $parameters;
-    private $cypher;
+    private Stream $clauses;
+    private ?Map $parameters = null;
+    private ?string $cypher = null;
 
     public function __construct()
     {

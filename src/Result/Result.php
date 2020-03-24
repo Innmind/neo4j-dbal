@@ -14,9 +14,9 @@ use Innmind\Immutable\{
 
 final class Result implements ResultInterface
 {
-    private $nodes;
-    private $relationships;
-    private $rows;
+    private MapInterface $nodes;
+    private MapInterface $relationships;
+    private StreamInterface $rows;
 
     public function __construct(
         MapInterface $nodes,

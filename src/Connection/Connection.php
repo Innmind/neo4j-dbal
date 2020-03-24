@@ -13,8 +13,8 @@ use Innmind\Neo4j\DBAL\{
 
 final class Connection implements ConnectionInterface
 {
-    private $transport;
-    private $transactions;
+    private Transport $transport;
+    private Transactions $transactions;
 
     public function __construct(
         Transport $transport,

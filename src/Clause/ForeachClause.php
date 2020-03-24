@@ -13,7 +13,7 @@ final class ForeachClause implements Clause
 {
     private const IDENTIFIER = 'FOREACH';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

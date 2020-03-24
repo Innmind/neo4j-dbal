@@ -20,12 +20,12 @@ final class Relationship
     const RIGHT = 'RIGHT';
     const BOTH = 'BOTH';
 
-    private $variable;
-    private $type;
-    private $direction;
-    private $distance;
-    private $parameters;
-    private $properties;
+    private ?string $variable;
+    private ?string $type;
+    private string $direction;
+    private Distance $distance;
+    private Map $parameters;
+    private Map $properties;
 
     private function __construct(
         string $variable = null,

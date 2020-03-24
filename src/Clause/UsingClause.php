@@ -13,7 +13,7 @@ final class UsingClause implements Clause
 {
     private const IDENTIFIER = 'USING';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

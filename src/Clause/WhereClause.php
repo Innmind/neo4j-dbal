@@ -18,8 +18,8 @@ final class WhereClause implements Clause, Parametrable
 {
     private const IDENTIFIER = 'WHERE';
 
-    private $cypher;
-    private $parameters;
+    private string $cypher;
+    private Map $parameters;
 
     public function __construct(string $cypher)
     {

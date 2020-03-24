@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class Row implements RowInterface
 {
-    private $column;
+    private string $column;
     private $value;
 
     public function __construct(string $column, $value)

@@ -9,7 +9,7 @@ final class WithClause implements Clause
 {
     private const IDENTIFIER = 'WITH';
 
-    private $variables;
+    private array $variables;
 
     public function __construct(string ...$variables)
     {

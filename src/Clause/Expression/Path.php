@@ -15,9 +15,9 @@ use Innmind\Immutable\{
 
 final class Path
 {
-    private $elements;
-    private $lastOperation;
-    private $parameters;
+    private Stream $elements;
+    private ?string $lastOperation = null;
+    private ?Map $parameters = null;
 
     private function __construct()
     {

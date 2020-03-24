@@ -13,7 +13,7 @@ final class UnwindClause implements Clause
 {
     private const IDENTIFIER = 'UNWIND';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

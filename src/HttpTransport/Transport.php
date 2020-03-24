@@ -24,9 +24,9 @@ use Innmind\Immutable\Map;
 
 final class Transport implements TransportInterface
 {
-    private $server;
-    private $authorization;
-    private $fulfill;
+    private UrlInterface $server;
+    private Authorization $authorization;
+    private TransportInterface $fulfill;
 
     public function __construct(
         UrlInterface $server,

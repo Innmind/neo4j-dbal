@@ -16,10 +16,10 @@ use Innmind\Immutable\{
 
 final class Node
 {
-    private $variable;
-    private $labels;
-    private $parameters;
-    private $properties;
+    private ?string $variable;
+    private Set $labels;
+    private Map $parameters;
+    private Map $properties;
 
     public function __construct(string $variable = null, array $labels = [])
     {

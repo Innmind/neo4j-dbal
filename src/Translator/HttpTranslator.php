@@ -33,8 +33,8 @@ use Innmind\Immutable\Map;
  */
 final class HttpTranslator
 {
-    private $transactions;
-    private $headers;
+    private Transactions $transactions;
+    private Headers $headers;
 
     public function __construct(Transactions $transactions)
     {

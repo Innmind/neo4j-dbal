@@ -25,11 +25,11 @@ use Innmind\Immutable\{
 
 final class Transactions
 {
-    private $transactions;
-    private $fulfill;
-    private $clock;
-    private $headers;
-    private $body;
+    private Stream $transactions;
+    private Transport $fulfill;
+    private TimeContinuumInterface $clock;
+    private Headers $headers;
+    private StringStream $body;
 
     public function __construct(
         Transport $fulfill,

@@ -15,8 +15,8 @@ use Innmind\Immutable\{
 
 final class Cypher implements QueryInterface
 {
-    private $cypher;
-    private $parameters;
+    private string $cypher;
+    private Map $parameters;
 
     public function __construct(string $cypher)
     {

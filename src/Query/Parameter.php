@@ -8,7 +8,7 @@ use Innmind\Immutable\Str;
 
 final class Parameter
 {
-    private $key;
+    private string $key;
     private $value;
 
     public function __construct(string $key, $value)

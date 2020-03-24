@@ -9,7 +9,7 @@ final class ReturnClause implements Clause
 {
     private const IDENTIFIER = 'RETURN';
 
-    private $variables;
+    private array $variables;
 
     public function __construct(string ...$variables)
     {

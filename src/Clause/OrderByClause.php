@@ -15,8 +15,8 @@ final class OrderByClause implements Clause
     private const ASC = 'ASC';
     private const DESC = 'DESC';
 
-    private $cypher;
-    private $direction;
+    private string $cypher;
+    private string $direction;
 
     private function __construct(string $cypher, string $direction)
     {

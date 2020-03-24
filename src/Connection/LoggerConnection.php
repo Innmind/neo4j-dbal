@@ -14,8 +14,8 @@ use Psr\Log\LoggerInterface;
 
 final class LoggerConnection implements ConnectionInterface
 {
-    private $connection;
-    private $logger;
+    private ConnectionInterface $connection;
+    private LoggerInterface $logger;
 
     public function __construct(
         ConnectionInterface $connection,

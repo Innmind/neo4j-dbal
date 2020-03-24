@@ -8,7 +8,7 @@ use Innmind\Immutable\MapInterface;
 
 trait PathAware
 {
-    private $path;
+    private Clause\Expression\Path $path;
 
     /**
      * {@inheritdoc}

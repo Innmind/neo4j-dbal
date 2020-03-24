@@ -7,8 +7,8 @@ use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Distance
 {
-    private $min = 1;
-    private $max = 1;
+    private ?int $min = 1;
+    private ?int $max = 1;
 
     public static function of(int $distance): self
     {

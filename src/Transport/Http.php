@@ -23,8 +23,8 @@ use Innmind\Json\Json;
 
 final class Http implements Transport
 {
-    private $translate;
-    private $fulfill;
+    private HttpTranslator $translate;
+    private HttpTransport $fulfill;
 
     public function __construct(
         HttpTranslator $translate,

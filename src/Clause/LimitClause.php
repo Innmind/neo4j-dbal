@@ -13,7 +13,7 @@ final class LimitClause implements Clause
 {
     private const IDENTIFIER = 'LIMIT';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

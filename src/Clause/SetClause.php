@@ -18,8 +18,8 @@ final class SetClause implements Clause, Parametrable
 {
     private const IDENTIFIER = 'SET';
 
-    private $cypher;
-    private $parameters;
+    private string $cypher;
+    private Map $parameters;
 
     public function __construct(string $cypher)
     {

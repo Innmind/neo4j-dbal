@@ -13,7 +13,7 @@ final class RemoveClause implements Clause
 {
     private const IDENTIFIER = 'REMOVE';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

@@ -12,11 +12,11 @@ use Innmind\Immutable\MapInterface;
 
 final class Relationship implements RelationshipInterface
 {
-    private $id;
-    private $type;
-    private $startNode;
-    private $endNode;
-    private $properties;
+    private Id $id;
+    private Type $type;
+    private Id $startNode;
+    private Id $endNode;
+    private MapInterface $properties;
 
     public function __construct(
         Id $id,

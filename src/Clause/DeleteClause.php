@@ -13,8 +13,8 @@ final class DeleteClause implements Clause
 {
     private const IDENTIFIER = 'DELETE';
 
-    private $cypher;
-    private $detachable = false;
+    private string $cypher;
+    private bool $detachable = false;
 
     public function __construct(string $cypher, bool $detachable)
     {

@@ -13,7 +13,7 @@ final class SkipClause implements Clause
 {
     private const IDENTIFIER = 'SKIP';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {

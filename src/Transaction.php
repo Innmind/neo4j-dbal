@@ -8,9 +8,9 @@ use Innmind\Url\UrlInterface;
 
 final class Transaction
 {
-    private $endpoint;
-    private $expiration;
-    private $commitEndpoint;
+    private UrlInterface $endpoint;
+    private PointInTimeInterface $expiration;
+    private UrlInterface $commitEndpoint;
 
     public function __construct(
         UrlInterface $endpoint,

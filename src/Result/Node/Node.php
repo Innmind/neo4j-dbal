@@ -14,9 +14,9 @@ use Innmind\Immutable\{
 
 final class Node implements NodeInterface
 {
-    private $id;
-    private $labels;
-    private $properties;
+    private Id $id;
+    private SetInterface $labels;
+    private MapInterface $properties;
 
     public function __construct(
         Id $id,
