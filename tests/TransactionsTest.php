@@ -19,7 +19,7 @@ class TransactionsTest extends TestCase
     private $transactions;
     private $server;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->server = 'http://localhost:7474/';
 

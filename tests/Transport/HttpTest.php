@@ -23,7 +23,7 @@ class HttpTest extends TestCase
 {
     private $transport;
 
-    public function setUp()
+    public function setUp(): void
     {
         $httpTransport = new HttpTransport(
             Url::fromString('http://neo4j:ci@localhost:7474/'),

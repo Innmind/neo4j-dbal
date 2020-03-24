@@ -30,7 +30,7 @@ class HttpTranslatorTest extends TestCase
     private $transactions;
     private $transport;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->translate = new HttpTranslator(
             $this->transactions = new Transactions(

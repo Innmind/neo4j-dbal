@@ -22,7 +22,7 @@ class ConnectionTest extends TestCase
 {
     private $connection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $httpTransport = new Transport(
             Url::fromString('http://neo4j:ci@localhost:7474/'),
