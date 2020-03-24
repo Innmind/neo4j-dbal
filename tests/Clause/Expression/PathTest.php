@@ -15,7 +15,7 @@ class PathTest extends TestCase
 {
     public function testStartWithNode()
     {
-        $path = Path::startWithNode('foo', ['Bar']);
+        $path = Path::startWithNode('foo', 'Bar');
 
         $this->assertInstanceOf(Path::class, $path);
         $this->assertSame('(foo:Bar)', $path->cypher());
@@ -31,7 +31,7 @@ class PathTest extends TestCase
     {
         $path = Path::startWithNode();
 
-        $path2 = $path->linkedTo('bar', ['Baz']);
+        $path2 = $path->linkedTo('bar', 'Baz');
         $this->assertNotSame($path, $path2);
         $this->assertInstanceOf(Path::class, $path2);
         $this->assertSame('()', $path->cypher());
@@ -155,10 +155,10 @@ class PathTest extends TestCase
 
     public function testComplexPath()
     {
-        $path = Path::startWithNode('a', ['A'])
+        $path = Path::startWithNode('a', 'A')
                 ->withProperty('a', '{a}')
                 ->withParameter('a', 'foo')
-            ->linkedTo('b', ['B'])
+            ->linkedTo('b', 'B')
                 ->withProperty('b', '{b}')
                 ->withParameter('b', 'bar')
             ->through(null, 'TYPE|ANOTHER', Relationship::RIGHT)

@@ -13,23 +13,15 @@ trait PathAware
 {
     private Clause\Expression\Path $path;
 
-    /**
-     * {@inheritdoc}
-     */
     public function cypher(): string
     {
         return $this->path->cypher();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function linkedTo(
-        string $variable = null,
-        array $labels = []
-    ): Clause {
+    public function linkedTo(string $variable = null, string ...$labels): Clause
+    {
         $clause = clone $this;
-        $clause->path = $this->path->linkedTo($variable, $labels);
+        $clause->path = $this->path->linkedTo($variable, ...$labels);
 
         return $clause;
     }

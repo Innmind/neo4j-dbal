@@ -70,15 +70,13 @@ final class Query implements QueryInterface
 
     /**
      * Match the given node
-     *
-     * @param list<string> $labels
      */
-    public function match(string $variable = null, array $labels = []): self
+    public function match(string $variable = null, string ...$labels): self
     {
         $query = new self;
         $query->clauses = ($this->clauses)(
             new Clause\MatchClause(
-                Clause\Expression\Path::startWithNode($variable, $labels),
+                Clause\Expression\Path::startWithNode($variable, ...$labels),
             ),
         );
 
@@ -87,15 +85,13 @@ final class Query implements QueryInterface
 
     /**
      * Add a OPTIONAL MATCh clause
-     *
-     * @param list<string> $labels
      */
-    public function maybeMatch(string $variable = null, array $labels = []): self
+    public function maybeMatch(string $variable = null, string ...$labels): self
     {
         $query = new self;
         $query->clauses = ($this->clauses)(
             new Clause\OptionalMatchClause(
-                Clause\Expression\Path::startWithNode($variable, $labels),
+                Clause\Expression\Path::startWithNode($variable, ...$labels),
             ),
         );
 
@@ -190,11 +186,9 @@ final class Query implements QueryInterface
     /**
      * Match the node linked to the previous declared node match
      *
-     * @param list<string> $labels
-     *
      * @throws NonPathAwareClause
      */
-    public function linkedTo(string $variable = null, array $labels = []): self
+    public function linkedTo(string $variable = null, string ...$labels): self
     {
         $clause = $this->clauses->last();
 
@@ -202,7 +196,7 @@ final class Query implements QueryInterface
             throw new NonPathAwareClause;
         }
 
-        $clause = $clause->linkedTo($variable, $labels);
+        $clause = $clause->linkedTo($variable, ...$labels);
         $query = new self;
         $query->clauses = $this
             ->clauses
@@ -542,15 +536,13 @@ final class Query implements QueryInterface
 
     /**
      * Add a MERGE clause
-     *
-     * @param list<string> $labels
      */
-    public function merge(string $variable = null, array $labels = []): self
+    public function merge(string $variable = null, string ...$labels): self
     {
         $query = new self;
         $query->clauses = ($this->clauses)(
             new Clause\MergeClause(
-                Clause\Expression\Path::startWithNode($variable, $labels),
+                Clause\Expression\Path::startWithNode($variable, ...$labels),
             ),
         );
 
@@ -603,16 +595,29 @@ final class Query implements QueryInterface
      *
      * @param list<string> $labels
      */
-    public function create(
-        string $variable,
-        array $labels = [],
-        bool $unique = false
-    ): self {
+    public function create(string $variable, string ...$labels): self
+    {
         $query = new self;
         $query->clauses = ($this->clauses)(
             new Clause\CreateClause(
-                Clause\Expression\Path::startWithNode($variable, $labels),
-                $unique,
+                Clause\Expression\Path::startWithNode($variable, ...$labels),
+                false,
+            ),
+        );
+
+        return $query;
+    }
+
+    /**
+     * Add a CREATE clause
+     */
+    public function createUnique(string $variable, string ...$labels): self
+    {
+        $query = new self;
+        $query->clauses = ($this->clauses)(
+            new Clause\CreateClause(
+                Clause\Expression\Path::startWithNode($variable, ...$labels),
+                true,
             ),
         );
 

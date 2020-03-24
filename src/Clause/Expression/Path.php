@@ -26,16 +26,14 @@ final class Path
 
     /**
      * Start the path with the given node
-     *
-     * @param list<string> $labels
      */
     public static function startWithNode(
         string $variable = null,
-        array $labels = []
+        string ...$labels
     ): self {
         $path = new self;
         $path->elements = ($path->elements)(
-            new Node($variable, $labels),
+            new Node($variable, ...$labels),
         );
         $path->lastOperation = Node::class;
 
@@ -44,16 +42,14 @@ final class Path
 
     /**
      * Create a relationship to the given node
-     *
-     * @param list<string> $labels
      */
-    public function linkedTo(string $variable = null, array $labels = []): self
+    public function linkedTo(string $variable = null, string ...$labels): self
     {
         $path = new self;
         $path->elements = $this
             ->elements
             ->add(Relationship::both())
-            ->add(new Node($variable, $labels));
+            ->add(new Node($variable, ...$labels));
         $path->lastOperation = Node::class;
 
         return $path;

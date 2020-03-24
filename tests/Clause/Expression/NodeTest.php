@@ -45,11 +45,11 @@ class NodeTest extends TestCase
     {
         $this->assertSame('()', (new Node)->cypher());
         $this->assertSame('(a)', (new Node('a'))->cypher());
-        $this->assertSame('(a:Foo:Bar)', (new Node('a', ['Foo', 'Bar']))->cypher());
-        $this->assertSame('(:Foo:Bar)', (new Node(null, ['Foo', 'Bar']))->cypher());
+        $this->assertSame('(a:Foo:Bar)', (new Node('a', 'Foo', 'Bar'))->cypher());
+        $this->assertSame('(:Foo:Bar)', (new Node(null, 'Foo', 'Bar'))->cypher());
         $this->assertSame(
             '(a:Foo { key: {value}, another: {where}.value })',
-            (new Node('a', ['Foo']))
+            (new Node('a', 'Foo'))
                 ->withProperty('key', '{value}')
                 ->withProperty('another', '{where}.value')
                 ->withParameter('value', 'foo')

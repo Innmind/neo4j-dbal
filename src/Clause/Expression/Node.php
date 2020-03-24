@@ -27,10 +27,7 @@ final class Node
     /** @var Map<string, string> */
     private Map $properties;
 
-    /**
-     * @param list<string> $labels
-     */
-    public function __construct(string $variable = null, array $labels = [])
+    public function __construct(string $variable = null, string ...$labels)
     {
         $this->variable = $variable;
         $this->labels = Set::strings(...$labels);;
@@ -49,7 +46,7 @@ final class Node
             throw new DomainException;
         }
 
-        $node = new self($this->variable, unwrap($this->labels));
+        $node = new self($this->variable, ...unwrap($this->labels));
         $node->parameters = ($this->parameters)(
             $key,
             new Parameter($key, $value),
@@ -65,7 +62,7 @@ final class Node
             throw new DomainException;
         }
 
-        $node = new self($this->variable, unwrap($this->labels));
+        $node = new self($this->variable, ...unwrap($this->labels));
         $node->parameters = $this->parameters;
         $node->properties = ($this->properties)($property, $cypher);
 

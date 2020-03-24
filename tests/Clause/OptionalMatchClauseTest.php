@@ -28,10 +28,10 @@ class OptionalMatchClauseTest extends TestCase
 
     public function testComposition()
     {
-        $clause = (new OptionalMatchClause(Path::startWithNode('a', ['A'])))
+        $clause = (new OptionalMatchClause(Path::startWithNode('a', 'A')))
             ->withProperty('a', '{a}')
                 ->withParameter('a', 'foo')
-            ->linkedTo('b', ['B'])
+            ->linkedTo('b', 'B')
                 ->withProperty('b', '{b}')
                 ->withParameter('b', 'bar')
             ->through(null, 'TYPE|ANOTHER', Relationship::RIGHT)

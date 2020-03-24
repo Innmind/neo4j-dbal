@@ -12,13 +12,8 @@ interface PathAware extends Parametrable
 {
     /**
      * Link the currently matched node to another node
-     *
-     * @param list<string> $labels
      */
-    public function linkedTo(
-        string $variable = null,
-        array $labels = []
-    ): Clause;
+    public function linkedTo(string $variable = null, string ...$labels): Clause;
 
     /**
      * Type the last connection

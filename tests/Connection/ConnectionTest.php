@@ -98,7 +98,7 @@ class ConnectionTest extends TestCase
     public function testConcrete()
     {
         $query = (new Query\Query)
-            ->create('n', ['Foo', 'Bar'])
+            ->create('n', 'Foo', 'Bar')
             ->withProperty('foo', '{bar}')
             ->withParameter('bar', 'baz')
             ->return('n');

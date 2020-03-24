@@ -32,10 +32,10 @@ class CreateClauseTest extends TestCase
 
     public function testComposition()
     {
-        $clause = (new CreateClause(Path::startWithNode('a', ['A']), false))
+        $clause = (new CreateClause(Path::startWithNode('a', 'A'), false))
             ->withProperty('a', '{a}')
                 ->withParameter('a', 'foo')
-            ->linkedTo('b', ['B'])
+            ->linkedTo('b', 'B')
                 ->withProperty('b', '{b}')
                 ->withParameter('b', 'bar')
             ->through(null, 'TYPE|ANOTHER', Relationship::RIGHT)
