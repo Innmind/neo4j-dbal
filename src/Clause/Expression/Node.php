@@ -50,9 +50,9 @@ final class Node
         }
 
         $node = new self($this->variable, unwrap($this->labels));
-        $node->parameters = $this->parameters->put(
+        $node->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $value)
+            new Parameter($key, $value),
         );
         $node->properties = $this->properties;
 
@@ -67,7 +67,7 @@ final class Node
 
         $node = new self($this->variable, unwrap($this->labels));
         $node->parameters = $this->parameters;
-        $node->properties = $this->properties->put($property, $cypher);
+        $node->properties = ($this->properties)($property, $cypher);
 
         return $node;
     }
@@ -84,22 +84,22 @@ final class Node
     {
         $labels = $properties = '';
 
-        if ($this->labels->count() > 0) {
+        if (!$this->labels->empty()) {
             $labels = ':'.join(':', $this->labels)->toString();
         }
 
-        if ($this->properties->count() > 0) {
-            $properties = sprintf(
+        if (!$this->properties->empty()) {
+            $properties = \sprintf(
                 ' { %s }',
                 join(
                     ', ',
                     $this
                         ->properties
                         ->map(function(string $property, string $value): string {
-                            return sprintf(
+                            return \sprintf(
                                 '%s: %s',
                                 $property,
-                                $value
+                                $value,
                             );
                         })
                         ->values(),
@@ -107,11 +107,11 @@ final class Node
             );
         }
 
-        return sprintf(
+        return \sprintf(
             '(%s%s%s)',
             (string) $this->variable,
             $labels,
-            $properties
+            $properties,
         );
     }
 }

@@ -20,8 +20,6 @@ final class Id
 
     /**
      * Return the id
-     *
-     * @return int
      */
     public function value(): int
     {
@@ -30,8 +28,6 @@ final class Id
 
     /**
      * Return the string representation of the id
-     *
-     * @return string
      */
     public function __toString(): string
     {

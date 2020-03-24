@@ -55,23 +55,17 @@ final class OrderByClause implements Clause
         return new self($cypher, self::DESC);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return \sprintf(
             '%s %s',
             $this->cypher,
-            $this->direction === self::ASC ? 'ASC' : 'DESC'
+            $this->direction === self::ASC ? 'ASC' : 'DESC',
         );
     }
 }

@@ -24,17 +24,11 @@ final class OnCreateClause implements Clause
         $this->cypher = $cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->cypher;

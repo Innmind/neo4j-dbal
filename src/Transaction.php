@@ -24,8 +24,6 @@ final class Transaction
 
     /**
      * Return the endpoint where to make new queries
-     *
-     * @return Url
      */
     public function endpoint(): Url
     {
@@ -34,8 +32,6 @@ final class Transaction
 
     /**
      * Return the date at which the transaction will expire
-     *
-     * @return PointInTime
      */
     public function expiration(): PointInTime
     {
@@ -44,8 +40,6 @@ final class Transaction
 
     /**
      * Return the endpoint to use in order to commit this transaction
-     *
-     * @return Url
      */
     public function commitEndpoint(): Url
     {

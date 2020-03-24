@@ -11,6 +11,10 @@ use Innmind\Immutable\{
     Set,
     Map,
 };
+use function Innmind\Immutable\{
+    assertSet,
+    assertMap,
+};
 
 final class Node implements NodeInterface
 {
@@ -24,64 +28,38 @@ final class Node implements NodeInterface
      * @param Set<string> $labels
      * @param Map<string, scalar|array> $properties
      */
-    public function __construct(
-        Id $id,
-        Set $labels,
-        Map $properties
-    ) {
-        if ((string) $labels->type() !== 'string') {
-            throw new \TypeError('Argument 2 must be of type Set<string>');
-        }
-
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'scalar|array'
-        ) {
-            throw new \TypeError('Argument 3 must be of type Map<string, scalar|array>');
-        }
+    public function __construct(Id $id, Set $labels, Map $properties)
+    {
+        assertSet('string', $labels, 2);
+        assertMap('string', 'scalar|array', $properties, 3);
 
         $this->id = $id;
         $this->labels = $labels;
         $this->properties = $properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function id(): Id
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function labels(): Set
     {
         return $this->labels;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasLabels(): bool
     {
-        return $this->labels->count() > 0;
+        return !$this->labels->empty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function properties(): Map
     {
         return $this->properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperties(): bool
     {
-        return $this->properties->count() > 0;
+        return !$this->properties->empty();
     }
 }

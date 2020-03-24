@@ -16,9 +16,6 @@ final class MatchClause implements Clause, PathAware
         $this->path = $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;

@@ -9,6 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Result\Type,
 };
 use Innmind\Immutable\Map;
+use function Innmind\Immutable\assertMap;
 
 final class Relationship implements RelationshipInterface
 {
@@ -29,12 +30,7 @@ final class Relationship implements RelationshipInterface
         Id $endNode,
         Map $properties
     ) {
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'scalar|array'
-        ) {
-            throw new \TypeError('Argument 5 must be of type Map<string, scalar|array>');
-        }
+        assertMap('string', 'scalar|array', $properties, 5);
 
         $this->id = $id;
         $this->type = $type;
@@ -43,51 +39,33 @@ final class Relationship implements RelationshipInterface
         $this->properties = $properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function id(): Id
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function type(): Type
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function startNode(): Id
     {
         return $this->startNode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function endNode(): Id
     {
         return $this->endNode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function properties(): Map
     {
         return $this->properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperties(): bool
     {
-        return $this->properties->count() > 0;
+        return !$this->properties->empty();
     }
 }

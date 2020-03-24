@@ -11,10 +11,8 @@ final class QueryFailed extends \RuntimeException implements Exception
     private Query $query;
     private Response $response;
 
-    public function __construct(
-        Query $query,
-        Response $response
-    ) {
+    public function __construct(Query $query, Response $response)
+    {
         parent::__construct('The query failed to execute properly', 400);
         $this->query = $query;
         $this->response = $response;

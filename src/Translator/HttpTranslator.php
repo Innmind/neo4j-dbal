@@ -60,7 +60,7 @@ final class HttpTranslator
             Method::post(),
             new ProtocolVersion(1, 1),
             $this->headers,
-            $this->computeBody($query)
+            $this->computeBody($query),
         );
     }
 

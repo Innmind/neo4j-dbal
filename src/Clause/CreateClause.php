@@ -21,9 +21,6 @@ final class CreateClause implements Clause, PathAware
         $this->unique = $unique;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER.($this->unique ? ' UNIQUE' : '');

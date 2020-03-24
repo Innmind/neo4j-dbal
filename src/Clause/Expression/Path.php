@@ -18,8 +18,6 @@ final class Path
     /** @var Sequence<Node|Relationship> */
     private Sequence $elements;
     private ?string $lastOperation = null;
-    /** @var Map<string, Parameter>|null */
-    private ?Map $parameters = null;
 
     private function __construct()
     {
@@ -29,18 +27,15 @@ final class Path
     /**
      * Start the path with the given node
      *
-     * @param string $variable
      * @param list<string> $labels
-     *
-     * @return self
      */
     public static function startWithNode(
         string $variable = null,
         array $labels = []
     ): self {
         $path = new self;
-        $path->elements = $path->elements->add(
-            new Node($variable, $labels)
+        $path->elements = ($path->elements)(
+            new Node($variable, $labels),
         );
         $path->lastOperation = Node::class;
 
@@ -50,10 +45,7 @@ final class Path
     /**
      * Create a relationship to the given node
      *
-     * @param string $variable
      * @param list<string> $labels
-     *
-     * @return self
      */
     public function linkedTo(string $variable = null, array $labels = []): self
     {
@@ -70,13 +62,9 @@ final class Path
     /**
      * Type the last declared relationship in the path
      *
-     * @param string $variable
-     * @param string $type
      * @param 'both'|'left'|'right' $direction
      *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function through(
         string $variable = null,
@@ -101,11 +89,7 @@ final class Path
     /**
      * Define the deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceOf(int $distance): self
     {
@@ -131,12 +115,7 @@ final class Path
     /**
      * Define the deepness range of the relationship
      *
-     * @param int $min
-     * @param int $max
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceBetween(int $min, int $max): self
     {
@@ -162,11 +141,7 @@ final class Path
     /**
      * Define the minimum deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceOfAtLeast(int $distance): self
     {
@@ -192,11 +167,7 @@ final class Path
     /**
      * Define the maximum deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceOfAtMost(int $distance): self
     {
@@ -222,11 +193,7 @@ final class Path
     /**
      * Define any deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withAnyDistance(): self
     {
@@ -252,10 +219,7 @@ final class Path
     /**
      * Add the given parameter to the last operation
      *
-     * @param string $key
      * @param mixed $value
-     *
-     * @return self
      */
     public function withParameter(string $key, $value): self
     {
@@ -289,11 +253,6 @@ final class Path
 
     /**
      * Add the given property to the last operation
-     *
-     * @param string $property
-     * @param string $cypher
-     *
-     * @return self
      */
     public function withProperty(string $property, string $cypher): self
     {
@@ -332,19 +291,12 @@ final class Path
      */
     public function parameters(): Map
     {
-        if ($this->parameters) {
-            return $this->parameters;
-        }
-
-        /**
-         * @psalm-suppress MixedPropertyTypeCoercion
-         * @var Map<string, Parameter>
-         */
-        return $this->parameters = $this->elements->reduce(
+        /** @var Map<string, Parameter> */
+        return $this->elements->reduce(
             Map::of('string', Parameter::class),
             function(Map $carry, $element): Map {
                 return $carry->merge($element->parameters());
-            }
+            },
         );
     }
 

@@ -29,36 +29,24 @@ final class Cypher implements QueryInterface
         $this->parameters = Map::of('string', Parameter::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cypher(): string
     {
         return $this->cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->cypher();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parameters(): Map
     {
         return $this->parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->parameters->size() > 0;
+        return !$this->parameters->empty();
     }
 
     /**
@@ -90,9 +78,9 @@ final class Cypher implements QueryInterface
         }
 
         $query = new self($this->cypher);
-        $query->parameters = $this->parameters->put(
+        $query->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $parameter)
+            new Parameter($key, $parameter),
         );
 
         return $query;

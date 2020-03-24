@@ -34,9 +34,6 @@ final class Http implements Transport
         $this->fulfill = $fulfill;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(Query $query): Result
     {
         $response = ($this->fulfill)(
@@ -49,17 +46,13 @@ final class Http implements Transport
 
         /** @var array{results: array{0?: array{columns: list<string>, data: list<array{row: list<scalar|array>, graph: array{nodes: list<array{id: numeric, labels: list<string>, properties: array<string, scalar|array>}>, relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}>}}} */
         $response = Json::decode($response->body()->toString());
-        $result = Result\Result::fromRaw($response['results'][0] ?? [
+
+        return Result\Result::fromRaw($response['results'][0] ?? [
             'columns' => [],
             'data' => [],
         ]);
-
-        return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function ping(): void
     {
         try {
@@ -87,13 +80,6 @@ final class Http implements Transport
         throw new ServerDown;
     }
 
-    /**
-     * Check if the response is successful
-     *
-     * @param Response $response
-     *
-     * @return bool
-     */
     private function isSuccessful(Response $response): bool
     {
         if ($response->statusCode()->value() !== 200) {
@@ -103,6 +89,6 @@ final class Http implements Transport
         /** @var array{errors: array} */
         $json = Json::decode($response->body()->toString());
 
-        return count($json['errors']) === 0;
+        return \count($json['errors']) === 0;
     }
 }

@@ -32,25 +32,16 @@ final class SetClause implements Clause, Parametrable
         $this->parameters = Map::of('string', Parameter::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withParameter(string $key, $value): Clause
     {
         if (Str::of($key)->empty()) {
@@ -58,25 +49,19 @@ final class SetClause implements Clause, Parametrable
         }
 
         $set = new self($this->cypher);
-        $set->parameters = $this->parameters->put(
+        $set->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $value)
+            new Parameter($key, $value),
         );
 
         return $set;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->parameters->size() > 0;
+        return !$this->parameters->empty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parameters(): Map
     {
         return $this->parameters;

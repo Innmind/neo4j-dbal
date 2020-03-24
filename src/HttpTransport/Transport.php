@@ -26,9 +26,7 @@ final class Transport implements TransportInterface
         TransportInterface $fulfill
     ) {
         $this->server = $server
-            ->withAuthority(
-                $server->authority()->withoutUserInformation()
-            )
+            ->withAuthority($server->authority()->withoutUserInformation())
             ->withoutPath()
             ->withoutQuery()
             ->withoutFragment();
@@ -45,24 +43,16 @@ final class Transport implements TransportInterface
         $this->fulfill = $fulfill;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __invoke(Request $request): Response
     {
         $request = new Request\Request(
             $this->server->withPath($request->url()->path()),
             $request->method(),
             $request->protocolVersion(),
-            $this->addAuthorizationHeader($request->headers()),
-            $request->body()
+            $request->headers()->add($this->authorization),
+            $request->body(),
         );
 
         return ($this->fulfill)($request);
-    }
-
-    private function addAuthorizationHeader(Headers $headers): Headers
-    {
-        return $headers->add($this->authorization);
     }
 }

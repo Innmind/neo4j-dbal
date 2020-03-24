@@ -24,11 +24,8 @@ final class Result implements ResultInterface
      * @param Map<int, Relationship> $relationships
      * @param Sequence<Row> $rows
      */
-    public function __construct(
-        Map $nodes,
-        Map $relationships,
-        Sequence $rows
-    ) {
+    public function __construct(Map $nodes, Map $relationships, Sequence $rows)
+    {
         $this->nodes = $nodes;
         $this->relationships = $relationships;
         $this->rows = $rows;
@@ -38,8 +35,6 @@ final class Result implements ResultInterface
      * Build a result object out of a standard neo4j rest api response
      *
      * @param array{columns: list<string>, data: list<array{row: list<scalar|array>, graph: array{nodes: list<array{id: numeric, labels: list<string>, properties: array<string, scalar|array>}>, relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}>} $response
-     *
-     * @return self
      */
     public static function fromRaw(array $response): self
     {
@@ -48,29 +43,20 @@ final class Result implements ResultInterface
         return new self(
             self::buildNodes($data),
             self::buildRelationships($data),
-            self::buildRows($response)
+            self::buildRows($response),
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function nodes(): Map
     {
         return $this->nodes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function relationships(): Map
     {
         return $this->relationships;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rows(): Sequence
     {
         return $this->rows;
@@ -88,15 +74,15 @@ final class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
-                $labels = Set::of('string', ...\array_values($node['labels']));
+                $labels = Set::strings(...\array_values($node['labels']));
 
-                $nodes = $nodes->put(
+                $nodes = ($nodes)(
                     (int) $node['id'],
                     new Node\Node(
                         new Id((int) $node['id']),
                         $labels,
-                        self::buildProperties($node['properties'])
-                    )
+                        self::buildProperties($node['properties']),
+                    ),
                 );
             }
         }
@@ -116,15 +102,15 @@ final class Result implements ResultInterface
 
         foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
-                $relationships = $relationships->put(
+                $relationships = ($relationships)(
                     (int) $rel['id'],
                     new Relationship\Relationship(
                         new Id((int) $rel['id']),
                         new Type($rel['type']),
                         new Id((int) $rel['startNode']),
                         new Id((int) $rel['endNode']),
-                        self::buildProperties($rel['properties'])
-                    )
+                        self::buildProperties($rel['properties']),
+                    ),
                 );
             }
         }
@@ -145,9 +131,9 @@ final class Result implements ResultInterface
 
         foreach ($responses as $response) {
             foreach ($response['row'] as $idx => $row) {
-                $rows = $rows->add(new Row\Row(
+                $rows = ($rows)(new Row\Row(
                     $data['columns'][$idx],
-                    $row
+                    $row,
                 ));
             }
         }

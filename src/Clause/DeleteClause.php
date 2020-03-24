@@ -26,18 +26,12 @@ final class DeleteClause implements Clause
         $this->detachable = $detachable;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return $this->detachable ?
             'DETACH '.self::IDENTIFIER : self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->cypher;

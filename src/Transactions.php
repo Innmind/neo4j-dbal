@@ -50,8 +50,6 @@ final class Transactions
 
     /**
      * Open a new transaction
-     *
-     * @return Transaction
      */
     public function open(): Transaction
     {
@@ -61,8 +59,8 @@ final class Transactions
                 Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
-                $this->body
-            )
+                $this->body,
+            ),
         );
 
         /** @var array{commit: string, transaction: array{expires: string}} */
@@ -71,28 +69,24 @@ final class Transactions
         $transaction = new Transaction(
             Url::of($location->toString()),
             $this->clock->at($body['transaction']['expires']),
-            Url::of($body['commit'])
+            Url::of($body['commit']),
         );
 
-        $this->transactions = $this->transactions->add($transaction);
+        $this->transactions = ($this->transactions)($transaction);
 
         return $transaction;
     }
 
     /**
      * Check if a transaction is opened
-     *
-     * @return bool
      */
     public function isOpened(): bool
     {
-        return $this->transactions->size() > 0;
+        return !$this->transactions->empty();
     }
 
     /**
      * Return the current transaction
-     *
-     * @return Transaction
      */
     public function current(): Transaction
     {
@@ -110,8 +104,8 @@ final class Transactions
                 Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
-                $this->body
-            )
+                $this->body,
+            ),
         );
         $this->transactions = $this->transactions->dropEnd(1);
     }
@@ -125,8 +119,8 @@ final class Transactions
             new Request(
                 $this->current()->endpoint(),
                 Method::delete(),
-                new ProtocolVersion(1, 1)
-            )
+                new ProtocolVersion(1, 1),
+            ),
         );
         $this->transactions = $this->transactions->dropEnd(1);
     }

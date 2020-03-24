@@ -12,8 +12,6 @@ interface Node
 {
     /**
      * Return the node id
-     *
-     * @return Id
      */
     public function id(): Id;
 
@@ -26,8 +24,6 @@ interface Node
 
     /**
      * Check if the node has labels
-     *
-     * @return bool
      */
     public function hasLabels(): bool;
 
@@ -40,8 +36,6 @@ interface Node
 
     /**
      * Check if the node has properties
-     *
-     * @return bool
      */
     public function hasProperties(): bool;
 }

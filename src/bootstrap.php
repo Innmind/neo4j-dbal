@@ -14,15 +14,15 @@ function bootstrap(
 ): Connection {
     $httpTransport = new HttpTransport\Transport(
         $server ?? Url::of('https://neo4j:neo4j@localhost:7474/'),
-        $transport
+        $transport,
     );
     $transactions = new Transactions($httpTransport, $clock);
 
     return new Connection\Connection(
         new Transport\Http(
             new Translator\HttpTranslator($transactions),
-            $httpTransport
+            $httpTransport,
         ),
-        $transactions
+        $transactions,
     );
 }

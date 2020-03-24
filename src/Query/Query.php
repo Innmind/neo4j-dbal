@@ -21,24 +21,14 @@ final class Query implements QueryInterface
 {
     /** @var Sequence<Clause> */
     private Sequence $clauses;
-    /** @var Map<string, Parameter>|null */
-    private ?Map $parameters = null;
-    private ?string $cypher = null;
 
     public function __construct()
     {
         $this->clauses = Sequence::of(Clause::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cypher(): string
     {
-        if ($this->cypher) {
-            return $this->cypher;
-        }
-
         $previous = $this->clauses->first();
         $clauses = $this->clauses->drop(1);
         $cypher = $previous->identifier().' '.(string) $previous;
@@ -54,38 +44,23 @@ final class Query implements QueryInterface
             $previous = $clause;
         }
 
-        $this->cypher = $cypher;
-
         return $cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->cypher();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parameters(): Map
     {
-        if ($this->parameters) {
-            return $this->parameters;
-        }
-
         /** @var Sequence<Clause\Parametrable> [description] */
         $parametrables = $this->clauses->filter(function(Clause $clause): bool {
             return $clause instanceof Clause\Parametrable;
         });
 
-        /**
-         * @psalm-suppress MixedPropertyTypeCoercion
-         * @var Map<string, Parameter>
-         */
-        return $this->parameters = $parametrables->reduce(
+        /** @var Map<string, Parameter> */
+        return $parametrables->reduce(
             Map::of('string', Parameter::class),
             function(Map $carry, Clause\Parametrable $clause): Map {
                 return $carry->merge($clause->parameters());
@@ -93,29 +68,23 @@ final class Query implements QueryInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->parameters()->size() > 0;
+        return !$this->parameters()->empty();
     }
 
     /**
      * Match the given node
      *
-     * @param string $variable
      * @param list<string> $labels
-     *
-     * @return self
      */
     public function match(string $variable = null, array $labels = []): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
+        $query->clauses = ($this->clauses)(
             new Clause\MatchClause(
-                Clause\Expression\Path::startWithNode($variable, $labels)
-            )
+                Clause\Expression\Path::startWithNode($variable, $labels),
+            ),
         );
 
         return $query;
@@ -124,18 +93,15 @@ final class Query implements QueryInterface
     /**
      * Add a OPTIONAL MATCh clause
      *
-     * @param string $variable
      * @param list<string> $labels
-     *
-     * @return self
      */
     public function maybeMatch(string $variable = null, array $labels = []): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
+        $query->clauses = ($this->clauses)(
             new Clause\OptionalMatchClause(
-                Clause\Expression\Path::startWithNode($variable, $labels)
-            )
+                Clause\Expression\Path::startWithNode($variable, $labels),
+            ),
         );
 
         return $query;
@@ -147,8 +113,6 @@ final class Query implements QueryInterface
      * @param array<string, mixed> $parameters
      *
      * @throws NonParametrableClause
-     *
-     * @return self
      */
     public function withParameters(array $parameters): self
     {
@@ -165,12 +129,9 @@ final class Query implements QueryInterface
     /**
      * Attach the given parameter to the last clause
      *
-     * @param string $key
      * @param mixed $parameter
      *
      * @throws NonParametrableClause
-     *
-     * @return self
      */
     public function withParameter(string $key, $parameter): self
     {
@@ -196,8 +157,6 @@ final class Query implements QueryInterface
      * @param array<string, string> $properties
      *
      * @throws NonPathAwareClause
-     *
-     * @return self
      */
     public function withProperties(array $properties): self
     {
@@ -213,12 +172,7 @@ final class Query implements QueryInterface
     /**
      * Specify a property to be matched
      *
-     * @param string $property
-     * @param string $cypher
-     *
      * @throws NonPathAwareClause
-     *
-     * @return self
      */
     public function withProperty(string $property, string $cypher): self
     {
@@ -241,12 +195,9 @@ final class Query implements QueryInterface
     /**
      * Match the node linked to the previous declared node match
      *
-     * @param string $variable
      * @param list<string> $labels
      *
      * @throws NonPathAwareClause
-     *
-     * @return self
      */
     public function linkedTo(string $variable = null, array $labels = []): self
     {
@@ -269,13 +220,9 @@ final class Query implements QueryInterface
     /**
      * Specify the type of relationship for the last match clause
      *
-     * @param string $type
-     * @param string $variable
      * @param 'both'|'left'|'right' $direction
      *
      * @throws NonPathAwareClause
-     *
-     * @return self
      */
     public function through(
         string $type,
@@ -301,11 +248,7 @@ final class Query implements QueryInterface
     /**
      * Define the deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceOf(int $distance): self
     {
@@ -328,12 +271,7 @@ final class Query implements QueryInterface
     /**
      * Define the deepness range of the relationship
      *
-     * @param int $min
-     * @param int $max
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceBetween(int $min, int $max): self
     {
@@ -356,11 +294,7 @@ final class Query implements QueryInterface
     /**
      * Define the minimum deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceOfAtLeast(int $distance): self
     {
@@ -383,11 +317,7 @@ final class Query implements QueryInterface
     /**
      * Define the maximum deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withADistanceOfAtMost(int $distance): self
     {
@@ -410,11 +340,7 @@ final class Query implements QueryInterface
     /**
      * Define any deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return self
      */
     public function withAnyDistance(): self
     {
@@ -436,16 +362,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a WITH clause
-     *
-     * @param string[] $variables
-     *
-     * @return self
      */
     public function with(string ...$variables): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\WithClause(...$variables)
+        $query->clauses = ($this->clauses)(
+            new Clause\WithClause(...$variables),
         );
 
         return $query;
@@ -453,16 +375,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a WHERE clause
-     *
-     * @param string $cypher
-     *
-     * @return self
      */
     public function where(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\WhereClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\WhereClause($cypher),
         );
 
         return $query;
@@ -470,16 +388,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a SET clause
-     *
-     * @param string $cypher
-     *
-     * @return self
      */
     public function set(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\SetClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\SetClause($cypher),
         );
 
         return $query;
@@ -487,16 +401,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a USING clause
-     *
-     * @param string $cypher
-     *
-     * @return self
      */
     public function using(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\UsingClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\UsingClause($cypher),
         );
 
         return $query;
@@ -504,16 +414,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a UNWIND clause
-     *
-     * @param string $cypher
-     *
-     * @return self
      */
     public function unwind(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\UnwindClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\UnwindClause($cypher),
         );
 
         return $query;
@@ -521,14 +427,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a UNION clause
-     *
-     * @return self
      */
     public function union(): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\UnionClause
+        $query->clauses = ($this->clauses)(
+            new Clause\UnionClause,
         );
 
         return $query;
@@ -539,14 +443,12 @@ final class Query implements QueryInterface
      *
      * @see http://neo4j.com/docs/stable/query-skip.html#skip-skip-first-from-expression
      * @param string $cypher Of type string as it may contain operations
-     *
-     * @return self
      */
     public function skip(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\SkipClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\SkipClause($cypher),
         );
 
         return $query;
@@ -554,16 +456,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a RETURN clause
-     *
-     * @param string[] $variables
-     *
-     * @return self
      */
     public function return(string ...$variables): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\ReturnClause(...$variables)
+        $query->clauses = ($this->clauses)(
+            new Clause\ReturnClause(...$variables),
         );
 
         return $query;
@@ -571,16 +469,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a REMOVE clause
-     *
-     * @param string $cypher
-     *
-     * @return self
      */
     public function remove(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\RemoveClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\RemoveClause($cypher),
         );
 
         return $query;
@@ -589,18 +483,15 @@ final class Query implements QueryInterface
     /**
      * Add a ORDER BY clause
      *
-     * @param string $cypher
      * @param 'asc'|'desc' $direction
-     *
-     * @return self
      */
     public function orderBy(
         string $cypher,
         string $direction = 'asc'
     ): self {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            Clause\OrderByClause::of($direction, $cypher)
+        $query->clauses = ($this->clauses)(
+            Clause\OrderByClause::of($direction, $cypher),
         );
 
         return $query;
@@ -609,11 +500,7 @@ final class Query implements QueryInterface
     /**
      * Add a ON MATCH clause
      *
-     * @param string $cypher
-     *
      * @throws NonMergeClause
-     *
-     * @return self
      */
     public function onMatch(string $cypher): self
     {
@@ -627,8 +514,8 @@ final class Query implements QueryInterface
         }
 
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\OnMatchClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\OnMatchClause($cypher),
         );
 
         return $query;
@@ -637,11 +524,7 @@ final class Query implements QueryInterface
     /**
      * Add a ON CREATE clause
      *
-     * @param string $cypher
-     *
      * @throws NonMergeClause
-     *
-     * @return self
      */
     public function onCreate(string $cypher): self
     {
@@ -655,8 +538,8 @@ final class Query implements QueryInterface
         }
 
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\OnCreateClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\OnCreateClause($cypher),
         );
 
         return $query;
@@ -665,18 +548,15 @@ final class Query implements QueryInterface
     /**
      * Add a MERGE clause
      *
-     * @param string $variable
      * @param list<string> $labels
-     *
-     * @return self
      */
     public function merge(string $variable = null, array $labels = []): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
+        $query->clauses = ($this->clauses)(
             new Clause\MergeClause(
-                Clause\Expression\Path::startWithNode($variable, $labels)
-            )
+                Clause\Expression\Path::startWithNode($variable, $labels),
+            ),
         );
 
         return $query;
@@ -686,15 +566,12 @@ final class Query implements QueryInterface
      * Add a LIMIT clause
      *
      * @see http://neo4j.com/docs/stable/query-limit.html#limit-return-first-from-expression
-     * @param string $cypher
-     *
-     * @return self
      */
     public function limit(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\LimitClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\LimitClause($cypher),
         );
 
         return $query;
@@ -702,16 +579,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a FOREACH clause
-     *
-     * @param string $cypher
-     *
-     * @return self
      */
     public function foreach(string $cypher): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\ForeachClause($cypher)
+        $query->clauses = ($this->clauses)(
+            new Clause\ForeachClause($cypher),
         );
 
         return $query;
@@ -719,17 +592,12 @@ final class Query implements QueryInterface
 
     /**
      * Add a DELETE clause
-     *
-     * @param string $variable
-     * @param bool $detach
-     *
-     * @return self
      */
     public function delete(string $variable, bool $detach = false): self
     {
         $query = new self;
-        $query->clauses = $this->clauses->add(
-            new Clause\DeleteClause($variable, $detach)
+        $query->clauses = ($this->clauses)(
+            new Clause\DeleteClause($variable, $detach),
         );
 
         return $query;
@@ -738,11 +606,7 @@ final class Query implements QueryInterface
     /**
      * Add a CREATE clause
      *
-     * @param string $variable
      * @param list<string> $labels
-     * @param bool $unique
-     *
-     * @return self
      */
     public function create(
         string $variable,
@@ -750,11 +614,11 @@ final class Query implements QueryInterface
         bool $unique = false
     ): self {
         $query = new self;
-        $query->clauses = $this->clauses->add(
+        $query->clauses = ($this->clauses)(
             new Clause\CreateClause(
                 Clause\Expression\Path::startWithNode($variable, $labels),
-                $unique
-            )
+                $unique,
+            ),
         );
 
         return $query;

@@ -33,9 +33,6 @@ final class Row implements RowInterface
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function column(): string
     {
         return $this->column;

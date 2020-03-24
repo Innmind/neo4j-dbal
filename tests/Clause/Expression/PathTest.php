@@ -150,7 +150,6 @@ class PathTest extends TestCase
         $this->assertCount(1, $path2->parameters());
         $this->assertSame('string', (string) $path2->parameters()->keyType());
         $this->assertSame(Parameter::class, (string) $path2->parameters()->valueType());
-        $this->assertSame($path2->parameters(), $path2->parameters());
     }
 
     public function testComplexPath()

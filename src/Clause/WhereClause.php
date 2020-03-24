@@ -32,25 +32,16 @@ final class WhereClause implements Clause, Parametrable
         $this->parameters = Map::of('string', Parameter::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withParameter(string $key, $value): Clause
     {
         if (Str::of($key)->empty()) {
@@ -58,25 +49,19 @@ final class WhereClause implements Clause, Parametrable
         }
 
         $where = new self($this->cypher);
-        $where->parameters = $this->parameters->put(
+        $where->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $value)
+            new Parameter($key, $value),
         );
 
         return $where;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->parameters->size() > 0;
+        return !$this->parameters->empty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parameters(): Map
     {
         return $this->parameters;

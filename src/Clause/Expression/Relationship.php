@@ -143,9 +143,9 @@ final class Relationship
         }
 
         $relationship = new self($this->variable, $this->type, $this->direction, $this->distance);
-        $relationship->parameters = $this->parameters->put(
+        $relationship->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $value)
+            new Parameter($key, $value),
         );
         $relationship->properties = $this->properties;
 
@@ -160,7 +160,7 @@ final class Relationship
 
         $relationship = new self($this->variable, $this->type, $this->direction, $this->distance);
         $relationship->parameters = $this->parameters;
-        $relationship->properties = $this->properties->put($property, $cypher);
+        $relationship->properties = ($this->properties)($property, $cypher);
 
         return $relationship;
     }
@@ -177,7 +177,7 @@ final class Relationship
     {
         $properties = '';
 
-        if ($this->properties->count() > 0) {
+        if (!$this->properties->empty()) {
             $properties = sprintf(
                 ' { %s }',
                 join(
@@ -185,10 +185,10 @@ final class Relationship
                     $this
                         ->properties
                         ->map(function(string $property, string $value): string {
-                            return sprintf(
+                            return \sprintf(
                                 '%s: %s',
                                 $property,
-                                $value
+                                $value,
                             );
                         })
                         ->values(),
@@ -196,14 +196,14 @@ final class Relationship
             );
         }
 
-        return sprintf(
+        return \sprintf(
             '%s-[%s%s%s%s]-%s',
             $this->direction === self::LEFT ? '<' : '',
             (string) $this->variable,
             $this->type ? ':'.$this->type : '',
             (string) $this->distance,
             $properties,
-            $this->direction === self::RIGHT ? '>' : ''
+            $this->direction === self::RIGHT ? '>' : '',
         );
     }
 }

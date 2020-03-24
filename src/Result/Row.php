@@ -14,8 +14,6 @@ interface Row
 
     /**
      * Return the column referencing this row
-     *
-     * @return string
      */
     public function column(): string;
 }

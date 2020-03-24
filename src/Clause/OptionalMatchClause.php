@@ -16,9 +16,6 @@ final class OptionalMatchClause implements Clause, PathAware
         $this->path = $path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;

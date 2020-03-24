@@ -41,9 +41,9 @@ final class LoggerConnection implements ConnectionInterface
                                 $carry[$parameter->key()] = $parameter->value();
 
                                 return $carry;
-                            }
+                            },
                         ),
-                ]
+                ],
             );
 
             return $this->connection->execute($query);
@@ -52,7 +52,7 @@ final class LoggerConnection implements ConnectionInterface
                 'Query failed',
                 [
                     'message' => $e->response()->body()->toString(),
-                ]
+                ],
             );
             throw $e;
         }
@@ -81,9 +81,6 @@ final class LoggerConnection implements ConnectionInterface
         $this->logger->debug('Transaction rollbacked');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAlive(): bool
     {
         return $this->connection->isAlive();

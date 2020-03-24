@@ -16,17 +16,11 @@ final class ReturnClause implements Clause
         $this->variables = $variables;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return \implode(', ', $this->variables);

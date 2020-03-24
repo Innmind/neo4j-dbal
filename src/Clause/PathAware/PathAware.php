@@ -48,9 +48,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceOf(int $distance): Clause
     {
         $clause = clone $this;
@@ -59,9 +56,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceBetween(int $min, int $max): Clause
     {
         $clause = clone $this;
@@ -70,9 +64,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceOfAtLeast(int $distance): Clause
     {
         $clause = clone $this;
@@ -81,9 +72,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceOfAtMost(int $distance): Clause
     {
         $clause = clone $this;
@@ -92,9 +80,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withAnyDistance(): Clause
     {
         $clause = clone $this;
@@ -103,9 +88,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withProperty(
         string $property,
         string $cypher
@@ -116,9 +98,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withParameter(string $key, $value): Clause
     {
         $clause = clone $this;
@@ -127,12 +106,9 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->path->parameters()->size() > 0;
+        return !$this->path->parameters()->empty();
     }
 
     /**

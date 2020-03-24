@@ -21,8 +21,6 @@ final class Type
 
     /**
      * Return the relationship type
-     *
-     * @return string
      */
     public function value(): string
     {
@@ -31,8 +29,6 @@ final class Type
 
     /**
      * @see self::getValue
-     *
-     * @return string
      */
     public function __toString(): string
     {

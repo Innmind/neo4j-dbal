@@ -49,9 +49,6 @@ final class Connection implements ConnectionInterface
         $this->transactions->rollback();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAlive(): bool
     {
         try {

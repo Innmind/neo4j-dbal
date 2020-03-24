@@ -10,15 +10,11 @@ interface Query
 {
     /**
      * Return the cypher query
-     *
-     * @return string
      */
     public function cypher(): string;
 
     /**
      * Same as cypher()
-     *
-     * @return string
      */
     public function __toString(): string;
 
@@ -31,8 +27,6 @@ interface Query
 
     /**
      * Check if parameters have been set
-     *
-     * @return bool
      */
     public function hasParameters(): bool;
 }
