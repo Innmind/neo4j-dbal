@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause;
+use Innmind\Neo4j\DBAL\{
+    Clause,
+    Query\Parameter,
+};
 use Innmind\Immutable\Map;
 
 interface Parametrable

@@ -13,21 +13,21 @@ interface Result
     /**
      * Return a list of nodes
      *
-     * @return Map<int, NodeInterface>
+     * @return Map<int, Result\Node>
      */
     public function nodes(): Map;
 
     /**
      * Return a list of relationships
      *
-     * @return Map<int, RelationshipInterface>
+     * @return Map<int, Result\Relationship>
      */
     public function relationships(): Map;
 
     /**
      * Return the rows
      *
-     * @return Sequence<RowInterface>
+     * @return Sequence<Result\Row>
      */
     public function rows(): Sequence;
 }

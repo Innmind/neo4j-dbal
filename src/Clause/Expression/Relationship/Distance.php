@@ -85,6 +85,6 @@ final class Distance
             return '';
         }
 
-        return '*'.$this->min;
+        return '*'.(string) $this->min;
     }
 }

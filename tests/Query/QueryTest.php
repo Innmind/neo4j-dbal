@@ -47,7 +47,7 @@ class QueryTest extends TestCase
             ->linkedTo()
             ->onCreate('SET n3.foo = "bar"')
             ->onMatch('SET n.updated = timestamp()')
-            ->orderBy('n3.updated', 'DESC')
+            ->orderBy('n3.updated', 'desc')
             ->return('n', 'n2', 'n3')
             ->skip('3')
             ->unwind('[1,2,3] AS x')

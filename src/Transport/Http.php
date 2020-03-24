@@ -47,8 +47,12 @@ final class Http implements Transport
             throw new QueryFailed($query, $response);
         }
 
+        /** @var array{results: array{0?: array{columns: list<string>, data: list<array{row: list<scalar|array>, graph: array{nodes: list<array{id: numeric, labels: list<string>, properties: array<string, scalar|array>}>, relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}>}}} */
         $response = Json::decode($response->body()->toString());
-        $result = Result\Result::fromRaw($response['results'][0] ?? []);
+        $result = Result\Result::fromRaw($response['results'][0] ?? [
+            'columns' => [],
+            'data' => [],
+        ]);
 
         return $result;
     }
@@ -71,7 +75,7 @@ final class Http implements Transport
         } catch (\Exception $e) {
             throw new ServerDown(
                 $e->getMessage(),
-                $e->getCode(),
+                (int) $e->getCode(),
                 $e,
             );
         }
@@ -96,6 +100,7 @@ final class Http implements Transport
             return false;
         }
 
+        /** @var array{errors: array} */
         $json = Json::decode($response->body()->toString());
 
         return count($json['errors']) === 0;

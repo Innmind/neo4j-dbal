@@ -7,6 +7,7 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     Clause\Expression\Relationship\Distance,
     Exception\DomainException,
+    Exception\LogicException,
 };
 use Innmind\Immutable\{
     Map,
@@ -16,15 +17,17 @@ use function Innmind\Immutable\join;
 
 final class Relationship
 {
-    const LEFT = 'LEFT';
-    const RIGHT = 'RIGHT';
-    const BOTH = 'BOTH';
+    const LEFT = 'left';
+    const RIGHT = 'right';
+    const BOTH = 'both';
 
     private ?string $variable;
     private ?string $type;
     private string $direction;
     private Distance $distance;
+    /** @var Map<string, Parameter> */
     private Map $parameters;
+    /** @var Map<string, string> */
     private Map $properties;
 
     private function __construct(
@@ -37,8 +40,33 @@ final class Relationship
         $this->type = $type;
         $this->direction = $direction;
         $this->distance = $distance ?? new Distance;
+        /** @var Map<string, Parameter> */
         $this->parameters = Map::of('string', Parameter::class);
+        /** @var Map<string, string> */
         $this->properties = Map::of('string', 'string');
+    }
+
+    /**
+     * @param 'both'|'left'|'right' $direction
+     */
+    public static function of(
+        string $direction,
+        string $variable = null,
+        string $type = null,
+        Distance $distance = null
+    ): self {
+        switch ($direction) {
+            case 'both':
+                return self::both($variable, $type, $distance);
+
+            case 'left':
+                return self::left($variable, $type, $distance);
+
+            case 'right':
+                return self::right($variable, $type, $distance);
+        }
+
+        throw new LogicException("Unknown direction '$direction'");
     }
 
     public static function both(
@@ -105,6 +133,9 @@ final class Relationship
         return $self;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function withParameter(string $key, $value): self
     {
         if (Str::of($key)->empty()) {
@@ -167,12 +198,12 @@ final class Relationship
 
         return sprintf(
             '%s-[%s%s%s%s]-%s',
-            $this->direction === self::LEFT ? '<' : null,
-            $this->variable,
-            $this->type ? ':'.$this->type : null,
-            $this->distance,
+            $this->direction === self::LEFT ? '<' : '',
+            (string) $this->variable,
+            $this->type ? ':'.$this->type : '',
+            (string) $this->distance,
             $properties,
-            $this->direction === self::RIGHT ? '>' : null
+            $this->direction === self::RIGHT ? '>' : ''
         );
     }
 }

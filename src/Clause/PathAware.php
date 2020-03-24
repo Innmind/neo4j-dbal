@@ -3,17 +3,17 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause;
 
-use Innmind\Neo4j\DBAL\Clause;
+use Innmind\Neo4j\DBAL\{
+    Clause,
+    Exception\LogicException,
+};
 
 interface PathAware extends Parametrable
 {
     /**
      * Link the currently matched node to another node
      *
-     * @param string $variable
-     * @param array $labels
-     *
-     * @return CauseInterface
+     * @param list<string> $labels
      */
     public function linkedTo(
         string $variable = null,
@@ -23,25 +23,16 @@ interface PathAware extends Parametrable
     /**
      * Type the last connection
      *
-     * @param string $variable
-     * @param string $type
-     * @param string $direction
-     *
-     * @return Clause
+     * @param 'both'|'left'|'right' $direction
      */
     public function through(
         string $variable = null,
         string $type = null,
-        string $direction = 'BOTH'
+        string $direction = 'both'
     ): Clause;
 
     /**
      * Specify a property to be matched
-     *
-     * @param string $property
-     * @param string $cypher
-     *
-     * @return Clause
      */
     public function withProperty(
         string $property,
@@ -51,56 +42,35 @@ interface PathAware extends Parametrable
     /**
      * Define the deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return Clause
      */
     public function withADistanceOf(int $distance): Clause;
 
     /**
      * Define the deepness range of the relationship
      *
-     * @param int $min
-     * @param int $max
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return Clause
      */
     public function withADistanceBetween(int $min, int $max): Clause;
 
     /**
      * Define the minimum deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return Clause
      */
     public function withADistanceOfAtLeast(int $distance): Clause;
 
     /**
      * Define the maximum deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return Clause
      */
     public function withADistanceOfAtMost(int $distance): Clause;
 
     /**
      * Define any deepness of the relationship
      *
-     * @param int $distance
-     *
      * @throws LogicException If no relationship in the path
-     *
-     * @return Clause
      */
     public function withAnyDistance(): Clause;
 }

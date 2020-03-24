@@ -8,7 +8,7 @@ interface Row
     /**
      * Return the row value
      *
-     * @return mixed
+     * @return scalar|array
      */
     public function value();
 

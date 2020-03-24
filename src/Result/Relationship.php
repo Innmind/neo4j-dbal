@@ -38,7 +38,7 @@ interface Relationship
     /**
      * Return the properties
      *
-     * @return Map<string, variable>
+     * @return Map<string, scalar|array>
      */
     public function properties(): Map;
 

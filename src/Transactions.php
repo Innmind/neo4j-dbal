@@ -25,6 +25,7 @@ use function Innmind\Immutable\first;
 
 final class Transactions
 {
+    /** @var Sequence<Transaction> */
     private Sequence $transactions;
     private Transport $fulfill;
     private Clock $clock;
@@ -33,6 +34,7 @@ final class Transactions
 
     public function __construct(Transport $fulfill, Clock $clock)
     {
+        /** @var Sequence<Transaction> */
         $this->transactions = Sequence::of(Transaction::class);
         $this->fulfill = $fulfill;
         $this->clock = $clock;
@@ -63,6 +65,7 @@ final class Transactions
             )
         );
 
+        /** @var array{commit: string, transaction: array{expires: string}} */
         $body = Json::decode($response->body()->toString());
         $location = first($response->headers()->get('Location')->values());
         $transaction = new Transaction(

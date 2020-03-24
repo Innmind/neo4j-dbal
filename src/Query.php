@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
+use Innmind\Neo4j\DBAL\Query\Parameter;
 use Innmind\Immutable\Map;
 
 interface Query

@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL;
 
+use Innmind\Neo4j\DBAL\Exception\ServerDown;
+
 interface Transport
 {
     public function execute(Query $query): Result;

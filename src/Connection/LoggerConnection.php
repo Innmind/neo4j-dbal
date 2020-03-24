@@ -37,6 +37,7 @@ final class LoggerConnection implements ConnectionInterface
                         ->reduce(
                             [],
                             function(array $carry, string $key, Parameter $parameter): array {
+                                /** @psalm-suppress MixedAssignment */
                                 $carry[$parameter->key()] = $parameter->value();
 
                                 return $carry;

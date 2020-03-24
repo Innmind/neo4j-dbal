@@ -16,8 +16,12 @@ final class Relationship implements RelationshipInterface
     private Type $type;
     private Id $startNode;
     private Id $endNode;
+    /** @var Map<string, scalar|array> */
     private Map $properties;
 
+    /**
+     * @param Map<string, scalar|array> $properties
+     */
     public function __construct(
         Id $id,
         Type $type,
@@ -27,9 +31,9 @@ final class Relationship implements RelationshipInterface
     ) {
         if (
             (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'variable'
+            (string) $properties->valueType() !== 'scalar|array'
         ) {
-            throw new \TypeError('Argument 5 must be of type Map<string, variable>');
+            throw new \TypeError('Argument 5 must be of type Map<string, scalar|array>');
         }
 
         $this->id = $id;

@@ -12,8 +12,12 @@ use Innmind\Immutable\Str;
 final class Row implements RowInterface
 {
     private string $column;
+    /** @var scalar|array */
     private $value;
 
+    /**
+     * @param scalar|array $value
+     */
     public function __construct(string $column, $value)
     {
         if (Str::of($column)->empty()) {
@@ -24,9 +28,6 @@ final class Row implements RowInterface
         $this->value = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function value()
     {
         return $this->value;

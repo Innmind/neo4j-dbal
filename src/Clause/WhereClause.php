@@ -18,6 +18,7 @@ final class WhereClause implements Clause, Parametrable
     private const IDENTIFIER = 'WHERE';
 
     private string $cypher;
+    /** @var Map<string, Parameter> */
     private Map $parameters;
 
     public function __construct(string $cypher)
@@ -27,6 +28,7 @@ final class WhereClause implements Clause, Parametrable
         }
 
         $this->cypher = $cypher;
+        /** @var Map<string, Parameter> */
         $this->parameters = Map::of('string', Parameter::class);
     }
 

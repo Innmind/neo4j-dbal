@@ -12,10 +12,18 @@ use Innmind\Immutable\{
 
 final class Result implements ResultInterface
 {
+    /** @var Map<int, Node> */
     private Map $nodes;
+    /** @var Map<int, Relationship> */
     private Map $relationships;
+    /** @var Sequence<Row> */
     private Sequence $rows;
 
+    /**
+     * @param Map<int, Node> $nodes
+     * @param Map<int, Relationship> $relationships
+     * @param Sequence<Row> $rows
+     */
     public function __construct(
         Map $nodes,
         Map $relationships,
@@ -29,7 +37,7 @@ final class Result implements ResultInterface
     /**
      * Build a result object out of a standard neo4j rest api response
      *
-     * @param array $response
+     * @param array{columns: list<string>, data: list<array{row: list<scalar|array>, graph: array{nodes: list<array{id: numeric, labels: list<string>, properties: array<string, scalar|array>}>, relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}>} $response
      *
      * @return self
      */
@@ -69,12 +77,13 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @param array $data
+     * @param list<array{graph: array{nodes: list<array{labels: list<string>, id: numeric, properties: array<string, scalar|array>}>}}> $data
      *
      * @return Map<int, Node>
      */
     private static function buildNodes(array $data): Map
     {
+        /** @var Map<int, Node> */
         $nodes = Map::of('int', Node::class);
 
         foreach ($data as $response) {
@@ -96,12 +105,13 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @param array $data
+     * @param list<array{graph: array{relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}> $data
      *
      * @return Map<int, Relationship>
      */
     private static function buildRelationships(array $data): Map
     {
+        /** @var Map<int, Relationship> */
         $relationships = Map::of('int', Relationship::class);
 
         foreach ($data as $response) {
@@ -123,12 +133,13 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @param array $data
+     * @param array{data?: list<array{row: array<int, scalar|array>}>, columns: array<int, string>} $data
      *
      * @return Sequence<Row>
      */
     private static function buildRows(array $data): Sequence
     {
+        /** @var Sequence<Row> */
         $rows = Sequence::of(Row::class);
         $responses = $data['data'] ?? [];
 
@@ -145,11 +156,14 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @return Map<string, variable>
+     * @param array<string, scalar|array> $data
+     *
+     * @return Map<string, scalar|array>
      */
     private static function buildProperties(array $data): Map
     {
-        $properties = Map::of('string', 'variable');
+        /** @var Map<string, scalar|array> */
+        $properties = Map::of('string', 'scalar|array');
 
         foreach ($data as $key => $value) {
             $properties = ($properties)($key, $value);

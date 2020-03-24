@@ -15,9 +15,15 @@ use Innmind\Immutable\{
 final class Node implements NodeInterface
 {
     private Id $id;
+    /** @var Set<string> */
     private Set $labels;
+    /** @var Map<string, scalar|array> */
     private Map $properties;
 
+    /**
+     * @param Set<string> $labels
+     * @param Map<string, scalar|array> $properties
+     */
     public function __construct(
         Id $id,
         Set $labels,
@@ -29,9 +35,9 @@ final class Node implements NodeInterface
 
         if (
             (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'variable'
+            (string) $properties->valueType() !== 'scalar|array'
         ) {
-            throw new \TypeError('Argument 3 must be of type Map<string, variable>');
+            throw new \TypeError('Argument 3 must be of type Map<string, scalar|array>');
         }
 
         $this->id = $id;

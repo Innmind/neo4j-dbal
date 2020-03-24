@@ -15,20 +15,22 @@ use function Innmind\Immutable\join;
 
 final class Path
 {
+    /** @var Sequence<Node|Relationship> */
     private Sequence $elements;
     private ?string $lastOperation = null;
+    /** @var Map<string, Parameter>|null */
     private ?Map $parameters = null;
 
     private function __construct()
     {
-        $this->elements = Sequence::objects();
+        $this->elements = Sequence::of(Node::class.'|'.Relationship::class);
     }
 
     /**
      * Start the path with the given node
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      *
      * @return self
      */
@@ -49,7 +51,7 @@ final class Path
      * Create a relationship to the given node
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      *
      * @return self
      */
@@ -70,7 +72,7 @@ final class Path
      *
      * @param string $variable
      * @param string $type
-     * @param string $direction
+     * @param 'both'|'left'|'right' $direction
      *
      * @throws LogicException If no relationship in the path
      *
@@ -79,19 +81,17 @@ final class Path
     public function through(
         string $variable = null,
         string $type = null,
-        string $direction = 'BOTH'
+        string $direction = 'both'
     ): self {
         if ($this->elements->size() < 3) {
             throw new LogicException;
         }
 
-        $direction = \strtolower($direction);
-
         $path = new self;
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(Relationship::$direction($variable, $type))
+            ->add(Relationship::of($direction, $variable, $type))
             ->add($this->elements->last());
         $path->lastOperation = Relationship::class;
 
@@ -114,12 +114,15 @@ final class Path
         }
 
         $path = clone $this;
+        /**
+         * @psalm-suppress PossiblyUndefinedMethod
+         * @var Relationship
+         */
+        $relationship = $this->elements->dropEnd(1)->last()->withADistanceOf($distance);
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(
-                $this->elements->dropEnd(1)->last()->withADistanceOf($distance)
-            )
+            ->add($relationship)
             ->add($this->elements->last());
 
         return $path;
@@ -142,12 +145,15 @@ final class Path
         }
 
         $path = clone $this;
+        /**
+         * @psalm-suppress PossiblyUndefinedMethod
+         * @var Relationship
+         */
+        $relationship = $this->elements->dropEnd(1)->last()->withADistanceBetween($min, $max);
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(
-                $this->elements->dropEnd(1)->last()->withADistanceBetween($min, $max)
-            )
+            ->add($relationship)
             ->add($this->elements->last());
 
         return $path;
@@ -169,12 +175,15 @@ final class Path
         }
 
         $path = clone $this;
+        /**
+         * @psalm-suppress PossiblyUndefinedMethod
+         * @var Relationship
+         */
+        $relationship = $this->elements->dropEnd(1)->last()->withADistanceOfAtLeast($distance);
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(
-                $this->elements->dropEnd(1)->last()->withADistanceOfAtLeast($distance)
-            )
+            ->add($relationship)
             ->add($this->elements->last());
 
         return $path;
@@ -196,12 +205,15 @@ final class Path
         }
 
         $path = clone $this;
+        /**
+         * @psalm-suppress PossiblyUndefinedMethod
+         * @var Relationship
+         */
+        $relationship = $this->elements->dropEnd(1)->last()->withADistanceOfAtMost($distance);
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(
-                $this->elements->dropEnd(1)->last()->withADistanceOfAtMost($distance)
-            )
+            ->add($relationship)
             ->add($this->elements->last());
 
         return $path;
@@ -223,12 +235,15 @@ final class Path
         }
 
         $path = clone $this;
+        /**
+         * @psalm-suppress PossiblyUndefinedMethod
+         * @var Relationship
+         */
+        $relationship = $this->elements->dropEnd(1)->last()->withAnyDistance();
         $path->elements = $this
             ->elements
             ->dropEnd(2)
-            ->add(
-                $this->elements->dropEnd(1)->last()->withAnyDistance()
-            )
+            ->add($relationship)
             ->add($this->elements->last());
 
         return $path;
@@ -245,8 +260,10 @@ final class Path
     public function withParameter(string $key, $value): self
     {
         if ($this->lastOperation === Node::class) {
+            /** @var Node */
             $element = $this->elements->last();
         } else {
+            /** @var Node */
             $element = $this->elements->dropEnd(1)->last();
         }
 
@@ -281,8 +298,10 @@ final class Path
     public function withProperty(string $property, string $cypher): self
     {
         if ($this->lastOperation === Node::class) {
+            /** @var Node */
             $element = $this->elements->last();
         } else {
+            /** @var Node */
             $element = $this->elements->dropEnd(1)->last();
         }
 
@@ -317,6 +336,10 @@ final class Path
             return $this->parameters;
         }
 
+        /**
+         * @psalm-suppress MixedPropertyTypeCoercion
+         * @var Map<string, Parameter>
+         */
         return $this->parameters = $this->elements->reduce(
             Map::of('string', Parameter::class),
             function(Map $carry, $element): Map {

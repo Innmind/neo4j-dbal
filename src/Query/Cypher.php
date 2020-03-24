@@ -15,6 +15,7 @@ use Innmind\Immutable\{
 final class Cypher implements QueryInterface
 {
     private string $cypher;
+    /** @var Map<string, Parameter> */
     private Map $parameters;
 
     public function __construct(string $cypher)
@@ -24,6 +25,7 @@ final class Cypher implements QueryInterface
         }
 
         $this->cypher = $cypher;
+        /** @var Map<string, Parameter> */
         $this->parameters = Map::of('string', Parameter::class);
     }
 
@@ -62,16 +64,13 @@ final class Cypher implements QueryInterface
     /**
      * Attach parameters to this query
      *
-     * @param array $parameters
-     *
-     * @throws NonParametrableClause
-     *
-     * @return self
+     * @param array<string, mixed> $parameters
      */
     public function withParameters(array $parameters): self
     {
         $query = $this;
 
+        /** @var mixed $parameter */
         foreach ($parameters as $key => $parameter) {
             $query = $query->withParameter($key, $parameter);
         }
@@ -82,12 +81,7 @@ final class Cypher implements QueryInterface
     /**
      * Attach the given parameter to this query
      *
-     * @param string $key
      * @param mixed $parameter
-     *
-     * @throws NonParametrableClause
-     *
-     * @return self
      */
     public function withParameter(string $key, $parameter): self
     {

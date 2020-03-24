@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause\PathAware;
 
-use Innmind\Neo4j\DBAL\Clause;
+use Innmind\Neo4j\DBAL\{
+    Clause,
+    Query\Parameter,
+};
 use Innmind\Immutable\Map;
 
 trait PathAware
@@ -37,7 +40,7 @@ trait PathAware
     public function through(
         string $variable = null,
         string $type = null,
-        string $direction = Expression\Relationship::BOTH
+        string $direction = Clause\Expression\Relationship::BOTH
     ): Clause {
         $clause = clone $this;
         $clause->path = $this->path->through($variable, $type, $direction);
@@ -133,7 +136,7 @@ trait PathAware
     }
 
     /**
-     * {@inheritdoc}
+     * @return Map<string, Parameter>
      */
     public function parameters(): Map
     {

@@ -20,18 +20,29 @@ use function Innmind\Immutable\{
 final class Node
 {
     private ?string $variable;
+    /** @var Set<string> */
     private Set $labels;
+    /** @var Map<string, Parameter> */
     private Map $parameters;
+    /** @var Map<string, string> */
     private Map $properties;
 
+    /**
+     * @param list<string> $labels
+     */
     public function __construct(string $variable = null, array $labels = [])
     {
         $this->variable = $variable;
-        $this->labels = Set::of('string', ...$labels);;
+        $this->labels = Set::strings(...$labels);;
+        /** @var Map<string, Parameter> */
         $this->parameters = Map::of('string', Parameter::class);
+        /** @var Map<string, string> */
         $this->properties = Map::of('string', 'string');
     }
 
+    /**
+     * @param mixed $value
+     */
     public function withParameter(string $key, $value): self
     {
         if (Str::of($key)->empty()) {
@@ -98,7 +109,7 @@ final class Node
 
         return sprintf(
             '(%s%s%s)',
-            $this->variable,
+            (string) $this->variable,
             $labels,
             $properties
         );

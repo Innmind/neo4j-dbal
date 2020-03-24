@@ -9,6 +9,7 @@ use Innmind\Neo4j\DBAL\{
     Exception\NonParametrableClause,
     Exception\NonPathAwareClause,
     Exception\NonMergeClause,
+    Exception\LogicException,
 };
 use Innmind\Immutable\{
     Map,
@@ -18,7 +19,9 @@ use function Innmind\Immutable\unwrap;
 
 final class Query implements QueryInterface
 {
+    /** @var Sequence<Clause> */
     private Sequence $clauses;
+    /** @var Map<string, Parameter>|null */
     private ?Map $parameters = null;
     private ?string $cypher = null;
 
@@ -73,17 +76,21 @@ final class Query implements QueryInterface
             return $this->parameters;
         }
 
-        return $this->parameters = $this
-            ->clauses
-            ->filter(function(Clause $clause): bool {
-                return $clause instanceof Clause\Parametrable;
-            })
-            ->reduce(
-                Map::of('string', Parameter::class),
-                function(Map $carry, Clause\Parametrable $clause): Map {
-                    return $carry->merge($clause->parameters());
-                }
-            );
+        /** @var Sequence<Clause\Parametrable> [description] */
+        $parametrables = $this->clauses->filter(function(Clause $clause): bool {
+            return $clause instanceof Clause\Parametrable;
+        });
+
+        /**
+         * @psalm-suppress MixedPropertyTypeCoercion
+         * @var Map<string, Parameter>
+         */
+        return $this->parameters = $parametrables->reduce(
+            Map::of('string', Parameter::class),
+            function(Map $carry, Clause\Parametrable $clause): Map {
+                return $carry->merge($clause->parameters());
+            },
+        );
     }
 
     /**
@@ -98,7 +105,7 @@ final class Query implements QueryInterface
      * Match the given node
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      *
      * @return self
      */
@@ -118,7 +125,7 @@ final class Query implements QueryInterface
      * Add a OPTIONAL MATCh clause
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      *
      * @return self
      */
@@ -137,7 +144,7 @@ final class Query implements QueryInterface
     /**
      * Attach parameters to the last clause
      *
-     * @param array $parameters
+     * @param array<string, mixed> $parameters
      *
      * @throws NonParametrableClause
      *
@@ -147,6 +154,7 @@ final class Query implements QueryInterface
     {
         $query = $this;
 
+        /** @var mixed $parameter */
         foreach ($parameters as $key => $parameter) {
             $query = $query->withParameter($key, $parameter);
         }
@@ -185,7 +193,7 @@ final class Query implements QueryInterface
     /**
      * Specify a set of properties to be matched
      *
-     * @param array $properties
+     * @param array<string, string> $properties
      *
      * @throws NonPathAwareClause
      *
@@ -234,7 +242,7 @@ final class Query implements QueryInterface
      * Match the node linked to the previous declared node match
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      *
      * @throws NonPathAwareClause
      *
@@ -263,7 +271,7 @@ final class Query implements QueryInterface
      *
      * @param string $type
      * @param string $variable
-     * @param string $direction
+     * @param 'both'|'left'|'right' $direction
      *
      * @throws NonPathAwareClause
      *
@@ -272,7 +280,7 @@ final class Query implements QueryInterface
     public function through(
         string $type,
         string $variable = null,
-        string $direction = 'BOTH'
+        string $direction = 'both'
     ): self {
         $clause = $this->clauses->last();
 
@@ -582,19 +590,17 @@ final class Query implements QueryInterface
      * Add a ORDER BY clause
      *
      * @param string $cypher
-     * @param string $direction
+     * @param 'asc'|'desc' $direction
      *
      * @return self
      */
     public function orderBy(
         string $cypher,
-        string $direction = 'ASC'
+        string $direction = 'asc'
     ): self {
-        $direction = \strtolower($direction);
-
         $query = new self;
         $query->clauses = $this->clauses->add(
-            Clause\OrderByClause::$direction($cypher)
+            Clause\OrderByClause::of($direction, $cypher)
         );
 
         return $query;
@@ -660,7 +666,7 @@ final class Query implements QueryInterface
      * Add a MERGE clause
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      *
      * @return self
      */
@@ -733,7 +739,7 @@ final class Query implements QueryInterface
      * Add a CREATE clause
      *
      * @param string $variable
-     * @param array $labels
+     * @param list<string> $labels
      * @param bool $unique
      *
      * @return self

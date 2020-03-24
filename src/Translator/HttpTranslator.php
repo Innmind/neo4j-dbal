@@ -90,6 +90,7 @@ final class HttpTranslator
             $statement['parameters'] = $query->parameters()->values()->reduce(
                 [],
                 static function(array $parameters, Query\Parameter $parameter): array {
+                    /** @psalm-suppress MixedAssignment */
                     $parameters[$parameter->key()] = $parameter->value();
 
                     return $parameters;

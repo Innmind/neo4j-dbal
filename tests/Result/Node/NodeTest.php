@@ -21,7 +21,7 @@ class NodeTest extends TestCase
         $node = new Node(
             $id = new Id(42),
             $labels = Set::of('string'),
-            $properties = Map::of('string', 'variable')
+            $properties = Map::of('string', 'scalar|array')
         );
 
         $this->assertInstanceOf(NodeInterface::class, $node);
@@ -34,7 +34,7 @@ class NodeTest extends TestCase
         $node = new Node(
             new Id(42),
             Set::of('string', 'foo'),
-            Map::of('string', 'variable')
+            Map::of('string', 'scalar|array')
                 ('foo', 'bar')
         );
 
@@ -50,14 +50,14 @@ class NodeTest extends TestCase
         new Node(
             new Id(42),
             Set::of('str'),
-            Map::of('string', 'variable')
+            Map::of('string', 'scalar|array')
         );
     }
 
     public function testThrowWhenInvalidPropertyMap()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 3 must be of type Map<string, variable>');
+        $this->expectExceptionMessage('Argument 3 must be of type Map<string, scalar|array>');
 
         new Node(
             new Id(42),
