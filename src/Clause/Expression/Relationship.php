@@ -9,10 +9,10 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Str,
 };
+use function Innmind\Immutable\join;
 
 final class Relationship
 {
@@ -37,8 +37,8 @@ final class Relationship
         $this->type = $type;
         $this->direction = $direction;
         $this->distance = $distance ?? new Distance;
-        $this->parameters = new Map('string', Parameter::class);
-        $this->properties = new Map('string', 'string');
+        $this->parameters = Map::of('string', Parameter::class);
+        $this->properties = Map::of('string', 'string');
     }
 
     public static function both(
@@ -135,9 +135,9 @@ final class Relationship
     }
 
     /**
-     * @return MapInterface<string, Parameter>
+     * @return Map<string, Parameter>
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }
@@ -149,16 +149,19 @@ final class Relationship
         if ($this->properties->count() > 0) {
             $properties = sprintf(
                 ' { %s }',
-                $this
-                    ->properties
-                    ->map(function(string $property, string $value): string {
-                        return sprintf(
-                            '%s: %s',
-                            $property,
-                            $value
-                        );
-                    })
-                    ->join(', ')
+                join(
+                    ', ',
+                    $this
+                        ->properties
+                        ->map(function(string $property, string $value): string {
+                            return sprintf(
+                                '%s: %s',
+                                $property,
+                                $value
+                            );
+                        })
+                        ->values(),
+                )->toString(),
             );
         }
 

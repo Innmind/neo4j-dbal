@@ -4,58 +4,46 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Neo4j\DBAL\HttpTransport\Transport;
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Http\{
-    Headers\Headers,
+    Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue,
-    Header\Parameter,
+    Header\Parameter\Parameter,
     Message\Request\Request,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    ProtocolVersion,
 };
-use Innmind\Filesystem\Stream\StringStream;
+use Innmind\Stream\Readable\Stream;
 use Innmind\Url\Url;
 use Innmind\Json\Json;
 use Innmind\Immutable\{
-    Stream,
+    Sequence,
     Map,
 };
+use function Innmind\Immutable\first;
 
 final class Transactions
 {
-    private Stream $transactions;
+    private Sequence $transactions;
     private Transport $fulfill;
-    private TimeContinuumInterface $clock;
+    private Clock $clock;
     private Headers $headers;
-    private StringStream $body;
+    private Stream $body;
 
-    public function __construct(
-        Transport $fulfill,
-        TimeContinuumInterface $clock
-    ) {
-        $this->transactions = new Stream(Transaction::class);
+    public function __construct(Transport $fulfill, Clock $clock)
+    {
+        $this->transactions = Sequence::of(Transaction::class);
         $this->fulfill = $fulfill;
         $this->clock = $clock;
         $this->headers = new Headers(
-            (new Map('string', Header::class))
-                ->put(
-                    'content-type',
-                    new ContentType(
-                        new ContentTypeValue(
-                            'application',
-                            'json',
-                            (new Map('string', Parameter::class))
-                                ->put(
-                                    'charset',
-                                    new Parameter\Parameter('charset', 'UTF-8')
-                                )
-                        )
-                    )
-                )
+            ContentType::of(
+                'application',
+                'json',
+                new Parameter('charset', 'UTF-8'),
+            ),
         );
-        $this->body = new StringStream(Json::encode(['statements' => []]));
+        $this->body = Stream::ofContent(Json::encode(['statements' => []]));
     }
 
     /**
@@ -67,7 +55,7 @@ final class Transactions
     {
         $response = ($this->fulfill)(
             new Request(
-                Url::fromString('/db/data/transaction'),
+                Url::of('/db/data/transaction'),
                 Method::post(),
                 new ProtocolVersion(1, 1),
                 $this->headers,
@@ -75,16 +63,12 @@ final class Transactions
             )
         );
 
-        $body = Json::decode((string) $response->body());
-        $location = (string) $response
-            ->headers()
-            ->get('Location')
-            ->values()
-            ->current();
+        $body = Json::decode($response->body()->toString());
+        $location = first($response->headers()->get('Location')->values());
         $transaction = new Transaction(
-            Url::fromString($location),
+            Url::of($location->toString()),
             $this->clock->at($body['transaction']['expires']),
-            Url::fromString($body['commit'])
+            Url::of($body['commit'])
         );
 
         $this->transactions = $this->transactions->add($transaction);

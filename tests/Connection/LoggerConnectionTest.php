@@ -11,10 +11,10 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     Exception\QueryFailed,
 };
-use Innmind\Filesystem\Stream\StringStream;
+use Innmind\Stream\Readable\Stream;
 use Innmind\Immutable\Map;
-use Psr\Log\LoggerInterface;
 use Innmind\Http\Message\Response;
+use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
 
 class LoggerConnectionTest extends TestCase
@@ -76,6 +76,10 @@ class LoggerConnectionTest extends TestCase
             $logger = $this->createMock(LoggerInterface::class)
         );
         $query = $this->createMock(Query::class);
+        $query
+            ->expects($this->any())
+            ->method('parameters')
+            ->willReturn(Map::of('string', Query\Parameter::class));
         $logger
             ->expects($this->once())
             ->method('error')
@@ -98,7 +102,7 @@ class LoggerConnectionTest extends TestCase
         $response
             ->expects($this->once())
             ->method('body')
-            ->willReturn(new StringStream('bar'));
+            ->willReturn(Stream::ofContent('bar'));
 
         $this->expectException(QueryFailed::class);
 

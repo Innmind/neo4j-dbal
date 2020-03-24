@@ -8,20 +8,20 @@ use Innmind\Neo4j\DBAL\{
     Exception\LogicException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    Stream,
+    Sequence,
 };
+use function Innmind\Immutable\join;
 
 final class Path
 {
-    private Stream $elements;
+    private Sequence $elements;
     private ?string $lastOperation = null;
     private ?Map $parameters = null;
 
     private function __construct()
     {
-        $this->elements = new Stream('object');
+        $this->elements = Sequence::objects();
     }
 
     /**
@@ -309,16 +309,16 @@ final class Path
     /**
      * Return all the parameters of the path
      *
-     * @return MapInterface<string, Parameter>
+     * @return Map<string, Parameter>
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         if ($this->parameters) {
             return $this->parameters;
         }
 
         return $this->parameters = $this->elements->reduce(
-            new Map('string', Parameter::class),
+            Map::of('string', Parameter::class),
             function(Map $carry, $element): Map {
                 return $carry->merge($element->parameters());
             }
@@ -327,6 +327,12 @@ final class Path
 
     public function __toString(): string
     {
-        return (string) $this->elements->join('');
+        return join(
+            '',
+            $this->elements->mapTo(
+                'string',
+                static fn($element): string => (string) $element,
+            ),
+        )->toString();
     }
 }

@@ -4,14 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\HttpTransport;
 
 use Innmind\HttpTransport\Transport as TransportInterface;
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-    Authority\NullUserInformation,
-    NullPath,
-    NullQuery,
-    NullFragment,
-};
+use Innmind\Url\Url;
 use Innmind\Http\{
     Header,
     Header\Authorization,
@@ -24,32 +17,30 @@ use Innmind\Immutable\Map;
 
 final class Transport implements TransportInterface
 {
-    private UrlInterface $server;
+    private Url $server;
     private Authorization $authorization;
     private TransportInterface $fulfill;
 
     public function __construct(
-        UrlInterface $server,
+        Url $server,
         TransportInterface $fulfill
     ) {
         $this->server = $server
             ->withAuthority(
-                $server->authority()->withUserInformation(new NullUserInformation)
+                $server->authority()->withoutUserInformation()
             )
-            ->withPath(new NullPath)
-            ->withQuery(new NullQuery)
-            ->withFragment(new NullFragment);
-        $this->authorization = new Authorization(
-            new AuthorizationValue(
-                'Basic',
-                base64_encode(
-                    sprintf(
-                        '%s:%s',
-                        $server->authority()->userInformation()->user(),
-                        $server->authority()->userInformation()->password()
-                    )
-                )
-            )
+            ->withoutPath()
+            ->withoutQuery()
+            ->withoutFragment();
+        $this->authorization = Authorization::of(
+            'Basic',
+            \base64_encode(
+                \sprintf(
+                    '%s:%s',
+                    $server->authority()->userInformation()->user()->toString(),
+                    $server->authority()->userInformation()->password()->toString(),
+                ),
+            ),
         );
         $this->fulfill = $fulfill;
     }
@@ -72,9 +63,6 @@ final class Transport implements TransportInterface
 
     private function addAuthorizationHeader(Headers $headers): Headers
     {
-        return Headers\Headers::of(
-            $this->authorization,
-            ...\array_values(\iterator_to_array($headers))
-        );
+        return $headers->add($this->authorization);
     }
 }

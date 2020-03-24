@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     Exception\DomainException,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class RelationshipTest extends TestCase
@@ -20,7 +20,7 @@ class RelationshipTest extends TestCase
         $relationship2 = $relationship->withParameter('foo', 'bar');
         $this->assertNotSame($relationship, $relationship2);
         $this->assertInstanceOf(Relationship::class, $relationship2);
-        $this->assertInstanceOf(MapInterface::class, $relationship2->parameters());
+        $this->assertInstanceOf(Map::class, $relationship2->parameters());
         $this->assertSame('string', (string) $relationship2->parameters()->keyType());
         $this->assertSame(Parameter::class, (string) $relationship2->parameters()->valueType());
         $this->assertCount(1, $relationship2->parameters());

@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     Exception\DomainException,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class NodeTest extends TestCase
@@ -20,7 +20,7 @@ class NodeTest extends TestCase
         $node2 = $node->withParameter('foo', 'bar');
         $this->assertNotSame($node, $node2);
         $this->assertInstanceOf(Node::class, $node2);
-        $this->assertInstanceOf(MapInterface::class, $node2->parameters());
+        $this->assertInstanceOf(Map::class, $node2->parameters());
         $this->assertSame(
             'string',
             (string) $node2->parameters()->keyType()

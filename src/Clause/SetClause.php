@@ -9,7 +9,6 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Str,
 };
@@ -28,7 +27,7 @@ final class SetClause implements Clause, Parametrable
         }
 
         $this->cypher = $cypher;
-        $this->parameters = new Map('string', Parameter::class);
+        $this->parameters = Map::of('string', Parameter::class);
     }
 
     /**
@@ -76,7 +75,7 @@ final class SetClause implements Clause, Parametrable
     /**
      * {@inheritdoc}
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }

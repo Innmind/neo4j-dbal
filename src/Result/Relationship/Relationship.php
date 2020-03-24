@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Result\Id,
     Result\Type,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 final class Relationship implements RelationshipInterface
 {
@@ -16,20 +16,20 @@ final class Relationship implements RelationshipInterface
     private Type $type;
     private Id $startNode;
     private Id $endNode;
-    private MapInterface $properties;
+    private Map $properties;
 
     public function __construct(
         Id $id,
         Type $type,
         Id $startNode,
         Id $endNode,
-        MapInterface $properties
+        Map $properties
     ) {
         if (
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'variable'
         ) {
-            throw new \TypeError('Argument 5 must be of type MapInterface<string, variable>');
+            throw new \TypeError('Argument 5 must be of type Map<string, variable>');
         }
 
         $this->id = $id;
@@ -74,7 +74,7 @@ final class Relationship implements RelationshipInterface
     /**
      * {@inheritdoc}
      */
-    public function properties(): MapInterface
+    public function properties(): Map
     {
         return $this->properties;
     }

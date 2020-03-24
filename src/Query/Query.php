@@ -11,20 +11,20 @@ use Innmind\Neo4j\DBAL\{
     Exception\NonMergeClause,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    Stream,
+    Sequence,
 };
+use function Innmind\Immutable\unwrap;
 
 final class Query implements QueryInterface
 {
-    private Stream $clauses;
+    private Sequence $clauses;
     private ?Map $parameters = null;
     private ?string $cypher = null;
 
     public function __construct()
     {
-        $this->clauses = new Stream(Clause::class);
+        $this->clauses = Sequence::of(Clause::class);
     }
 
     /**
@@ -40,7 +40,7 @@ final class Query implements QueryInterface
         $clauses = $this->clauses->drop(1);
         $cypher = $previous->identifier().' '.(string) $previous;
 
-        foreach ($clauses as $clause) {
+        foreach (unwrap($clauses) as $clause) {
             if ($clause->identifier() === $previous->identifier()) {
                 $cypher .= ', ';
             } else {
@@ -67,7 +67,7 @@ final class Query implements QueryInterface
     /**
      * {@inheritdoc}
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         if ($this->parameters) {
             return $this->parameters;
@@ -79,7 +79,7 @@ final class Query implements QueryInterface
                 return $clause instanceof Clause\Parametrable;
             })
             ->reduce(
-                new Map('string', Parameter::class),
+                Map::of('string', Parameter::class),
                 function(Map $carry, Clause\Parametrable $clause): Map {
                     return $carry->merge($clause->parameters());
                 }

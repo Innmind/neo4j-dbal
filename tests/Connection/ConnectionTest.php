@@ -13,9 +13,10 @@ use Innmind\Neo4j\DBAL\{
     Query,
     HttpTransport\Transport,
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Url\Url;
 use function Innmind\HttpTransport\bootstrap as http;
+use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionTest extends TestCase
@@ -25,12 +26,12 @@ class ConnectionTest extends TestCase
     public function setUp(): void
     {
         $httpTransport = new Transport(
-            Url::fromString('http://neo4j:ci@localhost:7474/'),
+            Url::of('http://neo4j:ci@localhost:7474/'),
             http()['default']()
         );
         $transactions = new Transactions(
             $httpTransport,
-            $this->createMock(TimeContinuumInterface::class)
+            $this->createMock(Clock::class)
         );
         $this->connection = new Connection(
             new Http(
@@ -76,12 +77,12 @@ class ConnectionTest extends TestCase
         $this->assertTrue($this->connection->isAlive());
 
         $httpTransport = new Transport(
-            Url::fromString('http://neo4j:ci@localhost:1337/'),
+            Url::of('http://neo4j:ci@localhost:1337/'),
             http()['default']()
         );
         $transactions = new Transactions(
             $httpTransport,
-            $this->createMock(TimeContinuumInterface::class)
+            $this->createMock(Clock::class)
         );
         $connection = new Connection(
             new Http(
@@ -106,23 +107,23 @@ class ConnectionTest extends TestCase
 
         $this->assertSame(1, $result->nodes()->count());
         $this->assertTrue(
-            in_array('Bar', $result->nodes()->current()->labels()->toPrimitive())
+            in_array('Bar', unwrap($result->nodes()->values()->first()->labels()))
         );
         $this->assertTrue(
-            in_array('Foo', $result->nodes()->current()->labels()->toPrimitive())
+            in_array('Foo', unwrap($result->nodes()->values()->first()->labels()))
         );
-        $this->assertCount(1, $result->nodes()->current()->properties());
+        $this->assertCount(1, $result->nodes()->values()->first()->properties());
         $this->assertSame(
             'baz',
-            $result->nodes()->current()->properties()->get('foo')
+            $result->nodes()->values()->first()->properties()->get('foo')
         );
         $this->assertSame(
             'n',
-            $result->rows()->current()->column()
+            $result->rows()->first()->column()
         );
         $this->assertSame(
             ['foo' => 'baz'],
-            $result->rows()->current()->value()
+            $result->rows()->first()->value()
         );
     }
 }

@@ -8,30 +8,30 @@ use Innmind\Neo4j\DBAL\{
     Result\Id,
 };
 use Innmind\Immutable\{
-    SetInterface,
-    MapInterface,
+    Set,
+    Map,
 };
 
 final class Node implements NodeInterface
 {
     private Id $id;
-    private SetInterface $labels;
-    private MapInterface $properties;
+    private Set $labels;
+    private Map $properties;
 
     public function __construct(
         Id $id,
-        SetInterface $labels,
-        MapInterface $properties
+        Set $labels,
+        Map $properties
     ) {
         if ((string) $labels->type() !== 'string') {
-            throw new \TypeError('Argument 2 must be of type SetInterface<string>');
+            throw new \TypeError('Argument 2 must be of type Set<string>');
         }
 
         if (
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'variable'
         ) {
-            throw new \TypeError('Argument 3 must be of type MapInterface<string, variable>');
+            throw new \TypeError('Argument 3 must be of type Map<string, variable>');
         }
 
         $this->id = $id;
@@ -50,7 +50,7 @@ final class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function labels(): SetInterface
+    public function labels(): Set
     {
         return $this->labels;
     }
@@ -66,7 +66,7 @@ final class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function properties(): MapInterface
+    public function properties(): Map
     {
         return $this->properties;
     }

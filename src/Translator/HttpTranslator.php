@@ -8,23 +8,19 @@ use Innmind\Neo4j\DBAL\{
     Transactions,
 };
 use Innmind\Http\{
-    Headers\Headers,
+    Headers,
     Header,
     Header\ContentType,
-    Header\ContentTypeValue,
     Header\Accept,
     Header\AcceptValue,
     Header\Value,
-    Header\Parameter,
+    Header\Parameter\Parameter,
     Message\Request,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    ProtocolVersion,
 };
-use Innmind\Filesystem\Stream\StringStream;
-use Innmind\Url\{
-    UrlInterface,
-    Url,
-};
+use Innmind\Stream\Readable\Stream;
+use Innmind\Url\Url;
 use Innmind\Json\Json;
 use Innmind\Immutable\Map;
 
@@ -40,20 +36,17 @@ final class HttpTranslator
     {
         $this->transactions = $transactions;
         $this->headers = Headers::of(
-            new ContentType(
-                new ContentTypeValue(
-                    'application',
-                    'json'
-                )
+            ContentType::of(
+                'application',
+                'json',
             ),
             new Accept(
                 new AcceptValue(
                     'application',
                     'json',
-                    Map::of('string', Parameter::class)
-                        ('charset', new Parameter\Parameter('charset', 'UTF-8'))
-                )
-            )
+                    new Parameter('charset', 'UTF-8'),
+                ),
+            ),
         );
     }
 
@@ -74,10 +67,10 @@ final class HttpTranslator
     /**
      * Determine the appropriate endpoint based on the transactions
      */
-    private function computeEndpoint(): UrlInterface
+    private function computeEndpoint(): Url
     {
         if (!$this->transactions->isOpened()) {
-            return Url::fromString('/db/data/transaction/commit');
+            return Url::of('/db/data/transaction/commit');
         }
 
         return $this->transactions->current()->endpoint();
@@ -86,7 +79,7 @@ final class HttpTranslator
     /**
      * Build the json payload to be sent to the server
      */
-    private function computeBody(Query $query): StringStream
+    private function computeBody(Query $query): Stream
     {
         $statement = [
             'statement' => $query->cypher(),
@@ -94,16 +87,17 @@ final class HttpTranslator
         ];
 
         if ($query->hasParameters()) {
-            $parameters = [];
+            $statement['parameters'] = $query->parameters()->values()->reduce(
+                [],
+                static function(array $parameters, Query\Parameter $parameter): array {
+                    $parameters[$parameter->key()] = $parameter->value();
 
-            foreach ($query->parameters() as $parameter) {
-                $parameters[$parameter->key()] = $parameter->value();
-            }
-
-            $statement['parameters'] = $parameters;
+                    return $parameters;
+                },
+            );
         }
 
-        return new StringStream(Json::encode([
+        return Stream::ofContent(Json::encode([
             'statements' => [$statement],
         ]));
     }

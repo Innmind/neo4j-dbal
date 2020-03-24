@@ -8,10 +8,13 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Set,
     Str,
+};
+use function Innmind\Immutable\{
+    unwrap,
+    join,
 };
 
 final class Node
@@ -25,8 +28,8 @@ final class Node
     {
         $this->variable = $variable;
         $this->labels = Set::of('string', ...$labels);;
-        $this->parameters = new Map('string', Parameter::class);
-        $this->properties = new Map('string', 'string');
+        $this->parameters = Map::of('string', Parameter::class);
+        $this->properties = Map::of('string', 'string');
     }
 
     public function withParameter(string $key, $value): self
@@ -35,7 +38,7 @@ final class Node
             throw new DomainException;
         }
 
-        $node = new self($this->variable, $this->labels->toPrimitive());
+        $node = new self($this->variable, unwrap($this->labels));
         $node->parameters = $this->parameters->put(
             $key,
             new Parameter($key, $value)
@@ -51,7 +54,7 @@ final class Node
             throw new DomainException;
         }
 
-        $node = new self($this->variable, $this->labels->toPrimitive());
+        $node = new self($this->variable, unwrap($this->labels));
         $node->parameters = $this->parameters;
         $node->properties = $this->properties->put($property, $cypher);
 
@@ -59,9 +62,9 @@ final class Node
     }
 
     /**
-     * @return MapInterface<string, Parameter>
+     * @return Map<string, Parameter>
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }
@@ -71,22 +74,25 @@ final class Node
         $labels = $properties = '';
 
         if ($this->labels->count() > 0) {
-            $labels = ':'.$this->labels->join(':');
+            $labels = ':'.join(':', $this->labels)->toString();
         }
 
         if ($this->properties->count() > 0) {
             $properties = sprintf(
                 ' { %s }',
-                $this
-                    ->properties
-                    ->map(function(string $property, string $value): string {
-                        return sprintf(
-                            '%s: %s',
-                            $property,
-                            $value
-                        );
-                    })
-                    ->join(', ')
+                join(
+                    ', ',
+                    $this
+                        ->properties
+                        ->map(function(string $property, string $value): string {
+                            return sprintf(
+                                '%s: %s',
+                                $property,
+                                $value
+                            );
+                        })
+                        ->values(),
+                )->toString(),
             );
         }
 

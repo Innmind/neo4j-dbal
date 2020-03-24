@@ -15,8 +15,8 @@ use Innmind\Neo4j\DBAL\{
 use Innmind\Http\{
     Message\Response,
     Message\Request\Request,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    ProtocolVersion,
 };
 use Innmind\Url\Url;
 use Innmind\Json\Json;
@@ -47,7 +47,7 @@ final class Http implements Transport
             throw new QueryFailed($query, $response);
         }
 
-        $response = Json::decode((string) $response->body());
+        $response = Json::decode($response->body()->toString());
         $result = Result\Result::fromRaw($response['results'][0] ?? []);
 
         return $result;
@@ -62,22 +62,21 @@ final class Http implements Transport
             $code = ($this->fulfill)
                 (
                     new Request(
-                        Url::fromString('/'),
+                        Url::of('/'),
                         Method::options(),
-                        new ProtocolVersion(1, 1)
-                    )
+                        new ProtocolVersion(1, 1),
+                    ),
                 )
-                ->statusCode()
-                ->value();
+                ->statusCode();
         } catch (\Exception $e) {
             throw new ServerDown(
                 $e->getMessage(),
                 $e->getCode(),
-                $e
+                $e,
             );
         }
 
-        if ($code >= 200 && $code < 300) {
+        if ($code->isSuccessful()) {
             return $this;
         }
 
@@ -97,7 +96,7 @@ final class Http implements Transport
             return false;
         }
 
-        $json = Json::decode((string) $response->body());
+        $json = Json::decode($response->body()->toString());
 
         return count($json['errors']) === 0;
     }

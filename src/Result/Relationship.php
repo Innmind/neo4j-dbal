@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Result;
 
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 interface Relationship
 {
@@ -38,9 +38,9 @@ interface Relationship
     /**
      * Return the properties
      *
-     * @return MapInterface<string, variable>
+     * @return Map<string, variable>
      */
-    public function properties(): MapInterface;
+    public function properties(): Map;
 
     /**
      * Check if the relationship has properties

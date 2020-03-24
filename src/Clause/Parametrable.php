@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause;
 
 use Innmind\Neo4j\DBAL\Clause;
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 interface Parametrable
 {
@@ -28,7 +28,7 @@ interface Parametrable
     /**
      * Return the list of parameters
      *
-     * @return MapInterface<string, Parameter>
+     * @return Map<string, Parameter>
      */
-    public function parameters(): MapInterface;
+    public function parameters(): Map;
 }

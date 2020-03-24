@@ -8,7 +8,6 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Str,
 };
@@ -25,7 +24,7 @@ final class Cypher implements QueryInterface
         }
 
         $this->cypher = $cypher;
-        $this->parameters = new Map('string', Parameter::class);
+        $this->parameters = Map::of('string', Parameter::class);
     }
 
     /**
@@ -47,7 +46,7 @@ final class Cypher implements QueryInterface
     /**
      * {@inheritdoc}
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }

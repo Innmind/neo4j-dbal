@@ -38,7 +38,7 @@ class RelationshipTest extends TestCase
             new Type('foo'),
             new Id(24),
             new Id(66),
-            new Map('string', 'variable')
+            Map::of('string', 'variable')
         );
 
         $this->assertFalse($relationship->hasProperties());
@@ -47,14 +47,14 @@ class RelationshipTest extends TestCase
     public function testThrowWhenInvalidPropertyMap()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 5 must be of type MapInterface<string, variable>');
+        $this->expectExceptionMessage('Argument 5 must be of type Map<string, variable>');
 
         new Relationship(
             new Id(42),
             new Type('foo'),
             new Id(24),
             new Id(66),
-            new Map('string', 'scalar')
+            Map::of('string', 'scalar')
         );
     }
 }

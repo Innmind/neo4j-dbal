@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Clause\PathAware;
 
 use Innmind\Neo4j\DBAL\Clause;
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
 
 trait PathAware
 {
@@ -135,7 +135,7 @@ trait PathAware
     /**
      * {@inheritdoc}
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->path->parameters();
     }

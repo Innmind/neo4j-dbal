@@ -10,12 +10,12 @@ use Innmind\Neo4j\DBAL\{
     Query\Parameter,
     HttpTransport\Transport,
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use Innmind\HttpTransport\Transport as TransportInterface;
 use Innmind\Http\{
     Message\Request,
     Message\Response,
-    Headers\Headers,
+    Headers,
     Header\Header,
     Header\Value\Value,
 };
@@ -35,10 +35,10 @@ class HttpTranslatorTest extends TestCase
         $this->translate = new HttpTranslator(
             $this->transactions = new Transactions(
                 new Transport(
-                    Url::fromString('http://neo4j:ci@localhost:7474/'),
+                    Url::of('http://neo4j:ci@localhost:7474/'),
                     $this->transport = $this->createMock(TransportInterface::class)
                 ),
-                $this->createMock(TimeContinuumInterface::class)
+                $this->createMock(Clock::class)
             )
         );
     }
@@ -62,8 +62,8 @@ class HttpTranslatorTest extends TestCase
         $request = ($this->translate)($query);
 
         $this->assertInstanceOf(Request::class, $request);
-        $this->assertSame('POST', (string) $request->method());
-        $this->assertSame('/db/data/transaction/commit', (string) $request->url());
+        $this->assertSame('POST', $request->method()->toString());
+        $this->assertSame('/db/data/transaction/commit', $request->url()->toString());
         $this->assertSame(
             json_encode([
                 'statements' => [[
@@ -72,7 +72,7 @@ class HttpTranslatorTest extends TestCase
                     'parameters' => ['foo' => 'bar'],
                 ]],
             ]),
-            (string) $request->body()
+            $request->body()->toString(),
         );
     }
 
@@ -102,7 +102,7 @@ class HttpTranslatorTest extends TestCase
             ->willReturn($body = $this->createMock(Readable::class));
         $body
             ->expects($this->once())
-            ->method('__toString')
+            ->method('toString')
             ->willReturn('{"transaction":{"expires":"+1hour"},"commit":"/db/data/transaction/1/commit"}');
         $response
             ->expects($this->once())
@@ -115,8 +115,8 @@ class HttpTranslatorTest extends TestCase
         $request = ($this->translate)($query);
 
         $this->assertInstanceOf(Request::class, $request);
-        $this->assertSame('POST', (string) $request->method());
-        $this->assertSame('/db/data/transaction/1', (string) $request->url());
+        $this->assertSame('POST', $request->method()->toString());
+        $this->assertSame('/db/data/transaction/1', $request->url()->toString());
         $this->assertSame(
             json_encode([
                 'statements' => [[
@@ -125,7 +125,7 @@ class HttpTranslatorTest extends TestCase
                     'parameters' => ['foo' => 'bar'],
                 ]],
             ]),
-            (string) $request->body()
+            $request->body()->toString()
         );
     }
 }

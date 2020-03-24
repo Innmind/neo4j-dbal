@@ -11,8 +11,12 @@ use Innmind\Neo4j\DBAL\{
     Result\Row,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    StreamInterface,
+    Map,
+    Sequence,
+};
+use function Innmind\Immutable\{
+    unwrap,
+    first,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -23,9 +27,9 @@ class ResultTest extends TestCase
         $result = Result::fromRaw([]);
 
         $this->assertInstanceOf(ResultInterface::class, $result);
-        $this->assertInstanceOf(MapInterface::class, $result->nodes());
-        $this->assertInstanceOf(MapInterface::class, $result->relationships());
-        $this->assertInstanceOf(StreamInterface::class, $result->rows());
+        $this->assertInstanceOf(Map::class, $result->nodes());
+        $this->assertInstanceOf(Map::class, $result->relationships());
+        $this->assertInstanceOf(Sequence::class, $result->rows());
         $this->assertSame('int', (string) $result->nodes()->keyType());
         $this->assertSame(Node::class, (string) $result->nodes()->valueType());
         $this->assertSame('int', (string) $result->relationships()->keyType());
@@ -90,40 +94,40 @@ class ResultTest extends TestCase
         $this->assertSame('baz', $result->rows()->first()->column());
         $this->assertSame(
             19,
-            $result->nodes()->current()->id()->value()
+            $result->nodes()->values()->first()->id()->value()
         );
-        $this->assertSame([19, 21], $result->nodes()->keys()->toPrimitive());
+        $this->assertSame([19, 21], unwrap($result->nodes()->keys()));
         $this->assertSame(
             ['Bike'],
-            $result->nodes()->current()->labels()->toPrimitive()
+            unwrap($result->nodes()->values()->first()->labels())
         );
-        $this->assertCount(1, $result->relationships()->current()->properties());
+        $this->assertCount(1, $result->relationships()->values()->first()->properties());
         $this->assertSame(
             10,
-            $result->nodes()->current()->properties()->get('weight')
+            $result->nodes()->values()->first()->properties()->get('weight')
         );
         $this->assertCount(2, $result->relationships());
         $this->assertSame(
             9,
-            $result->relationships()->current()->id()->value()
+            $result->relationships()->values()->first()->id()->value()
         );
-        $this->assertSame([9, 10], $result->relationships()->keys()->toPrimitive());
+        $this->assertSame([9, 10], unwrap($result->relationships()->keys()));
         $this->assertSame(
             'HAS',
-            $result->relationships()->current()->type()->value()
+            $result->relationships()->values()->first()->type()->value()
         );
         $this->assertSame(
             19,
-            $result->relationships()->current()->startNode()->value()
+            $result->relationships()->values()->first()->startNode()->value()
         );
         $this->assertSame(
             20,
-            $result->relationships()->current()->endNode()->value()
+            $result->relationships()->values()->first()->endNode()->value()
         );
-        $this->assertCount(1, $result->relationships()->current()->properties());
+        $this->assertCount(1, $result->relationships()->values()->first()->properties());
         $this->assertSame(
             1,
-            $result->relationships()->current()->properties()->get('position')
+            $result->relationships()->values()->first()->properties()->get('position')
         );
     }
 

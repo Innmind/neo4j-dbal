@@ -6,7 +6,7 @@ namespace Tests\Innmind\Neo4j\DBAL;
 use function Innmind\Neo4j\DBAL\bootstrap;
 use Innmind\Neo4j\DBAL\Connection;
 use Innmind\HttpTransport\Transport;
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use PHPUnit\Framework\TestCase;
 
 class BootstrapTest extends TestCase
@@ -15,7 +15,7 @@ class BootstrapTest extends TestCase
     {
         $connection = bootstrap(
             $this->createMock(Transport::class),
-            $this->createMock(TimeContinuumInterface::class)
+            $this->createMock(Clock::class)
         );
 
         $this->assertInstanceOf(Connection::class, $connection);

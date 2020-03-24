@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Immutable\{
-    SetInterface,
-    MapInterface,
+    Set,
+    Map,
 };
 
 interface Node
@@ -20,9 +20,9 @@ interface Node
     /**
      * Return the labels
      *
-     * @return SetInterface<string>
+     * @return Set<string>
      */
-    public function labels(): SetInterface;
+    public function labels(): Set;
 
     /**
      * Check if the node has labels
@@ -34,9 +34,9 @@ interface Node
     /**
      * Return the properties
      *
-     * @return MapInterface<string, variable>
+     * @return Map<string, variable>
      */
-    public function properties(): MapInterface;
+    public function properties(): Map;
 
     /**
      * Check if the node has properties
