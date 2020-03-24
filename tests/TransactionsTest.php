@@ -53,8 +53,7 @@ class TransactionsTest extends TestCase
     public function testCommit()
     {
         $this->transactions->open();
-        $this->assertSame(
-            $this->transactions,
+        $this->assertNull(
             $this->transactions->commit()
         );
         $this->assertFalse($this->transactions->isOpened());
@@ -84,8 +83,7 @@ class TransactionsTest extends TestCase
     public function testRollback()
     {
         $this->transactions->open();
-        $this->assertSame(
-            $this->transactions,
+        $this->assertNull(
             $this->transactions->rollback()
         );
         $this->assertFalse($this->transactions->isOpened());

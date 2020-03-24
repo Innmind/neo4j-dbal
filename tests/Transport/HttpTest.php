@@ -50,7 +50,7 @@ class HttpTest extends TestCase
 
     public function testPing()
     {
-        $this->assertSame($this->transport, $this->transport->ping());
+        $this->assertNull($this->transport->ping());
     }
 
     public function testThrowWhenPingUnavailableServer()

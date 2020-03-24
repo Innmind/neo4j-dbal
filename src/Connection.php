@@ -6,10 +6,10 @@ namespace Innmind\Neo4j\DBAL;
 interface Connection
 {
     public function execute(Query $query): Result;
-    public function openTransaction(): self;
+    public function openTransaction(): void;
     public function isTransactionOpened(): bool;
-    public function commit(): self;
-    public function rollback(): self;
+    public function commit(): void;
+    public function rollback(): void;
 
     /**
      * Check if the server is up and running

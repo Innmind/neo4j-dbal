@@ -56,7 +56,7 @@ final class Http implements Transport
     /**
      * {@inheritdoc}
      */
-    public function ping(): Transport
+    public function ping(): void
     {
         try {
             $code = ($this->fulfill)
@@ -77,7 +77,7 @@ final class Http implements Transport
         }
 
         if ($code->isSuccessful()) {
-            return $this;
+            return;
         }
 
         throw new ServerDown;

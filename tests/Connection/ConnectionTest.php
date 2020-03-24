@@ -62,13 +62,13 @@ class ConnectionTest extends TestCase
     public function testTransactions()
     {
         $this->assertFalse($this->connection->isTransactionOpened());
-        $this->assertSame($this->connection, $this->connection->openTransaction());
+        $this->assertNull($this->connection->openTransaction());
         $this->assertTrue($this->connection->isTransactionOpened());
-        $this->assertSame($this->connection, $this->connection->commit());
+        $this->assertNull($this->connection->commit());
         $this->assertFalse($this->connection->isTransactionOpened());
         $this->connection->openTransaction();
         $this->assertTrue($this->connection->isTransactionOpened());
-        $this->assertSame($this->connection, $this->connection->rollback());
+        $this->assertNull($this->connection->rollback());
         $this->assertFalse($this->connection->isTransactionOpened());
     }
 

@@ -123,7 +123,7 @@ class LoggerConnectionTest extends TestCase
             ->method('debug')
             ->with('Transaction opened');
 
-        $this->assertSame($connection, $connection->openTransaction());
+        $this->assertNull($connection->openTransaction());
     }
 
     public function testIsTransactionOpened()
@@ -154,7 +154,7 @@ class LoggerConnectionTest extends TestCase
             ->method('debug')
             ->with('Transaction committed');
 
-        $this->assertSame($connection, $connection->commit());
+        $this->assertNull($connection->commit());
     }
 
     public function testRollback()
@@ -171,7 +171,7 @@ class LoggerConnectionTest extends TestCase
             ->method('debug')
             ->with('Transaction rollbacked');
 
-        $this->assertSame($connection, $connection->rollback());
+        $this->assertNull($connection->rollback());
     }
 
     public function testIsAlive()

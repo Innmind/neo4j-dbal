@@ -29,11 +29,9 @@ final class Connection implements ConnectionInterface
         return $this->transport->execute($query);
     }
 
-    public function openTransaction(): ConnectionInterface
+    public function openTransaction(): void
     {
         $this->transactions->open();
-
-        return $this;
     }
 
     public function isTransactionOpened(): bool
@@ -41,18 +39,14 @@ final class Connection implements ConnectionInterface
         return $this->transactions->isOpened();
     }
 
-    public function commit(): ConnectionInterface
+    public function commit(): void
     {
         $this->transactions->commit();
-
-        return $this;
     }
 
-    public function rollback(): ConnectionInterface
+    public function rollback(): void
     {
         $this->transactions->rollback();
-
-        return $this;
     }
 
     /**

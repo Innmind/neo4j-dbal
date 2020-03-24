@@ -98,10 +98,8 @@ final class Transactions
 
     /**
      * Commit the current transaction
-     *
-     * @return self
      */
-    public function commit(): self
+    public function commit(): void
     {
         ($this->fulfill)(
             new Request(
@@ -113,16 +111,12 @@ final class Transactions
             )
         );
         $this->transactions = $this->transactions->dropEnd(1);
-
-        return $this;
     }
 
     /**
      * Rollback the current transaction
-     *
-     * @return self
      */
-    public function rollback(): self
+    public function rollback(): void
     {
         ($this->fulfill)(
             new Request(
@@ -132,7 +126,5 @@ final class Transactions
             )
         );
         $this->transactions = $this->transactions->dropEnd(1);
-
-        return $this;
     }
 }

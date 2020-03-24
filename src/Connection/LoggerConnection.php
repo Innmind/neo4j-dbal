@@ -57,12 +57,10 @@ final class LoggerConnection implements ConnectionInterface
         }
     }
 
-    public function openTransaction(): ConnectionInterface
+    public function openTransaction(): void
     {
         $this->connection->openTransaction();
         $this->logger->debug('Transaction opened');
-
-        return $this;
     }
 
     public function isTransactionOpened(): bool
@@ -70,20 +68,16 @@ final class LoggerConnection implements ConnectionInterface
         return $this->connection->isTransactionOpened();
     }
 
-    public function commit(): ConnectionInterface
+    public function commit(): void
     {
         $this->connection->commit();
         $this->logger->debug('Transaction committed');
-
-        return $this;
     }
 
-    public function rollback(): ConnectionInterface
+    public function rollback(): void
     {
         $this->connection->rollback();
         $this->logger->debug('Transaction rollbacked');
-
-        return $this;
     }
 
     /**

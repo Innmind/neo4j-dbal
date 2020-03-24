@@ -12,5 +12,5 @@ interface Transport
      *
      * @throws ServerDown if it doesn't respond
      */
-    public function ping(): self;
+    public function ping(): void;
 }
