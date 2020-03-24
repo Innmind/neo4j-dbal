@@ -14,11 +14,6 @@ interface Query
     public function cypher(): string;
 
     /**
-     * Same as cypher()
-     */
-    public function __toString(): string;
-
-    /**
      * Return the list of parameters
      *
      * @return Map<string, Parameter>

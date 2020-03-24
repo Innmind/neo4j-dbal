@@ -17,6 +17,6 @@ class UnionClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('UNION', $clause->identifier());
-        $this->assertSame('', (string) $clause);
+        $this->assertSame('', $clause->cypher());
     }
 }

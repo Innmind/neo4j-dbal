@@ -300,13 +300,13 @@ final class Path
         );
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         return join(
             '',
             $this->elements->mapTo(
                 'string',
-                static fn($element): string => (string) $element,
+                static fn($element): string => $element->cypher(),
             ),
         )->toString();
     }

@@ -37,7 +37,7 @@ final class SetClause implements Clause, Parametrable
         return self::IDENTIFIER;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         return $this->cypher;
     }

@@ -17,6 +17,6 @@ class ReturnClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('RETURN', $clause->identifier());
-        $this->assertSame('a, b, c, d', (string) $clause);
+        $this->assertSame('a, b, c, d', $clause->cypher());
     }
 }

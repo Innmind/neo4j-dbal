@@ -16,9 +16,9 @@ trait PathAware
     /**
      * {@inheritdoc}
      */
-    public function __toString(): string
+    public function cypher(): string
     {
-        return (string) $this->path;
+        return $this->path->cypher();
     }
 
     /**

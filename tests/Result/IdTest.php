@@ -16,7 +16,7 @@ class IdTest extends TestCase
         $id = new Id(42);
 
         $this->assertSame(42, $id->value());
-        $this->assertSame('42', (string) $id);
+        $this->assertSame('42', $id->toString());
     }
 
     public function testThrowWhenNegativeId()

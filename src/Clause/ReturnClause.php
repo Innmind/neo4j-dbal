@@ -21,7 +21,7 @@ final class ReturnClause implements Clause
         return self::IDENTIFIER;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         return \implode(', ', $this->variables);
     }

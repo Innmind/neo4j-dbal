@@ -31,7 +31,7 @@ final class Query implements QueryInterface
     {
         $previous = $this->clauses->first();
         $clauses = $this->clauses->drop(1);
-        $cypher = $previous->identifier().' '.(string) $previous;
+        $cypher = $previous->identifier().' '.$previous->cypher();
 
         foreach (unwrap($clauses) as $clause) {
             if ($clause->identifier() === $previous->identifier()) {
@@ -40,16 +40,11 @@ final class Query implements QueryInterface
                 $cypher .= ' '.$clause->identifier().' ';
             }
 
-            $cypher .= (string) $clause;
+            $cypher .= $clause->cypher();
             $previous = $clause;
         }
 
         return $cypher;
-    }
-
-    public function __toString(): string
-    {
-        return $this->cypher();
     }
 
     public function parameters(): Map

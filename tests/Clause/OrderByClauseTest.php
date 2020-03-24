@@ -18,10 +18,10 @@ class OrderByClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('ORDER BY', $clause->identifier());
-        $this->assertSame('n.foo ASC', (string) $clause);
+        $this->assertSame('n.foo ASC', $clause->cypher());
         $this->assertSame(
             'n.foo DESC',
-            (string) OrderByClause::desc('n.foo')
+            OrderByClause::desc('n.foo')->cypher(),
         );
     }
 

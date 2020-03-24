@@ -173,7 +173,7 @@ final class Relationship
         return $this->parameters;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         $properties = '';
 
@@ -201,7 +201,7 @@ final class Relationship
             $this->direction === self::LEFT ? '<' : '',
             (string) $this->variable,
             $this->type ? ':'.$this->type : '',
-            (string) $this->distance,
+            $this->distance->cypher(),
             $properties,
             $this->direction === self::RIGHT ? '>' : '',
         );

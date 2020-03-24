@@ -19,7 +19,7 @@ class DeleteClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('DELETE', $clause->identifier());
-        $this->assertSame('n', (string) $clause);
+        $this->assertSame('n', $clause->cypher());
 
         $this->assertSame(
             'DETACH DELETE',

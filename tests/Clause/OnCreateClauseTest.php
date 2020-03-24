@@ -18,7 +18,7 @@ class OnCreateClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('ON CREATE', $clause->identifier());
-        $this->assertSame('SET n:Foo', (string) $clause);
+        $this->assertSame('SET n:Foo', $clause->cypher());
     }
 
     public function testThrowWhenEmptyCypher()

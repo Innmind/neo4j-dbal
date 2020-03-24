@@ -43,17 +43,18 @@ class NodeTest extends TestCase
 
     public function testCast()
     {
-        $this->assertSame('()', (string) new Node);
-        $this->assertSame('(a)', (string) new Node('a'));
-        $this->assertSame('(a:Foo:Bar)', (string) new Node('a', ['Foo', 'Bar']));
-        $this->assertSame('(:Foo:Bar)', (string) new Node(null, ['Foo', 'Bar']));
+        $this->assertSame('()', (new Node)->cypher());
+        $this->assertSame('(a)', (new Node('a'))->cypher());
+        $this->assertSame('(a:Foo:Bar)', (new Node('a', ['Foo', 'Bar']))->cypher());
+        $this->assertSame('(:Foo:Bar)', (new Node(null, ['Foo', 'Bar']))->cypher());
         $this->assertSame(
             '(a:Foo { key: {value}, another: {where}.value })',
-            (string) (new Node('a', ['Foo']))
+            (new Node('a', ['Foo']))
                 ->withProperty('key', '{value}')
                 ->withProperty('another', '{where}.value')
                 ->withParameter('value', 'foo')
                 ->withParameter('where', ['value' => 'bar'])
+                ->cypher(),
         );
     }
 

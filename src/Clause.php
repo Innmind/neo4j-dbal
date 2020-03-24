@@ -13,5 +13,5 @@ interface Clause
     /**
      * Return the cypher representation of the clause
      */
-    public function __toString(): string;
+    public function cypher(): string;
 }

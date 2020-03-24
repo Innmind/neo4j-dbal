@@ -19,7 +19,7 @@ class DistanceTest extends TestCase
 
     public function testDefault()
     {
-        $this->assertSame('', (string) new Distance);
+        $this->assertSame('', (new Distance)->cypher());
     }
 
     public function testOf()
@@ -32,7 +32,7 @@ class DistanceTest extends TestCase
             })
             ->then(function(int $int): void {
                 $this->assertInstanceOf(Distance::class, Distance::of($int));
-                $this->assertSame('*'.$int, (string) Distance::of($int));
+                $this->assertSame('*'.$int, Distance::of($int)->cypher());
             });
     }
 
@@ -53,7 +53,7 @@ class DistanceTest extends TestCase
             })
             ->then(function(int $min, int $max): void {
                 $this->assertInstanceOf(Distance::class, Distance::between($min, $max));
-                $this->assertSame("*$min..$max", (string) Distance::between($min, $max));
+                $this->assertSame("*$min..$max", Distance::between($min, $max)->cypher());
             });
     }
 
@@ -81,7 +81,7 @@ class DistanceTest extends TestCase
             })
             ->then(function(int $int): void {
                 $this->assertInstanceOf(Distance::class, Distance::atLeast($int));
-                $this->assertSame("*$int..", (string) Distance::atLeast($int));
+                $this->assertSame("*$int..", Distance::atLeast($int)->cypher());
             });
     }
 
@@ -102,7 +102,7 @@ class DistanceTest extends TestCase
             })
             ->then(function(int $int): void {
                 $this->assertInstanceOf(Distance::class, Distance::atMost($int));
-                $this->assertSame("*..$int", (string) Distance::atMost($int));
+                $this->assertSame("*..$int", Distance::atMost($int)->cypher());
             });
     }
 
@@ -116,6 +116,6 @@ class DistanceTest extends TestCase
     public function testAny()
     {
         $this->assertInstanceOf(Distance::class, Distance::any());
-        $this->assertSame('*', (string) Distance::any());
+        $this->assertSame('*', Distance::any()->cypher());
     }
 }

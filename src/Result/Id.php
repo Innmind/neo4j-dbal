@@ -29,7 +29,7 @@ final class Id
     /**
      * Return the string representation of the id
      */
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
     }

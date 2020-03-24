@@ -22,7 +22,7 @@ class CreateClauseTest extends TestCase
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertInstanceOf(PathAware::class, $clause);
         $this->assertInstanceOf(Parametrable::class, $clause);
-        $this->assertSame('()', (string) $clause);
+        $this->assertSame('()', $clause->cypher());
         $this->assertSame('CREATE', $clause->identifier());
         $this->assertSame(
             'CREATE UNIQUE',
@@ -48,7 +48,7 @@ class CreateClauseTest extends TestCase
 
         $this->assertSame(
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
-            (string) $clause
+            $clause->cypher()
         );
         $this->assertTrue($clause->hasParameters());
         $this->assertCount(4, $clause->parameters());

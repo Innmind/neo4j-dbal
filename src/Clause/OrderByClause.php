@@ -60,7 +60,7 @@ final class OrderByClause implements Clause
         return self::IDENTIFIER;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         return \sprintf(
             '%s %s',

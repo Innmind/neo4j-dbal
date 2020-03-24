@@ -80,7 +80,7 @@ final class Node
         return $this->parameters;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         $labels = $properties = '';
 

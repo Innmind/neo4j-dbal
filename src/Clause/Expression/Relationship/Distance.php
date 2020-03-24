@@ -71,7 +71,7 @@ final class Distance
         return $self;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         if ($this->min === null && $this->max === null) {
             return '*';

@@ -55,7 +55,7 @@ class QueryTest extends TestCase
 
         $this->assertSame(
             $expression = 'MATCH (n:labels { foo: {foo} })-[r:TYPE*..42 { foo: {baz} }]-(n2:labels { bar: {bar} }) WITH n, n2, r WHERE n.foo = {foobar}, n2.bar = {foobaz}.whatever SET n :ExtraLabel CREATE (n2:Foo:Bar) DELETE unknown REMOVE n.foo FOREACH (n IN nodes(p)| SET n.marked = TRUE ) LIMIT 42 MERGE (n3)-[]-() ON CREATE SET n3.foo = "bar" ON MATCH SET n.updated = timestamp() ORDER BY n3.updated DESC RETURN n, n2, n3 SKIP 3 UNWIND [1,2,3] AS x USING INDEX n.foo',
-            (string) $query
+            $query->cypher()
         );
         $this->assertSame($expression, $query->cypher());
         $this->assertCount(5, $query->parameters());

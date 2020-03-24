@@ -19,7 +19,7 @@ class LimitClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('LIMIT', $clause->identifier());
-        $this->assertSame('42', (string) $clause);
+        $this->assertSame('42', $clause->cypher());
     }
 
     public function testThrowWhenEmptyCypher()

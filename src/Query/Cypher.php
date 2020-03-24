@@ -34,11 +34,6 @@ final class Cypher implements QueryInterface
         return $this->cypher;
     }
 
-    public function __toString(): string
-    {
-        return $this->cypher();
-    }
-
     public function parameters(): Map
     {
         return $this->parameters;

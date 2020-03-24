@@ -18,12 +18,12 @@ class PathTest extends TestCase
         $path = Path::startWithNode('foo', ['Bar']);
 
         $this->assertInstanceOf(Path::class, $path);
-        $this->assertSame('(foo:Bar)', (string) $path);
+        $this->assertSame('(foo:Bar)', $path->cypher());
         $this->assertNotSame($path, $path->withProperty('foo', ''));
         $this->assertInstanceOf(Path::class, $path->withProperty('foo', ''));
         $this->assertSame(
             '(foo:Bar { prop: {value} })',
-            (string) $path->withProperty('prop', '{value}')
+            $path->withProperty('prop', '{value}')->cypher(),
         );
     }
 
@@ -34,11 +34,11 @@ class PathTest extends TestCase
         $path2 = $path->linkedTo('bar', ['Baz']);
         $this->assertNotSame($path, $path2);
         $this->assertInstanceOf(Path::class, $path2);
-        $this->assertSame('()', (string) $path);
-        $this->assertSame('()-[]-(bar:Baz)', (string) $path2);
+        $this->assertSame('()', $path->cypher());
+        $this->assertSame('()-[]-(bar:Baz)', $path2->cypher());
         $this->assertSame(
             '()-[]-(bar:Baz { prop: {value} })',
-            (string) $path2->withProperty('prop', '{value}')
+            $path2->withProperty('prop', '{value}')->cypher(),
         );
     }
 
@@ -56,13 +56,14 @@ class PathTest extends TestCase
         $path2 = $path->through(null, 'BAR');
         $this->assertNotSame($path, $path2);
         $this->assertInstanceOf(Path::class, $path2);
-        $this->assertSame('()-[]-()', (string) $path);
-        $this->assertSame('()-[:BAR]-()', (string) $path2);
+        $this->assertSame('()-[]-()', $path->cypher());
+        $this->assertSame('()-[:BAR]-()', $path2->cypher());
         $this->assertSame(
             '()-[a:BAR { foo: {value} }]->()',
-            (string) $path
+            $path
                 ->through('a', 'BAR', Relationship::RIGHT)
                 ->withProperty('foo', '{value}')
+                ->cypher(),
         );
     }
 
@@ -70,7 +71,7 @@ class PathTest extends TestCase
     {
         $this->assertSame(
             '()-[*2]-()',
-            (string) Path::startWithNode()->linkedTo()->withADistanceOf(2)
+            Path::startWithNode()->linkedTo()->withADistanceOf(2)->cypher(),
         );
     }
 
@@ -85,7 +86,7 @@ class PathTest extends TestCase
     {
         $this->assertSame(
             '()-[*2..3]-()',
-            (string) Path::startWithNode()->linkedTo()->withADistanceBetween(2, 3)
+            Path::startWithNode()->linkedTo()->withADistanceBetween(2, 3)->cypher(),
         );
     }
 
@@ -100,7 +101,7 @@ class PathTest extends TestCase
     {
         $this->assertSame(
             '()-[*2..]-()',
-            (string) Path::startWithNode()->linkedTo()->withADistanceOfAtLeast(2)
+            Path::startWithNode()->linkedTo()->withADistanceOfAtLeast(2)->cypher(),
         );
     }
 
@@ -115,7 +116,7 @@ class PathTest extends TestCase
     {
         $this->assertSame(
             '()-[*..2]-()',
-            (string) Path::startWithNode()->linkedTo()->withADistanceOfAtMost(2)
+            Path::startWithNode()->linkedTo()->withADistanceOfAtMost(2)->cypher(),
         );
     }
 
@@ -130,7 +131,7 @@ class PathTest extends TestCase
     {
         $this->assertSame(
             '()-[*]-()',
-            (string) Path::startWithNode()->linkedTo()->withAnyDistance()
+            Path::startWithNode()->linkedTo()->withAnyDistance()->cypher(),
         );
     }
 
@@ -170,7 +171,7 @@ class PathTest extends TestCase
 
         $this->assertSame(
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',
-            (string) $path
+            $path->cypher(),
         );
         $this->assertCount(4, $path->parameters());
     }

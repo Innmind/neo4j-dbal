@@ -32,7 +32,7 @@ final class DeleteClause implements Clause
             'DETACH '.self::IDENTIFIER : self::IDENTIFIER;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         return $this->cypher;
     }
