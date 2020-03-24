@@ -8,15 +8,15 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Str,
 };
 
 final class Cypher implements QueryInterface
 {
-    private $cypher;
-    private $parameters;
+    private string $cypher;
+    /** @var Map<string, Parameter> */
+    private Map $parameters;
 
     public function __construct(string $cypher)
     {
@@ -25,54 +25,35 @@ final class Cypher implements QueryInterface
         }
 
         $this->cypher = $cypher;
-        $this->parameters = new Map('string', Parameter::class);
+        /** @var Map<string, Parameter> */
+        $this->parameters = Map::of('string', Parameter::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function cypher(): string
     {
         return $this->cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
-    {
-        return $this->cypher();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->parameters->size() > 0;
+        return !$this->parameters->empty();
     }
 
     /**
      * Attach parameters to this query
      *
-     * @param array $parameters
-     *
-     * @throws NonParametrableClause
-     *
-     * @return self
+     * @param array<string, mixed> $parameters
      */
     public function withParameters(array $parameters): self
     {
         $query = $this;
 
+        /** @var mixed $parameter */
         foreach ($parameters as $key => $parameter) {
             $query = $query->withParameter($key, $parameter);
         }
@@ -83,12 +64,7 @@ final class Cypher implements QueryInterface
     /**
      * Attach the given parameter to this query
      *
-     * @param string $key
      * @param mixed $parameter
-     *
-     * @throws NonParametrableClause
-     *
-     * @return self
      */
     public function withParameter(string $key, $parameter): self
     {
@@ -97,9 +73,9 @@ final class Cypher implements QueryInterface
         }
 
         $query = new self($this->cypher);
-        $query->parameters = $this->parameters->put(
+        $query->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $parameter)
+            new Parameter($key, $parameter),
         );
 
         return $query;

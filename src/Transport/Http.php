@@ -15,16 +15,16 @@ use Innmind\Neo4j\DBAL\{
 use Innmind\Http\{
     Message\Response,
     Message\Request\Request,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
+    Message\Method,
+    ProtocolVersion,
 };
 use Innmind\Url\Url;
 use Innmind\Json\Json;
 
 final class Http implements Transport
 {
-    private $translate;
-    private $fulfill;
+    private HttpTranslator $translate;
+    private HttpTransport $fulfill;
 
     public function __construct(
         HttpTranslator $translate,
@@ -34,9 +34,6 @@ final class Http implements Transport
         $this->fulfill = $fulfill;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute(Query $query): Result
     {
         $response = ($this->fulfill)(
@@ -47,58 +44,51 @@ final class Http implements Transport
             throw new QueryFailed($query, $response);
         }
 
-        $response = Json::decode((string) $response->body());
-        $result = Result\Result::fromRaw($response['results'][0] ?? []);
+        /** @var array{results: array{0?: array{columns: list<string>, data: list<array{row: list<scalar|array>, graph: array{nodes: list<array{id: numeric, labels: list<string>, properties: array<string, scalar|array>}>, relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}>}}} */
+        $response = Json::decode($response->body()->toString());
 
-        return $result;
+        return Result\Result::fromRaw($response['results'][0] ?? [
+            'columns' => [],
+            'data' => [],
+        ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function ping(): Transport
+    public function ping(): void
     {
         try {
             $code = ($this->fulfill)
                 (
                     new Request(
-                        Url::fromString('/'),
+                        Url::of('/'),
                         Method::options(),
-                        new ProtocolVersion(1, 1)
-                    )
+                        new ProtocolVersion(1, 1),
+                    ),
                 )
-                ->statusCode()
-                ->value();
+                ->statusCode();
         } catch (\Exception $e) {
             throw new ServerDown(
                 $e->getMessage(),
-                $e->getCode(),
-                $e
+                (int) $e->getCode(),
+                $e,
             );
         }
 
-        if ($code >= 200 && $code < 300) {
-            return $this;
+        if ($code->isSuccessful()) {
+            return;
         }
 
         throw new ServerDown;
     }
 
-    /**
-     * Check if the response is successful
-     *
-     * @param Response $response
-     *
-     * @return bool
-     */
     private function isSuccessful(Response $response): bool
     {
         if ($response->statusCode()->value() !== 200) {
             return false;
         }
 
-        $json = Json::decode((string) $response->body());
+        /** @var array{errors: array} */
+        $json = Json::decode($response->body()->toString());
 
-        return count($json['errors']) === 0;
+        return \count($json['errors']) === 0;
     }
 }

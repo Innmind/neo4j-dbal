@@ -9,18 +9,12 @@ final class UnionClause implements Clause
 {
     private const IDENTIFIER = 'UNION';
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
+    public function cypher(): string
     {
         return '';
     }

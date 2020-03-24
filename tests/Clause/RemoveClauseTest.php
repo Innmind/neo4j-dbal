@@ -18,7 +18,7 @@ class RemoveClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('REMOVE', $clause->identifier());
-        $this->assertSame('n:Foo', (string) $clause);
+        $this->assertSame('n:Foo', $clause->cypher());
     }
 
     public function testThrowWhenEmptyCypher()

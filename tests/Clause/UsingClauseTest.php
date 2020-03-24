@@ -18,7 +18,7 @@ class UsingClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('USING', $clause->identifier());
-        $this->assertSame('INDEX n.foo', (string) $clause);
+        $this->assertSame('INDEX n.foo', $clause->cypher());
     }
 
     public function testThrowWhenEmptyCypher()

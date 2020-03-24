@@ -17,6 +17,6 @@ class WithClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('WITH', $clause->identifier());
-        $this->assertSame('a, b, c, d', (string) $clause);
+        $this->assertSame('a, b, c, d', $clause->cypher());
     }
 }

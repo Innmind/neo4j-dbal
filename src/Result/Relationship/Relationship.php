@@ -8,29 +8,29 @@ use Innmind\Neo4j\DBAL\{
     Result\Id,
     Result\Type,
 };
-use Innmind\Immutable\MapInterface;
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\assertMap;
 
 final class Relationship implements RelationshipInterface
 {
-    private $id;
-    private $type;
-    private $startNode;
-    private $endNode;
-    private $properties;
+    private Id $id;
+    private Type $type;
+    private Id $startNode;
+    private Id $endNode;
+    /** @var Map<string, scalar|array> */
+    private Map $properties;
 
+    /**
+     * @param Map<string, scalar|array> $properties
+     */
     public function __construct(
         Id $id,
         Type $type,
         Id $startNode,
         Id $endNode,
-        MapInterface $properties
+        Map $properties
     ) {
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'variable'
-        ) {
-            throw new \TypeError('Argument 5 must be of type MapInterface<string, variable>');
-        }
+        assertMap('string', 'scalar|array', $properties, 5);
 
         $this->id = $id;
         $this->type = $type;
@@ -39,51 +39,33 @@ final class Relationship implements RelationshipInterface
         $this->properties = $properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function id(): Id
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function type(): Type
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function startNode(): Id
     {
         return $this->startNode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function endNode(): Id
     {
         return $this->endNode;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function properties(): MapInterface
+    public function properties(): Map
     {
         return $this->properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperties(): bool
     {
-        return $this->properties->count() > 0;
+        return !$this->properties->empty();
     }
 }

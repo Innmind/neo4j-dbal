@@ -7,7 +7,7 @@ use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Id
 {
-    private $value;
+    private int $value;
 
     public function __construct(int $value)
     {
@@ -20,8 +20,6 @@ final class Id
 
     /**
      * Return the id
-     *
-     * @return int
      */
     public function value(): int
     {
@@ -30,10 +28,8 @@ final class Id
 
     /**
      * Return the string representation of the id
-     *
-     * @return string
      */
-    public function __toString(): string
+    public function toString(): string
     {
         return (string) $this->value;
     }

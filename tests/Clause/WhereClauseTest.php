@@ -21,7 +21,7 @@ class WhereClauseTest extends TestCase
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertInstanceOf(Parametrable::class, $clause);
         $this->assertSame('WHERE', $clause->identifier());
-        $this->assertSame('n.foo = {dumb}', (string) $clause);
+        $this->assertSame('n.foo = {dumb}', $clause->cypher());
         $this->assertNotSame($clause, $clause->withParameter('foo', 'bar'));
         $this->assertFalse($clause->hasParameters());
         $this->assertTrue($clause->withParameter('dumb', 'dumb')->hasParameters());

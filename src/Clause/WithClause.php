@@ -9,25 +9,19 @@ final class WithClause implements Clause
 {
     private const IDENTIFIER = 'WITH';
 
-    private $variables;
+    private array $variables;
 
     public function __construct(string ...$variables)
     {
         $this->variables = $variables;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
+    public function cypher(): string
     {
         return \implode(', ', $this->variables);
     }

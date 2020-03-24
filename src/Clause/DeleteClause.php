@@ -13,8 +13,8 @@ final class DeleteClause implements Clause
 {
     private const IDENTIFIER = 'DELETE';
 
-    private $cypher;
-    private $detachable = false;
+    private string $cypher;
+    private bool $detachable = false;
 
     public function __construct(string $cypher, bool $detachable)
     {
@@ -26,19 +26,13 @@ final class DeleteClause implements Clause
         $this->detachable = $detachable;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return $this->detachable ?
             'DETACH '.self::IDENTIFIER : self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
+    public function cypher(): string
     {
         return $this->cypher;
     }

@@ -8,37 +8,48 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Set,
     Str,
 };
+use function Innmind\Immutable\{
+    unwrap,
+    join,
+};
 
 final class Node
 {
-    private $variable;
-    private $labels;
-    private $parameters;
-    private $properties;
+    private ?string $variable;
+    /** @var Set<string> */
+    private Set $labels;
+    /** @var Map<string, Parameter> */
+    private Map $parameters;
+    /** @var Map<string, string> */
+    private Map $properties;
 
-    public function __construct(string $variable = null, array $labels = [])
+    public function __construct(string $variable = null, string ...$labels)
     {
         $this->variable = $variable;
-        $this->labels = Set::of('string', ...$labels);;
-        $this->parameters = new Map('string', Parameter::class);
-        $this->properties = new Map('string', 'string');
+        $this->labels = Set::strings(...$labels);;
+        /** @var Map<string, Parameter> */
+        $this->parameters = Map::of('string', Parameter::class);
+        /** @var Map<string, string> */
+        $this->properties = Map::of('string', 'string');
     }
 
+    /**
+     * @param mixed $value
+     */
     public function withParameter(string $key, $value): self
     {
         if (Str::of($key)->empty()) {
             throw new DomainException;
         }
 
-        $node = new self($this->variable, $this->labels->toPrimitive());
-        $node->parameters = $this->parameters->put(
+        $node = new self($this->variable, ...unwrap($this->labels));
+        $node->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $value)
+            new Parameter($key, $value),
         );
         $node->properties = $this->properties;
 
@@ -51,50 +62,53 @@ final class Node
             throw new DomainException;
         }
 
-        $node = new self($this->variable, $this->labels->toPrimitive());
+        $node = new self($this->variable, ...unwrap($this->labels));
         $node->parameters = $this->parameters;
-        $node->properties = $this->properties->put($property, $cypher);
+        $node->properties = ($this->properties)($property, $cypher);
 
         return $node;
     }
 
     /**
-     * @return MapInterface<string, Parameter>
+     * @return Map<string, Parameter>
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         $labels = $properties = '';
 
-        if ($this->labels->count() > 0) {
-            $labels = ':'.$this->labels->join(':');
+        if (!$this->labels->empty()) {
+            $labels = ':'.join(':', $this->labels)->toString();
         }
 
-        if ($this->properties->count() > 0) {
-            $properties = sprintf(
+        if (!$this->properties->empty()) {
+            $properties = \sprintf(
                 ' { %s }',
-                $this
-                    ->properties
-                    ->map(function(string $property, string $value): string {
-                        return sprintf(
-                            '%s: %s',
-                            $property,
-                            $value
-                        );
-                    })
-                    ->join(', ')
+                join(
+                    ', ',
+                    $this
+                        ->properties
+                        ->map(function(string $property, string $value): string {
+                            return \sprintf(
+                                '%s: %s',
+                                $property,
+                                $value,
+                            );
+                        })
+                        ->values(),
+                )->toString(),
             );
         }
 
-        return sprintf(
+        return \sprintf(
             '(%s%s%s)',
-            $this->variable,
+            (string) $this->variable,
             $labels,
-            $properties
+            $properties,
         );
     }
 }

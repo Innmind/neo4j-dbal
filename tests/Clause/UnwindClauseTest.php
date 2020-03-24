@@ -18,7 +18,7 @@ class UnwindClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('UNWIND', $clause->identifier());
-        $this->assertSame('[1,1,2,2] as x', (string) $clause);
+        $this->assertSame('[1,1,2,2] as x', $clause->cypher());
     }
 
     public function testThrowWhenEmptyCypher()

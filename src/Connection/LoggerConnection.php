@@ -14,8 +14,8 @@ use Psr\Log\LoggerInterface;
 
 final class LoggerConnection implements ConnectionInterface
 {
-    private $connection;
-    private $logger;
+    private ConnectionInterface $connection;
+    private LoggerInterface $logger;
 
     public function __construct(
         ConnectionInterface $connection,
@@ -37,12 +37,13 @@ final class LoggerConnection implements ConnectionInterface
                         ->reduce(
                             [],
                             function(array $carry, string $key, Parameter $parameter): array {
+                                /** @psalm-suppress MixedAssignment */
                                 $carry[$parameter->key()] = $parameter->value();
 
                                 return $carry;
-                            }
+                            },
                         ),
-                ]
+                ],
             );
 
             return $this->connection->execute($query);
@@ -50,19 +51,17 @@ final class LoggerConnection implements ConnectionInterface
             $this->logger->error(
                 'Query failed',
                 [
-                    'message' => (string) $e->response()->body(),
-                ]
+                    'message' => $e->response()->body()->toString(),
+                ],
             );
             throw $e;
         }
     }
 
-    public function openTransaction(): ConnectionInterface
+    public function openTransaction(): void
     {
         $this->connection->openTransaction();
         $this->logger->debug('Transaction opened');
-
-        return $this;
     }
 
     public function isTransactionOpened(): bool
@@ -70,25 +69,18 @@ final class LoggerConnection implements ConnectionInterface
         return $this->connection->isTransactionOpened();
     }
 
-    public function commit(): ConnectionInterface
+    public function commit(): void
     {
         $this->connection->commit();
         $this->logger->debug('Transaction committed');
-
-        return $this;
     }
 
-    public function rollback(): ConnectionInterface
+    public function rollback(): void
     {
         $this->connection->rollback();
         $this->logger->debug('Transaction rollbacked');
-
-        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAlive(): bool
     {
         return $this->connection->isAlive();

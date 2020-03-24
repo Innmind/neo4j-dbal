@@ -16,7 +16,6 @@ class TypeTest extends TestCase
         $type = new Type('foo');
 
         $this->assertSame('foo', $type->value());
-        $this->assertSame('foo', (string) $type);
     }
 
     public function testThrowWhenEmptyType()

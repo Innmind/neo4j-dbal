@@ -9,7 +9,6 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
     Str,
 };
@@ -18,8 +17,9 @@ final class WhereClause implements Clause, Parametrable
 {
     private const IDENTIFIER = 'WHERE';
 
-    private $cypher;
-    private $parameters;
+    private string $cypher;
+    /** @var Map<string, Parameter> */
+    private Map $parameters;
 
     public function __construct(string $cypher)
     {
@@ -28,28 +28,20 @@ final class WhereClause implements Clause, Parametrable
         }
 
         $this->cypher = $cypher;
-        $this->parameters = new Map('string', Parameter::class);
+        /** @var Map<string, Parameter> */
+        $this->parameters = Map::of('string', Parameter::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
+    public function cypher(): string
     {
         return $this->cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withParameter(string $key, $value): Clause
     {
         if (Str::of($key)->empty()) {
@@ -57,26 +49,20 @@ final class WhereClause implements Clause, Parametrable
         }
 
         $where = new self($this->cypher);
-        $where->parameters = $this->parameters->put(
+        $where->parameters = ($this->parameters)(
             $key,
-            new Parameter($key, $value)
+            new Parameter($key, $value),
         );
 
         return $where;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->parameters->size() > 0;
+        return !$this->parameters->empty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->parameters;
     }

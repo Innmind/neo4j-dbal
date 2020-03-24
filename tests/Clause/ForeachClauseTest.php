@@ -19,7 +19,7 @@ class ForeachClauseTest extends TestCase
 
         $this->assertInstanceOf(Clause::class, $clause);
         $this->assertSame('FOREACH', $clause->identifier());
-        $this->assertSame('(n IN nodes(p)| SET n.marked = TRUE )', (string) $clause);
+        $this->assertSame('(n IN nodes(p)| SET n.marked = TRUE )', $clause->cypher());
     }
 
     public function testThrowWhenEmptyCypher()

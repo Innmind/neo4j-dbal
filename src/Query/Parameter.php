@@ -8,9 +8,13 @@ use Innmind\Immutable\Str;
 
 final class Parameter
 {
-    private $key;
+    private string $key;
+    /** @var mixed */
     private $value;
 
+    /**
+     * @param mixed $value
+     */
     public function __construct(string $key, $value)
     {
         if (Str::of($key)->empty()) {
@@ -26,6 +30,9 @@ final class Parameter
         return $this->key;
     }
 
+    /**
+     * @return mixed
+     */
     public function value()
     {
         return $this->value;

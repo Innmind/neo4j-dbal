@@ -7,8 +7,8 @@ use Innmind\Neo4j\DBAL\Exception\DomainException;
 
 final class Distance
 {
-    private $min = 1;
-    private $max = 1;
+    private ?int $min = 1;
+    private ?int $max = 1;
 
     public static function of(int $distance): self
     {
@@ -71,7 +71,7 @@ final class Distance
         return $self;
     }
 
-    public function __toString(): string
+    public function cypher(): string
     {
         if ($this->min === null && $this->max === null) {
             return '*';
@@ -85,6 +85,6 @@ final class Distance
             return '';
         }
 
-        return '*'.$this->min;
+        return '*'.(string) $this->min;
     }
 }

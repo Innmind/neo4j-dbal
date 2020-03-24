@@ -15,7 +15,7 @@ use Innmind\Neo4j\DBAL\{
     Exception\QueryFailed,
 };
 use Innmind\Url\Url;
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use function Innmind\HttpTransport\bootstrap as http;
 use PHPUnit\Framework\TestCase;
 
@@ -23,17 +23,17 @@ class HttpTest extends TestCase
 {
     private $transport;
 
-    public function setUp()
+    public function setUp(): void
     {
         $httpTransport = new HttpTransport(
-            Url::fromString('http://neo4j:ci@localhost:7474/'),
+            Url::of('http://neo4j:ci@localhost:7474/'),
             http()['default']()
         );
         $this->transport = new Http(
             new HttpTranslator(
                 new Transactions(
                     $httpTransport,
-                    $this->createMock(TimeContinuumInterface::class)
+                    $this->createMock(Clock::class)
                 )
             ),
             $httpTransport
@@ -50,20 +50,20 @@ class HttpTest extends TestCase
 
     public function testPing()
     {
-        $this->assertSame($this->transport, $this->transport->ping());
+        $this->assertNull($this->transport->ping());
     }
 
     public function testThrowWhenPingUnavailableServer()
     {
         $httpTransport = new HttpTransport(
-            Url::fromString('http://neo4j:ci@localhost:1337/'),
+            Url::of('http://neo4j:ci@localhost:1337/'),
             http()['default']()
         );
         $transport = new Http(
             new HttpTranslator(
                 new Transactions(
                     $httpTransport,
-                    $this->createMock(TimeContinuumInterface::class)
+                    $this->createMock(Clock::class)
                 )
             ),
             $httpTransport

@@ -8,7 +8,7 @@ use Innmind\Immutable\Str;
 
 final class Type
 {
-    private $value;
+    private string $value;
 
     public function __construct(string $value)
     {
@@ -21,20 +21,8 @@ final class Type
 
     /**
      * Return the relationship type
-     *
-     * @return string
      */
     public function value(): string
-    {
-        return $this->value;
-    }
-
-    /**
-     * @see self::getValue
-     *
-     * @return string
-     */
-    public function __toString(): string
     {
         return $this->value;
     }

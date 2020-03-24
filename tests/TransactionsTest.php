@@ -8,7 +8,7 @@ use Innmind\Neo4j\DBAL\{
     Transaction,
     HttpTransport\Transport,
 };
-use Innmind\TimeContinuum\TimeContinuumInterface;
+use Innmind\TimeContinuum\Clock;
 use Innmind\Url\Url;
 use Innmind\Immutable\Exception\OutOfBoundException;
 use function Innmind\HttpTransport\bootstrap as http;
@@ -19,16 +19,16 @@ class TransactionsTest extends TestCase
     private $transactions;
     private $server;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->server = 'http://localhost:7474/';
 
         $this->transactions = new Transactions(
             new Transport(
-                Url::fromString('http://neo4j:ci@localhost:7474/'),
+                Url::of('http://neo4j:ci@localhost:7474/'),
                 http()['default']()
             ),
-            $this->createMock(TimeContinuumInterface::class)
+            $this->createMock(Clock::class)
         );
     }
 
@@ -39,12 +39,12 @@ class TransactionsTest extends TestCase
 
         $this->assertInstanceOf(Transaction::class, $transaction);
         $this->assertRegExp(
-            '|' . (string) $this->server . 'db/data/transaction/\d+|',
-            (string) $transaction->endpoint()
+            '|' . $this->server . 'db/data/transaction/\d+|',
+            $transaction->endpoint()->toString()
         );
         $this->assertRegExp(
-            '|' . (string) $this->server . 'db/data/transaction/\d+/commit|',
-            (string) $transaction->commitEndpoint()
+            '|' . $this->server . 'db/data/transaction/\d+/commit|',
+            $transaction->commitEndpoint()->toString()
         );
         $this->assertTrue($this->transactions->isOpened());
         $this->assertSame($transaction, $this->transactions->current());
@@ -53,8 +53,7 @@ class TransactionsTest extends TestCase
     public function testCommit()
     {
         $this->transactions->open();
-        $this->assertSame(
-            $this->transactions,
+        $this->assertNull(
             $this->transactions->commit()
         );
         $this->assertFalse($this->transactions->isOpened());
@@ -84,8 +83,7 @@ class TransactionsTest extends TestCase
     public function testRollback()
     {
         $this->transactions->open();
-        $this->assertSame(
-            $this->transactions,
+        $this->assertNull(
             $this->transactions->rollback()
         );
         $this->assertFalse($this->transactions->isOpened());

@@ -3,30 +3,25 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4j\DBAL\Clause\PathAware;
 
-use Innmind\Neo4j\DBAL\Clause;
-use Innmind\Immutable\MapInterface;
+use Innmind\Neo4j\DBAL\{
+    Clause,
+    Query\Parameter,
+};
+use Innmind\Immutable\Map;
 
 trait PathAware
 {
-    private $path;
+    private Clause\Expression\Path $path;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
+    public function cypher(): string
     {
-        return (string) $this->path;
+        return $this->path->cypher();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function linkedTo(
-        string $variable = null,
-        array $labels = []
-    ): Clause {
+    public function linkedTo(string $variable = null, string ...$labels): Clause
+    {
         $clause = clone $this;
-        $clause->path = $this->path->linkedTo($variable, $labels);
+        $clause->path = $this->path->linkedTo($variable, ...$labels);
 
         return $clause;
     }
@@ -37,7 +32,7 @@ trait PathAware
     public function through(
         string $variable = null,
         string $type = null,
-        string $direction = Expression\Relationship::BOTH
+        string $direction = Clause\Expression\Relationship::BOTH
     ): Clause {
         $clause = clone $this;
         $clause->path = $this->path->through($variable, $type, $direction);
@@ -45,9 +40,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceOf(int $distance): Clause
     {
         $clause = clone $this;
@@ -56,9 +48,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceBetween(int $min, int $max): Clause
     {
         $clause = clone $this;
@@ -67,9 +56,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceOfAtLeast(int $distance): Clause
     {
         $clause = clone $this;
@@ -78,9 +64,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withADistanceOfAtMost(int $distance): Clause
     {
         $clause = clone $this;
@@ -89,9 +72,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withAnyDistance(): Clause
     {
         $clause = clone $this;
@@ -100,9 +80,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withProperty(
         string $property,
         string $cypher
@@ -113,9 +90,6 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function withParameter(string $key, $value): Clause
     {
         $clause = clone $this;
@@ -124,18 +98,15 @@ trait PathAware
         return $clause;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameters(): bool
     {
-        return $this->path->parameters()->size() > 0;
+        return !$this->path->parameters()->empty();
     }
 
     /**
-     * {@inheritdoc}
+     * @return Map<string, Parameter>
      */
-    public function parameters(): MapInterface
+    public function parameters(): Map
     {
         return $this->path->parameters();
     }

@@ -13,7 +13,7 @@ final class UnwindClause implements Clause
 {
     private const IDENTIFIER = 'UNWIND';
 
-    private $cypher;
+    private string $cypher;
 
     public function __construct(string $cypher)
     {
@@ -24,18 +24,12 @@ final class UnwindClause implements Clause
         $this->cypher = $cypher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString(): string
+    public function cypher(): string
     {
         return $this->cypher;
     }

@@ -8,74 +8,58 @@ use Innmind\Neo4j\DBAL\{
     Result\Id,
 };
 use Innmind\Immutable\{
-    SetInterface,
-    MapInterface,
+    Set,
+    Map,
+};
+use function Innmind\Immutable\{
+    assertSet,
+    assertMap,
 };
 
 final class Node implements NodeInterface
 {
-    private $id;
-    private $labels;
-    private $properties;
+    private Id $id;
+    /** @var Set<string> */
+    private Set $labels;
+    /** @var Map<string, scalar|array> */
+    private Map $properties;
 
-    public function __construct(
-        Id $id,
-        SetInterface $labels,
-        MapInterface $properties
-    ) {
-        if ((string) $labels->type() !== 'string') {
-            throw new \TypeError('Argument 2 must be of type SetInterface<string>');
-        }
-
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'variable'
-        ) {
-            throw new \TypeError('Argument 3 must be of type MapInterface<string, variable>');
-        }
+    /**
+     * @param Set<string> $labels
+     * @param Map<string, scalar|array> $properties
+     */
+    public function __construct(Id $id, Set $labels, Map $properties)
+    {
+        assertSet('string', $labels, 2);
+        assertMap('string', 'scalar|array', $properties, 3);
 
         $this->id = $id;
         $this->labels = $labels;
         $this->properties = $properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function id(): Id
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function labels(): SetInterface
+    public function labels(): Set
     {
         return $this->labels;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasLabels(): bool
     {
-        return $this->labels->count() > 0;
+        return !$this->labels->empty();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function properties(): MapInterface
+    public function properties(): Map
     {
         return $this->properties;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasProperties(): bool
     {
-        return $this->properties->count() > 0;
+        return !$this->properties->empty();
     }
 }

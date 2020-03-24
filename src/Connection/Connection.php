@@ -13,8 +13,8 @@ use Innmind\Neo4j\DBAL\{
 
 final class Connection implements ConnectionInterface
 {
-    private $transport;
-    private $transactions;
+    private Transport $transport;
+    private Transactions $transactions;
 
     public function __construct(
         Transport $transport,
@@ -29,11 +29,9 @@ final class Connection implements ConnectionInterface
         return $this->transport->execute($query);
     }
 
-    public function openTransaction(): ConnectionInterface
+    public function openTransaction(): void
     {
         $this->transactions->open();
-
-        return $this;
     }
 
     public function isTransactionOpened(): bool
@@ -41,23 +39,16 @@ final class Connection implements ConnectionInterface
         return $this->transactions->isOpened();
     }
 
-    public function commit(): ConnectionInterface
+    public function commit(): void
     {
         $this->transactions->commit();
-
-        return $this;
     }
 
-    public function rollback(): ConnectionInterface
+    public function rollback(): void
     {
         $this->transactions->rollback();
-
-        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAlive(): bool
     {
         try {

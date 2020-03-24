@@ -20,8 +20,8 @@ class NodeTest extends TestCase
     {
         $node = new Node(
             $id = new Id(42),
-            $labels = new Set('string'),
-            $properties = new Map('string', 'variable')
+            $labels = Set::of('string'),
+            $properties = Map::of('string', 'scalar|array')
         );
 
         $this->assertInstanceOf(NodeInterface::class, $node);
@@ -34,7 +34,7 @@ class NodeTest extends TestCase
         $node = new Node(
             new Id(42),
             Set::of('string', 'foo'),
-            Map::of('string', 'variable')
+            Map::of('string', 'scalar|array')
                 ('foo', 'bar')
         );
 
@@ -45,24 +45,24 @@ class NodeTest extends TestCase
     public function testThrowWhenInvalidLabelSet()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 2 must be of type SetInterface<string>');
+        $this->expectExceptionMessage('Argument 2 must be of type Set<string>');
 
         new Node(
             new Id(42),
-            new Set('str'),
-            new Map('string', 'variable')
+            Set::of('str'),
+            Map::of('string', 'scalar|array')
         );
     }
 
     public function testThrowWhenInvalidPropertyMap()
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage('Argument 3 must be of type MapInterface<string, variable>');
+        $this->expectExceptionMessage('Argument 3 must be of type Map<string, scalar|array>');
 
         new Node(
             new Id(42),
-            new Set('string'),
-            new Map('string', 'scalar')
+            Set::of('string'),
+            Map::of('string', 'scalar')
         );
     }
 }

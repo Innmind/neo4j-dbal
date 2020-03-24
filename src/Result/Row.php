@@ -8,14 +8,12 @@ interface Row
     /**
      * Return the row value
      *
-     * @return mixed
+     * @return scalar|array
      */
     public function value();
 
     /**
      * Return the column referencing this row
-     *
-     * @return string
      */
     public function column(): string;
 }

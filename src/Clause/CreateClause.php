@@ -11,20 +11,14 @@ final class CreateClause implements Clause, PathAware
 
     private const IDENTIFIER = 'CREATE';
 
-    private $path;
-    private $unique;
+    private bool $unique;
 
-    public function __construct(
-        Expression\Path $path,
-        bool $unique
-    ) {
+    public function __construct(Expression\Path $path, bool $unique)
+    {
         $this->path = $path;
         $this->unique = $unique;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function identifier(): string
     {
         return self::IDENTIFIER.($this->unique ? ' UNIQUE' : '');

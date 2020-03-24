@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Neo4j\DBAL;
 
 use Innmind\Immutable\{
-    MapInterface,
-    StreamInterface,
+    Map,
+    Sequence,
 };
 
 interface Result
@@ -13,21 +13,21 @@ interface Result
     /**
      * Return a list of nodes
      *
-     * @return MapInterface<int, NodeInterface>
+     * @return Map<int, Result\Node>
      */
-    public function nodes(): MapInterface;
+    public function nodes(): Map;
 
     /**
      * Return a list of relationships
      *
-     * @return MapInterface<int, RelationshipInterface>
+     * @return Map<int, Result\Relationship>
      */
-    public function relationships(): MapInterface;
+    public function relationships(): Map;
 
     /**
      * Return the rows
      *
-     * @return StreamInterface<RowInterface>
+     * @return Sequence<Result\Row>
      */
-    public function rows(): StreamInterface;
+    public function rows(): Sequence;
 }

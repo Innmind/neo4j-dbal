@@ -19,7 +19,6 @@ class CypherTest extends TestCase
 
         $this->assertInstanceOf(Query::class, $cypher);
         $this->assertSame($expression, $cypher->cypher());
-        $this->assertSame($expression, (string) $cypher);
     }
 
     public function testParameters()

@@ -5,24 +5,27 @@ namespace Innmind\Neo4j\DBAL\Result;
 
 use Innmind\Neo4j\DBAL\Result as ResultInterface;
 use Innmind\Immutable\{
-    MapInterface,
-    StreamInterface,
     Map,
-    Stream,
+    Sequence,
     Set,
 };
 
 final class Result implements ResultInterface
 {
-    private $nodes;
-    private $relationships;
-    private $rows;
+    /** @var Map<int, Node> */
+    private Map $nodes;
+    /** @var Map<int, Relationship> */
+    private Map $relationships;
+    /** @var Sequence<Row> */
+    private Sequence $rows;
 
-    public function __construct(
-        MapInterface $nodes,
-        MapInterface $relationships,
-        StreamInterface $rows
-    ) {
+    /**
+     * @param Map<int, Node> $nodes
+     * @param Map<int, Relationship> $relationships
+     * @param Sequence<Row> $rows
+     */
+    public function __construct(Map $nodes, Map $relationships, Sequence $rows)
+    {
         $this->nodes = $nodes;
         $this->relationships = $relationships;
         $this->rows = $rows;
@@ -31,9 +34,7 @@ final class Result implements ResultInterface
     /**
      * Build a result object out of a standard neo4j rest api response
      *
-     * @param array $response
-     *
-     * @return self
+     * @param array{columns: list<string>, data: list<array{row: list<scalar|array>, graph: array{nodes: list<array{id: numeric, labels: list<string>, properties: array<string, scalar|array>}>, relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}>} $response
      */
     public static function fromRaw(array $response): self
     {
@@ -42,54 +43,46 @@ final class Result implements ResultInterface
         return new self(
             self::buildNodes($data),
             self::buildRelationships($data),
-            self::buildRows($response)
+            self::buildRows($response),
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function nodes(): MapInterface
+    public function nodes(): Map
     {
         return $this->nodes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function relationships(): MapInterface
+    public function relationships(): Map
     {
         return $this->relationships;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rows(): StreamInterface
+    public function rows(): Sequence
     {
         return $this->rows;
     }
 
     /**
-     * @param array $data
+     * @param list<array{graph: array{nodes: list<array{labels: list<string>, id: numeric, properties: array<string, scalar|array>}>}}> $data
      *
-     * @return MapInterface<int, Node>
+     * @return Map<int, Node>
      */
-    private static function buildNodes(array $data): MapInterface
+    private static function buildNodes(array $data): Map
     {
-        $nodes = new Map('int', Node::class);
+        /** @var Map<int, Node> */
+        $nodes = Map::of('int', Node::class);
 
         foreach ($data as $response) {
             foreach ($response['graph']['nodes'] as $node) {
-                $labels = Set::of('string', ...\array_values($node['labels']));
+                $labels = Set::strings(...\array_values($node['labels']));
 
-                $nodes = $nodes->put(
+                $nodes = ($nodes)(
                     (int) $node['id'],
                     new Node\Node(
                         new Id((int) $node['id']),
                         $labels,
-                        self::buildProperties($node['properties'])
-                    )
+                        self::buildProperties($node['properties']),
+                    ),
                 );
             }
         }
@@ -98,25 +91,26 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @param array $data
+     * @param list<array{graph: array{relationships: list<array{id: numeric, type: string, startNode: numeric, endNode: numeric, properties: array<string, scalar|array>}>}}> $data
      *
-     * @return MapInterface<int, Relationship>
+     * @return Map<int, Relationship>
      */
-    private static function buildRelationships(array $data): MapInterface
+    private static function buildRelationships(array $data): Map
     {
-        $relationships = new Map('int', Relationship::class);
+        /** @var Map<int, Relationship> */
+        $relationships = Map::of('int', Relationship::class);
 
         foreach ($data as $response) {
             foreach ($response['graph']['relationships'] as $rel) {
-                $relationships = $relationships->put(
+                $relationships = ($relationships)(
                     (int) $rel['id'],
                     new Relationship\Relationship(
                         new Id((int) $rel['id']),
                         new Type($rel['type']),
                         new Id((int) $rel['startNode']),
                         new Id((int) $rel['endNode']),
-                        self::buildProperties($rel['properties'])
-                    )
+                        self::buildProperties($rel['properties']),
+                    ),
                 );
             }
         }
@@ -125,20 +119,21 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @param array $data
+     * @param array{data?: list<array{row: array<int, scalar|array>}>, columns: array<int, string>} $data
      *
-     * @return StreamInterface<Row>
+     * @return Sequence<Row>
      */
-    private static function buildRows(array $data): StreamInterface
+    private static function buildRows(array $data): Sequence
     {
-        $rows = new Stream(Row::class);
+        /** @var Sequence<Row> */
+        $rows = Sequence::of(Row::class);
         $responses = $data['data'] ?? [];
 
         foreach ($responses as $response) {
             foreach ($response['row'] as $idx => $row) {
-                $rows = $rows->add(new Row\Row(
+                $rows = ($rows)(new Row\Row(
                     $data['columns'][$idx],
-                    $row
+                    $row,
                 ));
             }
         }
@@ -147,15 +142,19 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @return MapInterface<string, variable>
+     * @param array<string, scalar|array> $data
+     *
+     * @return Map<string, scalar|array>
      */
-    private static function buildProperties(array $data): MapInterface
+    private static function buildProperties(array $data): Map
     {
-        return Map::of(
-            'string',
-            'variable',
-            \array_keys($data),
-            \array_values($data)
-        );
+        /** @var Map<string, scalar|array> */
+        $properties = Map::of('string', 'scalar|array');
+
+        foreach ($data as $key => $value) {
+            $properties = ($properties)($key, $value);
+        }
+
+        return $properties;
     }
 }
