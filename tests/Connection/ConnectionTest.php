@@ -99,7 +99,7 @@ class ConnectionTest extends TestCase
     {
         $query = (new Query\Query)
             ->create('n', 'Foo', 'Bar')
-            ->withProperty('foo', '{bar}')
+            ->withProperty('foo', '$bar')
             ->withParameter('bar', 'baz')
             ->return('n');
 
