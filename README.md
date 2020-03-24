@@ -1,11 +1,9 @@
 # neo4j-dbal
 
-| `master` | `develop` |
-|----------|-----------|
-|[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/build-status/master)|[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/?branch=develop) [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/neo4j-dbal/build-status/develop)|
+[![Build Status](https://github.com/Innmind/neo4j-dbal/workflows/CI/badge.svg)](https://github.com/Innmind/neo4j-dbal/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/Innmind/neo4j-dbal/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/neo4j-dbal)
+[![Type Coverage](https://shepherd.dev/github/Innmind/neo4j-dbal/coverage.svg)](https://shepherd.dev/github/Innmind/neo4j-dbal)
 
-
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/47616b37-fc24-4cd2-bb0e-28fb10a55ff5/big.png)](https://insight.sensiolabs.com/projects/47616b37-fc24-4cd2-bb0e-28fb10a55ff5)
 
 PHP abstraction layer for neo4j graph database
 
