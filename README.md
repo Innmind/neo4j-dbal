@@ -25,22 +25,22 @@ use Innmind\Neo4j\DBAL\{
     Query,
     Clause\Expression\Relationship
 };
-use Innmind\TimeContinuum\TimeContinuum\Earth;
-use function Innmind\HttpTransport\bootstrap as transports;
+use Innmind\OperatingSystem\Factory;
 
+$os = Factory::build();
 $connection = bootstrap(
-    transports()['default'](),
-    new Earth
+    $os->remote()->http(),
+    $os->clock(),
 );
 
 $query = (new Query)
     ->match('n', ['LabelA', 'LabelB'])
-        ->withProperty('foo', '{param}')
+        ->withProperty('foo', '$param')
         ->withParameter('param', 'value')
     ->linkedTo('n2')
     ->through('r', 'REL_TYPE', 'right')
     ->return('n', 'n2', 'r');
-echo (string) $query; //MATCH (n:LabelA:LabelB { foo: {param} })-[r:REL_TYPE]->(n2) RETURN n, n2, r
+echo $query->cypher(); //MATCH (n:LabelA:LabelB { foo: $param })-[r:REL_TYPE]->(n2) RETURN n, n2, r
 
 $result = $connection->execute($query);
 echo $result->nodes()->count(); //2
@@ -54,9 +54,9 @@ echo $result->relationships()->count(); //1
 
 You have 3 options to execute a query:
 
-* use [`Query`](Query.php) to build the query via its API
-* use [`Cypher`](Cypher.php) where you put the raw cypher query
-* create your own class that implements [`QueryInterface`](QueryInterface.php)
+* use [`Query`](src/Query/Query.php) to build the query via its API
+* use [`Cypher`](src/Query/Cypher.php) where you put the raw cypher query
+* create your own class that implements [`Query`](src/Query.php)
 
 ## Structure
 
