@@ -17,7 +17,6 @@ interface Parametrable
      * @param mixed $value
      */
     public function withParameter(string $key, $value): Clause;
-
     public function hasParameters(): bool;
 
     /**

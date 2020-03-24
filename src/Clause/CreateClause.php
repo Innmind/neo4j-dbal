@@ -13,10 +13,8 @@ final class CreateClause implements Clause, PathAware
 
     private bool $unique;
 
-    public function __construct(
-        Expression\Path $path,
-        bool $unique
-    ) {
+    public function __construct(Expression\Path $path, bool $unique)
+    {
         $this->path = $path;
         $this->unique = $unique;
     }

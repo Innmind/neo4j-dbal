@@ -474,10 +474,8 @@ final class Query implements QueryInterface
      *
      * @param 'asc'|'desc' $direction
      */
-    public function orderBy(
-        string $cypher,
-        string $direction = 'asc'
-    ): self {
+    public function orderBy(string $cypher, string $direction = 'asc'): self
+    {
         $query = new self;
         $query->clauses = ($this->clauses)(
             Clause\OrderByClause::of($direction, $cypher),

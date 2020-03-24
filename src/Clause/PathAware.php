@@ -29,10 +29,7 @@ interface PathAware extends Parametrable
     /**
      * Specify a property to be matched
      */
-    public function withProperty(
-        string $property,
-        string $cypher
-    ): Clause;
+    public function withProperty(string $property, string $cypher): Clause;
 
     /**
      * Define the deepness of the relationship
