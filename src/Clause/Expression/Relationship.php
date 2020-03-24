@@ -17,9 +17,9 @@ use function Innmind\Immutable\join;
 
 final class Relationship
 {
-    const LEFT = 'left';
-    const RIGHT = 'right';
-    const BOTH = 'both';
+    public const LEFT = 'left';
+    public const RIGHT = 'right';
+    public const BOTH = 'both';
 
     private ?string $variable;
     private ?string $type;
