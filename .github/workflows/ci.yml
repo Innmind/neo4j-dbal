@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup Neo4j
-        uses: baptouuuu/setup-neo4j@v1.1
+        uses: baptouuuu/setup-neo4j@v1.1.0
         with:
           tag: ${{ matrix.neo4j-version }}
       - name: Setup PHP
