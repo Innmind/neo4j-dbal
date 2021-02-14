@@ -38,11 +38,11 @@ class TransactionsTest extends TestCase
         $transaction = $this->transactions->open();
 
         $this->assertInstanceOf(Transaction::class, $transaction);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '|' . $this->server . 'db/data/transaction/\d+|',
             $transaction->endpoint()->toString()
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '|' . $this->server . 'db/data/transaction/\d+/commit|',
             $transaction->commitEndpoint()->toString()
         );
