@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        php-version: ['7.4']
-        neo4j-version: ['3.4', '4.0', '8.0']
+        php-version: ['7.4', '8.0']
+        neo4j-version: ['3.4', '4.0']
     name: 'PHPUnit'
     steps:
       - name: Checkout
