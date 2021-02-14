@@ -1,6 +1,6 @@
 # neo4j-dbal
 
-[![Build Status](https://github.com/Innmind/neo4j-dbal/workflows/CI/badge.svg)](https://github.com/Innmind/neo4j-dbal/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/Innmind/neo4j-dbal/workflows/CI/badge.svg?branch=master)](https://github.com/Innmind/neo4j-dbal/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/Innmind/neo4j-dbal/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/neo4j-dbal)
 [![Type Coverage](https://shepherd.dev/github/Innmind/neo4j-dbal/coverage.svg)](https://shepherd.dev/github/Innmind/neo4j-dbal)
 
