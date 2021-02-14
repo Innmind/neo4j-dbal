@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/neo4j-dbal/issues"
     },
     "require": {
-        "php": "~7.4",
+        "php": "~7.4|~8.0",
         "innmind/immutable": "~3.5",
         "psr/log": "^1.0",
         "innmind/operating-system": "~2.0",
