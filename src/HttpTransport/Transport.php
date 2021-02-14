@@ -45,6 +45,7 @@ final class Transport implements TransportInterface
 
     public function __invoke(Request $request): Response
     {
+        /** @psalm-suppress InvalidArgument */
         $request = new Request\Request(
             $this->server->withPath($request->url()->path()),
             $request->method(),

@@ -38,6 +38,7 @@ final class Transactions
         $this->transactions = Sequence::of(Transaction::class);
         $this->fulfill = $fulfill;
         $this->clock = $clock;
+        /** @psalm-suppress InvalidArgument */
         $this->headers = new Headers(
             ContentType::of(
                 'application',

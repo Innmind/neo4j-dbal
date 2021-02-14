@@ -35,6 +35,7 @@ final class HttpTranslator
     public function __construct(Transactions $transactions)
     {
         $this->transactions = $transactions;
+        /** @psalm-suppress InvalidArgument */
         $this->headers = Headers::of(
             ContentType::of(
                 'application',

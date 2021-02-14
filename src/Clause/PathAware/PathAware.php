@@ -27,7 +27,7 @@ trait PathAware
     }
 
     /**
-     * {@inheritdoc}
+     * @param 'both'|'left'|'right' $direction
      */
     public function through(
         string $variable = null,
@@ -90,6 +90,9 @@ trait PathAware
         return $clause;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function withParameter(string $key, $value): Clause
     {
         $clause = clone $this;
