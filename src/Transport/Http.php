@@ -64,7 +64,7 @@ final class Http implements Transport
                         new ProtocolVersion(1, 1),
                     ),
                 )
-                ->statusCode();
+                    ->statusCode();
         } catch (\Exception $e) {
             throw new ServerDown(
                 $e->getMessage(),

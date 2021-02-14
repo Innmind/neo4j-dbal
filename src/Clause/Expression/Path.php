@@ -290,7 +290,7 @@ final class Path
         /** @var Map<string, Parameter> */
         return $this->elements->reduce(
             Map::of('string', Parameter::class),
-            function(Map $carry, $element): Map {
+            static function(Map $carry, $element): Map {
                 return $carry->merge($element->parameters());
             },
         );

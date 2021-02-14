@@ -22,7 +22,6 @@ use Innmind\Http\{
 use Innmind\Stream\Readable\Stream;
 use Innmind\Url\Url;
 use Innmind\Json\Json;
-use Innmind\Immutable\Map;
 
 /**
  * Translate a dbal query into a http request

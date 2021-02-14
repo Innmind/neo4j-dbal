@@ -13,7 +13,6 @@ use Innmind\Http\{
     Message\Response,
     Headers,
 };
-use Innmind\Immutable\Map;
 
 final class Transport implements TransportInterface
 {

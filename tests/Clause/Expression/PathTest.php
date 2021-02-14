@@ -156,18 +156,18 @@ class PathTest extends TestCase
     public function testComplexPath()
     {
         $path = Path::startWithNode('a', 'A')
-                ->withProperty('a', '{a}')
-                ->withParameter('a', 'foo')
+            ->withProperty('a', '{a}')
+            ->withParameter('a', 'foo')
             ->linkedTo('b', 'B')
-                ->withProperty('b', '{b}')
-                ->withParameter('b', 'bar')
+            ->withProperty('b', '{b}')
+            ->withParameter('b', 'bar')
             ->through(null, 'TYPE|ANOTHER', Relationship::RIGHT)
-                ->withProperty('t', '{baz}')
-                ->withParameter('baz', 'dont know')
+            ->withProperty('t', '{baz}')
+            ->withParameter('baz', 'dont know')
             ->linkedTo()
             ->through('r', null, Relationship::LEFT)
-                ->withProperty('r', '{wat}')
-                ->withParameter('wat', 'ever');
+            ->withProperty('r', '{wat}')
+            ->withParameter('wat', 'ever');
 
         $this->assertSame(
             '(a:A { a: {a} })-[:TYPE|ANOTHER { t: {baz} }]->(b:B { b: {b} })<-[r { r: {wat} }]-()',

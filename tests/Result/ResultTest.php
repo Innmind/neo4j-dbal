@@ -257,7 +257,7 @@ class ResultTest extends TestCase
                             ],
                         ],
                         'relationships' => [],
-                    ]
+                    ],
                 ],
                 [
                     'row' => [

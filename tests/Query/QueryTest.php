@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Tests\Innmind\Neo4j\DBAL\Query;
 
@@ -23,20 +24,20 @@ class QueryTest extends TestCase
         //this is not a valid query obviously
         $query = (new Query)
             ->match('n', 'labels')
-                ->withProperties(['foo' => '{foo}'])
-                ->withParameters(['foo' => 'bar'])
+            ->withProperties(['foo' => '{foo}'])
+            ->withParameters(['foo' => 'bar'])
             ->linkedTo('n2', 'labels')
-                ->withProperties(['bar' => '{bar}'])
-                ->withParameters(['bar' => 'baz'])
+            ->withProperties(['bar' => '{bar}'])
+            ->withParameters(['bar' => 'baz'])
             ->through('TYPE', 'r')
-                ->withProperties(['foo' => '{baz}'])
-                ->withParameters(['baz' => 'foobar'])
-                ->withADistanceOfAtMost(42)
+            ->withProperties(['foo' => '{baz}'])
+            ->withParameters(['baz' => 'foobar'])
+            ->withADistanceOfAtMost(42)
             ->with('n', 'n2', 'r')
             ->where('n.foo = {foobar}')
-                ->withParameter('foobar', 'baz')
+            ->withParameter('foobar', 'baz')
             ->where('n2.bar = {foobaz}.whatever')
-                ->withParameter('foobaz', ['whatever' => 'value'])
+            ->withParameter('foobaz', ['whatever' => 'value'])
             ->set('n :ExtraLabel')
             ->create('n2', 'Foo', 'Bar')
             ->createUnique('n42', 'Baz')

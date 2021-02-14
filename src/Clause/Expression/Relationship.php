@@ -178,13 +178,13 @@ final class Relationship
         $properties = '';
 
         if (!$this->properties->empty()) {
-            $properties = sprintf(
+            $properties = \sprintf(
                 ' { %s }',
                 join(
                     ', ',
                     $this
                         ->properties
-                        ->map(function(string $property, string $value): string {
+                        ->map(static function(string $property, string $value): string {
                             return \sprintf(
                                 '%s: %s',
                                 $property,

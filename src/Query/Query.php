@@ -50,14 +50,14 @@ final class Query implements QueryInterface
     public function parameters(): Map
     {
         /** @var Sequence<Clause\Parametrable> [description] */
-        $parametrables = $this->clauses->filter(function(Clause $clause): bool {
+        $parametrables = $this->clauses->filter(static function(Clause $clause): bool {
             return $clause instanceof Clause\Parametrable;
         });
 
         /** @var Map<string, Parameter> */
         return $parametrables->reduce(
             Map::of('string', Parameter::class),
-            function(Map $carry, Clause\Parametrable $clause): Map {
+            static function(Map $carry, Clause\Parametrable $clause): Map {
                 return $carry->merge($clause->parameters());
             },
         );
