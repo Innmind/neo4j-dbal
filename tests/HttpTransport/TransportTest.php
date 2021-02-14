@@ -17,7 +17,6 @@ use Innmind\Http\{
     Header\ContentType,
 };
 use Innmind\Url\Url;
-use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class TransportTest extends TestCase
@@ -47,7 +46,7 @@ class TransportTest extends TestCase
         $mock
             ->expects($this->once())
             ->method('__invoke')
-            ->with($this->callback(function(Request $request) use ($baseRequest): bool {
+            ->with($this->callback(static function(Request $request) use ($baseRequest): bool {
                 return $request->url()->toString() === 'https://somewhere:7473/path' &&
                     $request->method() === $baseRequest->method() &&
                     $request->protocolVersion() === $baseRequest->protocolVersion() &&

@@ -30,7 +30,7 @@ final class Node
     public function __construct(string $variable = null, string ...$labels)
     {
         $this->variable = $variable;
-        $this->labels = Set::strings(...$labels);;
+        $this->labels = Set::strings(...$labels);
         /** @var Map<string, Parameter> */
         $this->parameters = Map::of('string', Parameter::class);
         /** @var Map<string, string> */
@@ -92,7 +92,7 @@ final class Node
                     ', ',
                     $this
                         ->properties
-                        ->map(function(string $property, string $value): string {
+                        ->map(static function(string $property, string $value): string {
                             return \sprintf(
                                 '%s: %s',
                                 $property,

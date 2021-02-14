@@ -8,14 +8,14 @@ use Innmind\Neo4j\DBAL\{
     Exception\DomainException,
 };
 use PHPUnit\Framework\TestCase;
-use Eris\{
-    Generator,
-    TestTrait,
+use Innmind\BlackBox\{
+    PHPUnit\BlackBox,
+    Set,
 };
 
 class DistanceTest extends TestCase
 {
-    use TestTrait;
+    use BlackBox;
 
     public function testDefault()
     {
@@ -25,11 +25,7 @@ class DistanceTest extends TestCase
     public function testOf()
     {
         $this
-            ->minimumEvaluationRatio(0.01)
-            ->forAll(Generator\int())
-            ->when(static function(int $int): bool {
-                return $int > 1;
-            })
+            ->forAll(Set\Integers::above(2))
             ->then(function(int $int): void {
                 $this->assertInstanceOf(Distance::class, Distance::of($int));
                 $this->assertSame('*'.$int, Distance::of($int)->cypher());
@@ -46,10 +42,9 @@ class DistanceTest extends TestCase
     public function testBetween()
     {
         $this
-            ->minimumEvaluationRatio(0.01)
-            ->forAll(Generator\int(), Generator\int())
-            ->when(static function(int $min, int $max): bool {
-                return $min >= 0 && $min !== $max && $max > $min;
+            ->forAll(Set\Integers::above(0), Set\Integers::above(1))
+            ->filter(static function(int $min, int $max): bool {
+                return $max > $min;
             })
             ->then(function(int $min, int $max): void {
                 $this->assertInstanceOf(Distance::class, Distance::between($min, $max));
@@ -74,11 +69,7 @@ class DistanceTest extends TestCase
     public function testAtLeast()
     {
         $this
-            ->minimumEvaluationRatio(0.01)
-            ->forAll(Generator\int())
-            ->when(static function(int $int): bool {
-                return $int > 1;
-            })
+            ->forAll(Set\Integers::above(2))
             ->then(function(int $int): void {
                 $this->assertInstanceOf(Distance::class, Distance::atLeast($int));
                 $this->assertSame("*$int..", Distance::atLeast($int)->cypher());
@@ -95,11 +86,7 @@ class DistanceTest extends TestCase
     public function testAtMost()
     {
         $this
-            ->minimumEvaluationRatio(0.01)
-            ->forAll(Generator\int())
-            ->when(static function(int $int): bool {
-                return $int > 1;
-            })
+            ->forAll(Set\Integers::above(2))
             ->then(function(int $int): void {
                 $this->assertInstanceOf(Distance::class, Distance::atMost($int));
                 $this->assertSame("*..$int", Distance::atMost($int)->cypher());

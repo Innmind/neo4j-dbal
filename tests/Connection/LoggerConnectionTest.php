@@ -62,7 +62,7 @@ class LoggerConnectionTest extends TestCase
                 'Query about to be executed',
                 [
                     'cypher' => 'foo',
-                    'parameters' => ['bar' => 'baz']
+                    'parameters' => ['bar' => 'baz'],
                 ]
             );
 

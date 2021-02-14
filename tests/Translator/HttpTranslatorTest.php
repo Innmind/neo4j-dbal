@@ -65,7 +65,7 @@ class HttpTranslatorTest extends TestCase
         $this->assertSame('POST', $request->method()->toString());
         $this->assertSame('/db/data/transaction/commit', $request->url()->toString());
         $this->assertSame(
-            json_encode([
+            \json_encode([
                 'statements' => [[
                     'statement' => 'match n return n;',
                     'resultDataContents' => ['graph', 'row'],
@@ -93,7 +93,7 @@ class HttpTranslatorTest extends TestCase
             );
         $this
             ->transport
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('__invoke')
             ->willReturn($response = $this->createMock(Response::class));
         $response
@@ -118,7 +118,7 @@ class HttpTranslatorTest extends TestCase
         $this->assertSame('POST', $request->method()->toString());
         $this->assertSame('/db/data/transaction/1', $request->url()->toString());
         $this->assertSame(
-            json_encode([
+            \json_encode([
                 'statements' => [[
                     'statement' => 'match n return n;',
                     'resultDataContents' => ['graph', 'row'],

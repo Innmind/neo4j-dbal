@@ -107,10 +107,10 @@ class ConnectionTest extends TestCase
 
         $this->assertSame(1, $result->nodes()->count());
         $this->assertTrue(
-            in_array('Bar', unwrap($result->nodes()->values()->first()->labels()))
+            \in_array('Bar', unwrap($result->nodes()->values()->first()->labels()), true)
         );
         $this->assertTrue(
-            in_array('Foo', unwrap($result->nodes()->values()->first()->labels()))
+            \in_array('Foo', unwrap($result->nodes()->values()->first()->labels()), true)
         );
         $this->assertCount(1, $result->nodes()->values()->first()->properties());
         $this->assertSame(

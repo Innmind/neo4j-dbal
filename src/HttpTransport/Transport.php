@@ -13,7 +13,6 @@ use Innmind\Http\{
     Message\Response,
     Headers,
 };
-use Innmind\Immutable\Map;
 
 final class Transport implements TransportInterface
 {
@@ -45,6 +44,7 @@ final class Transport implements TransportInterface
 
     public function __invoke(Request $request): Response
     {
+        /** @psalm-suppress InvalidArgument */
         $request = new Request\Request(
             $this->server->withPath($request->url()->path()),
             $request->method(),
